@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Maths Morgan</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <h1>📚 Maths Morgan</h1>
+        <div class="search-header">
+            <i class="fas fa-search"></i>
+            <input type="text" id="globalSearch" placeholder="Rechercher une notion..." oninput="render(currentLevel)">
+        </div>
+        <div class="header-actions">
+            <button class="theme-toggle-btn" onclick="toggleDarkMode()" id="theme-toggle" title="Changer le mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </div>
+    <nav id="navigation" class="nav-tabs"></nav>
+</header>
+
+<main>
+    <div class="controls-bar">
+        <div id="filters-container"></div>
+        <div class="sort-wrapper">
+            <i class="fas fa-sort-amount-down"></i>
+            <select id="sortSelect" onchange="updateSort(this.value)">
+                <option value="recent">Plus récents</option>
+                <option value="ancien">Plus anciens</option>
+                <option value="alpha">Ordre A-Z</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="content" class="grid-lecons"></div>
+    
+    <p class="privacy-info">
+        <i class="fas fa-user-shield"></i> Tes favoris et tes statuts de réussite sont enregistrés uniquement sur ton appareil. Monsieur Morgan ne peut pas les consulter.
+    </p>
+</main>
+
+<div id="pdfModal" class="pdf-modal">
+    <span class="close-modal" onclick="closePDF()">&times;</span>
+    <div class="modal-content">
+        <iframe id="pdf-frame" src=""></iframe>
+    </div>
+</div>
+
+<button id="back-to-top" onclick="scrollToTop()" title="Retour en haut">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<div id="toast">Lien copié dans le presse-papier !</div>
+
+<script src="6e.js"></script>
+<script src="5e.js"></script>
+<script src="4e.js"></script>
+<script src="3e.js"></script>
+<script src="archives.js"></script>
+<script src="script.js"></script> </body>
+</html>
