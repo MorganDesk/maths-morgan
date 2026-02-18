@@ -393,8 +393,15 @@ body.modal-open {
 /* Petit message d'info sous la grille */
 .privacy-info {
     text-align: center;
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Un peu plus petit */
     color: var(--text-light);
-    margin: 2rem 0;
-    font-style: italic;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    line-height: 1.5; /* Espace bien les lignes */
+    max-width: 400px; /* Évite que le texte s'étale trop sur grand écran */
+    opacity: 0.8;
+}
+
+.privacy-info u {
+    text-decoration-color: var(--primary); /* Souligne "ce navigateur" discrètement */
 }
