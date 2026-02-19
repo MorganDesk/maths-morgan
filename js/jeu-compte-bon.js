@@ -18,7 +18,7 @@ function chargerMenuCompteBon() {
                 <span class="tag">Calcul & Logique</span>
             </div>
             <h3>Le Compte est Bon</h3>
-            <p>Combine les plaques pour atteindre la cible. Un vrai défi de réflexion !</p>
+            <p>Ton cerveau a plus de puissance que ton smartphone, prouve-le.</p>
             <div class="fichiers-liste-verticale">
                 <button class="btn-download-full" onclick="startCompteBon()" style="border:none; cursor:pointer;">
                     <i class="fas fa-play"></i> Lancer le défi

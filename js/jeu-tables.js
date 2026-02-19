@@ -23,7 +23,7 @@ function chargerMenuJeux() {
                 ${currentHigh > 0 ? `<span class="tag-highscore"><i class="fas fa-trophy"></i> Record : ${currentHigh}</span>` : ''}
             </div>
             <h3>Défi des Tables</h3>
-            <p>Combien de multiplications peux-tu résoudre en 60 secondes ?</p>
+            <p>Deviens plus rapide qu'une calculatrice (et beaucoup plus stylé).</p>
             <div class="fichiers-liste-verticale">
                 <button class="btn-download-full" onclick="startTablesGame()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le défi
