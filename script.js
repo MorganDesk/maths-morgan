@@ -31,34 +31,28 @@ function getLeconId(l) {
 function render(levelId) {
     currentLevel = levelId;
     
-    // 1. Mise à jour de la navigation (onglets)
     const nav = document.getElementById('navigation');
-	if (nav) {
-		// On génère les boutons habituels
-		let navHTML = niveaux.map(n => `
-			<button onclick="render('${n.id}')" class="tab-btn ${currentLevel === n.id ? 'active' : ''}">
-				${n.nom}
-			</button>
-		`).join('');
+    if (nav) {
+        let navHTML = niveaux.map(n => `
+            <button onclick="render('${n.id}')" class="tab-btn ${currentLevel === n.id ? 'active' : ''}">
+                ${n.nom}
+            </button>
+        `).join('');
 
-		// ON AJOUTE LE BOUTON JEUX À LA FIN
-		navHTML += `
-			<a href="jeux.html" class="tab-btn game-link">
-				<i class="fas fa-gamepad"></i> Jeux
-			</a>
-		`;
-		
-		nav.innerHTML = navHTML;
-	}
+        navHTML += `
+            <a href="jeux.html" class="tab-btn game-link">
+                <i class="fas fa-gamepad"></i> Jeux
+            </a>
+        `;
+        nav.innerHTML = navHTML;
+    }
 
     const content = document.getElementById('content');
     const searchTerm = document.getElementById('globalSearch').value.toLowerCase().trim();
 
     let data = [];
 
-    // 2. Sélection de la source de données
     if (searchTerm !== "") {
-        // Mode Recherche : On prend tout
         data = [
             ...lecons6e.map(l => ({...l, niveauSource: "6e"})),
             ...lecons5e.map(l => ({...l, niveauSource: "5e"})),
@@ -67,7 +61,6 @@ function render(levelId) {
             ...(typeof donneesArchives !== 'undefined' ? donneesArchives.map(l => ({...l, niveauSource: "archives"})) : [])
         ];
     } else if (levelId === 'favoris') {
-        // Mode Favoris : On fusionne tout et on filtre par IDs sauvegardés
         const allData = [
             ...lecons6e.map(l => ({...l, niveauSource: "6e"})),
             ...lecons5e.map(l => ({...l, niveauSource: "5e"})),
@@ -77,19 +70,16 @@ function render(levelId) {
         ];
         data = allData.filter(l => favoris.includes(getLeconId(l)));
     } else {
-        // Mode Niveau simple
         const source = niveaux.find(n => n.id === levelId);
         data = (source ? source.data : []).map(l => ({...l, niveauSource: levelId}));
     }
 
-    // 3. Filtrage par texte
     let filtered = data.filter(l => 
         l.titre.toLowerCase().includes(searchTerm) || 
         l.desc.toLowerCase().includes(searchTerm) ||
         (l.matiere && l.matiere.toLowerCase().includes(searchTerm))
     );
 
-    // 4. Tri (Niveau d'abord, puis Date/Alpha)
     const ordreNiveaux = { "6e": 1, "5e": 2, "4e": 3, "3e": 4, "archives": 5 };
     filtered.sort((a, b) => {
         const diffNiveau = (ordreNiveaux[a.niveauSource] || 99) - (ordreNiveaux[b.niveauSource] || 99);
@@ -99,7 +89,6 @@ function render(levelId) {
         return new Date(a.date) - new Date(b.date);
     });
 
-    // 5. Regroupement par Section
     if (filtered.length === 0) {
         content.innerHTML = `<div class="empty-msg">Aucun résultat trouvé pour "${searchTerm}".</div>`;
         return;
@@ -111,30 +100,29 @@ function render(levelId) {
         groupes[l.niveauSource].push(l);
     });
 
-    // 6. Génération du HTML
     let htmlFinal = "";
     const ordreAffichage = ["6e", "5e", "4e", "3e", "archives"];
     
     ordreAffichage.forEach(nivId => {
         if (groupes[nivId] && groupes[nivId].length > 0) {
-            // On affiche le titre de section si on cherche partout ou si on est dans les favoris
             if (searchTerm !== "" || levelId === 'favoris') {
                 const labelNiveau = niveaux.find(n => n.id === nivId).nom;
                 htmlFinal += `<h2 class="section-title">${labelNiveau}</h2>`;
             }
             
-            // Ajout des cartes du groupe
             htmlFinal += groupes[nivId].map(l => {
                 const leconId = getLeconId(l);
                 const isFav = favoris.includes(leconId);
                 const config = STATUTS_CONFIG[statuts[leconId] || 'neutre'];
                 
                 return `
-                <div class="card">
+                <div class="card" id="${leconId}">
                     <div class="card-header">
                         <span class="tag">${l.matiere || 'Maths'}</span>
                         <div class="actions">
-                            <button onclick="shareLecon(event, '${l.titre}')" class="icon-btn" title="Partager"><i class="fas fa-share-nodes"></i></button>
+                            <button onclick="shareLecon(event, '${l.titre}', '${leconId}')" class="icon-btn" title="Partager">
+                                <i class="fas fa-share-nodes"></i>
+                            </button>
                             <button onclick="toggleFav(event, '${leconId}')" class="icon-btn ${isFav ? 'fav-active' : ''}">
                                 <i class="${isFav ? 'fas' : 'far'} fa-star"></i>
                             </button>
@@ -180,14 +168,20 @@ function updateSort(val) {
     render(currentLevel);
 }
 
-function shareLecon(e, titre) {
+function shareLecon(e, titre, leconId) {
     e.stopPropagation();
-    const url = window.location.href;
+    // Création de l'URL spécifique avec l'ancre #id
+    const urlPartage = `${window.location.origin}${window.location.pathname}#${leconId}`;
+    
     if (navigator.share) {
-        navigator.share({ title: titre, url: url });
+        navigator.share({ 
+            title: titre, 
+            text: `Regarde cette leçon : ${titre}`,
+            url: urlPartage 
+        });
     } else {
-        navigator.clipboard.writeText(`${titre} : ${url}`);
-        showToast("Lien copié !");
+        navigator.clipboard.writeText(urlPartage);
+        showToast("Lien de la leçon copié !");
     }
 }
 
@@ -233,10 +227,43 @@ window.onclick = (e) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Gestion du thème
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-theme');
         const icon = document.querySelector('.theme-toggle-btn i');
         if(icon) icon.className = 'fas fa-sun';
     }
-    render('6e');
+
+    // Gestion de l'ancre au chargement
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+        // On récupère le niveau depuis l'ID (ex: "5e" depuis "5e-2024-titre")
+        const niveauId = hash.split('-')[0];
+        // On s'assure que le niveau existe bien
+        const niveauExiste = niveaux.some(n => n.id === niveauId);
+        
+        if (niveauExiste) {
+            render(niveauId);
+            setTimeout(() => {
+				const element = document.getElementById(hash);
+				if (element) {
+					element.scrollIntoView({ behavior: 'smooth' });
+					
+					// On prépare la transition longue
+					element.style.transition = "box-shadow 2s ease-in-out";
+					// On applique le halo
+					element.style.boxShadow = "0 0 30px var(--primary)";
+
+					// On attend que l'élève ait bien vu (ex: 3s) avant de le faire disparaître doucement
+					setTimeout(() => {
+						element.style.boxShadow = "none";
+					}, 3000); 
+				}
+			}, 500);
+        } else {
+            render('6e');
+        }
+    } else {
+        render('6e');
+    }
 });

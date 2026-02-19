@@ -2,7 +2,7 @@ let scoreRelatifs = 0;
 let timeLeftRelatifs = 60;
 let timerRelatifs;
 let currentAnswerRelatifs;
-let modeRelatifs = 'melange';
+let modeRelatifs = 'add';
 
 function chargerMenuRelatifs() {
     const gameZone = document.getElementById('game-zone');
@@ -20,7 +20,7 @@ function chargerMenuRelatifs() {
                 </span>
             </div>
             <h3>Choc des relatifs</h3>
-            <p>Maîtrise les signes !</p>
+            <p>Addition et soustraction de nombres relatifs !</p>
             
             <div class="fichiers-liste-verticale">
                 <select id="mode-select" class="game-input" onchange="updateRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
