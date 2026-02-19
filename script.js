@@ -1,4 +1,4 @@
-// Configuration des niveaux
+// --- CONFIGURATION ---
 const niveaux = [
     { id: "6e", nom: '<i class="fas fa-seedling"></i> 6ème', data: typeof lecons6e !== 'undefined' ? lecons6e : [] },
     { id: "5e", nom: '<i class="fas fa-leaf"></i> 5ème', data: typeof lecons5e !== 'undefined' ? lecons5e : [] },
@@ -8,7 +8,6 @@ const niveaux = [
     { id: "favoris", nom: '<i class="fas fa-star"></i> Favoris', data: [] }
 ];
 
-// Configuration des statuts de compétence
 const STATUTS_CONFIG = {
     'neutre': { label: 'Statut : À définir', class: '' },
     'rouge': { label: "Je n'ai pas compris", class: 'rouge' },
@@ -17,43 +16,153 @@ const STATUTS_CONFIG = {
     'vert-fonce': { label: 'Je maîtrise', class: 'vert-fonce' }
 };
 
-// Variables d'état globales
 let currentLevel = "6e";
 let currentSort = "recent";
-let filterMatiere = "";
+let favoris = JSON.parse(localStorage.getItem('maths_morgan_favs')) || [];
+let statuts = JSON.parse(localStorage.getItem('maths_morgan_statuts')) || {};
 
-// Éléments DOM fréquemment utilisés
-const nav = document.getElementById('navigation');
-const filtersContainer = document.getElementById('filters-container');
-const content = document.getElementById('content');
-const searchInput = document.getElementById('globalSearch');
-const backToTopBtn = document.getElementById("back-to-top");
-
-// --- GESTION DES STATUTS ---
-function getStatus(leconId) {
-    const statuses = JSON.parse(localStorage.getItem('maths-suivi') || '{}');
-    return statuses[leconId] || 'neutre';
+// --- GÉNÉRATEUR D'ID UNIQUE ---
+function getLeconId(l) {
+    const slug = l.titre.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+    return `${l.niveau || currentLevel}-${l.date || '0000'}-${slug}`;
 }
 
-function cycleStatus(leconId) {
-    const order = ['neutre', 'rouge', 'jaune', 'vert-clair', 'vert-fonce'];
-    const current = getStatus(leconId);
-    const next = order[(order.indexOf(current) + 1) % order.length];
-    const statuses = JSON.parse(localStorage.getItem('maths-suivi') || '{}');
-    statuses[leconId] = next;
-    localStorage.setItem('maths-suivi', JSON.stringify(statuses));
+// --- RENDU PRINCIPAL ---
+function render(levelId) {
+    currentLevel = levelId;
+    
+    // 1. Mise à jour de la navigation (onglets)
+    const nav = document.getElementById('navigation');
+    if (nav) {
+        nav.innerHTML = niveaux.map(n => `
+            <button onclick="render('${n.id}')" class="tab-btn ${currentLevel === n.id ? 'active' : ''}">
+                ${n.nom}
+            </button>
+        `).join('');
+    }
+
+    const content = document.getElementById('content');
+    const searchTerm = document.getElementById('globalSearch').value.toLowerCase().trim();
+
+    let data = [];
+
+    // 2. Sélection de la source de données
+    if (searchTerm !== "") {
+        // Mode Recherche : On prend tout
+        data = [
+            ...lecons6e.map(l => ({...l, niveauSource: "6e"})),
+            ...lecons5e.map(l => ({...l, niveauSource: "5e"})),
+            ...lecons4e.map(l => ({...l, niveauSource: "4e"})),
+            ...lecons3e.map(l => ({...l, niveauSource: "3e"})),
+            ...(typeof donneesArchives !== 'undefined' ? donneesArchives.map(l => ({...l, niveauSource: "archives"})) : [])
+        ];
+    } else if (levelId === 'favoris') {
+        // Mode Favoris : On fusionne tout et on filtre par IDs sauvegardés
+        const allData = [
+            ...lecons6e.map(l => ({...l, niveauSource: "6e"})),
+            ...lecons5e.map(l => ({...l, niveauSource: "5e"})),
+            ...lecons4e.map(l => ({...l, niveauSource: "4e"})),
+            ...lecons3e.map(l => ({...l, niveauSource: "3e"})),
+            ...(typeof donneesArchives !== 'undefined' ? donneesArchives.map(l => ({...l, niveauSource: "archives"})) : [])
+        ];
+        data = allData.filter(l => favoris.includes(getLeconId(l)));
+    } else {
+        // Mode Niveau simple
+        const source = niveaux.find(n => n.id === levelId);
+        data = (source ? source.data : []).map(l => ({...l, niveauSource: levelId}));
+    }
+
+    // 3. Filtrage par texte
+    let filtered = data.filter(l => 
+        l.titre.toLowerCase().includes(searchTerm) || 
+        l.desc.toLowerCase().includes(searchTerm) ||
+        (l.matiere && l.matiere.toLowerCase().includes(searchTerm))
+    );
+
+    // 4. Tri (Niveau d'abord, puis Date/Alpha)
+    const ordreNiveaux = { "6e": 1, "5e": 2, "4e": 3, "3e": 4, "archives": 5 };
+    filtered.sort((a, b) => {
+        const diffNiveau = (ordreNiveaux[a.niveauSource] || 99) - (ordreNiveaux[b.niveauSource] || 99);
+        if (diffNiveau !== 0) return diffNiveau;
+        if (currentSort === "recent") return new Date(b.date) - new Date(a.date);
+        if (currentSort === "alpha") return a.titre.localeCompare(b.titre);
+        return new Date(a.date) - new Date(b.date);
+    });
+
+    // 5. Regroupement par Section
+    if (filtered.length === 0) {
+        content.innerHTML = `<div class="empty-msg">Aucun résultat trouvé pour "${searchTerm}".</div>`;
+        return;
+    }
+
+    const groupes = {};
+    filtered.forEach(l => {
+        if (!groupes[l.niveauSource]) groupes[l.niveauSource] = [];
+        groupes[l.niveauSource].push(l);
+    });
+
+    // 6. Génération du HTML
+    let htmlFinal = "";
+    const ordreAffichage = ["6e", "5e", "4e", "3e", "archives"];
+    
+    ordreAffichage.forEach(nivId => {
+        if (groupes[nivId] && groupes[nivId].length > 0) {
+            // On affiche le titre de section si on cherche partout ou si on est dans les favoris
+            if (searchTerm !== "" || levelId === 'favoris') {
+                const labelNiveau = niveaux.find(n => n.id === nivId).nom;
+                htmlFinal += `<h2 class="section-title">${labelNiveau}</h2>`;
+            }
+            
+            // Ajout des cartes du groupe
+            htmlFinal += groupes[nivId].map(l => {
+                const leconId = getLeconId(l);
+                const isFav = favoris.includes(leconId);
+                const config = STATUTS_CONFIG[statuts[leconId] || 'neutre'];
+                
+                return `
+                <div class="card">
+                    <div class="card-header">
+                        <span class="tag">${l.matiere || 'Maths'}</span>
+                        <div class="actions">
+                            <button onclick="shareLecon(event, '${l.titre}')" class="icon-btn" title="Partager"><i class="fas fa-share-nodes"></i></button>
+                            <button onclick="toggleFav(event, '${leconId}')" class="icon-btn ${isFav ? 'fav-active' : ''}">
+                                <i class="${isFav ? 'fas' : 'far'} fa-star"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <h3>${l.titre}</h3>
+                    <p>${l.desc}</p>
+                    <div class="status-badge ${config.class}" onclick="cycleStatus('${leconId}')">
+                        <i class="fas fa-circle"></i> ${config.label}
+                    </div>
+                    <div class="fichiers-liste-verticale">
+                        ${(l.fichiers || []).map(f => `
+                            <a href="javascript:void(0)" class="btn-download-full" onclick="openPDF('${f.url}')">
+                                <i class="fas fa-file-pdf"></i> <span>${f.nom}</span>
+                            </a>`).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+    });
+
+    content.innerHTML = htmlFinal;
+}
+
+// --- FONCTIONS ACTIONS ---
+function toggleFav(e, leconId) {
+    e.stopPropagation();
+    favoris = favoris.includes(leconId) ? favoris.filter(id => id !== leconId) : [...favoris, leconId];
+    localStorage.setItem('maths_morgan_favs', JSON.stringify(favoris));
     render(currentLevel);
 }
 
-// --- LOGIQUE DE TRI ---
-function applySort(data) {
-    let sortedData = [...data];
-    if (currentSort === "alpha") return sortedData.sort((a, b) => a.titre.localeCompare(b.titre));
-    return sortedData.sort((a, b) => {
-        const dateA = a.date ? new Date(a.date) : new Date(0);
-        const dateB = b.date ? new Date(b.date) : new Date(0);
-        return currentSort === "recent" ? dateB - dateA : dateA - dateB;
-    });
+function cycleStatus(leconId) {
+    const ordres = ['neutre', 'rouge', 'jaune', 'vert-clair', 'vert-fonce'];
+    let index = ordres.indexOf(statuts[leconId] || 'neutre');
+    statuts[leconId] = ordres[(index + 1) % ordres.length];
+    localStorage.setItem('maths_morgan_statuts', JSON.stringify(statuts));
+    render(currentLevel);
 }
 
 function updateSort(val) {
@@ -61,165 +170,63 @@ function updateSort(val) {
     render(currentLevel);
 }
 
-// --- FAVORIS ---
-function generateId(l) {
-    return `${l.titre}-${l.niveau || currentLevel}-${l.annee || ''}`.replace(/\s+/g, '-').toLowerCase();
-}
-
-function getFavoris() {
-    return JSON.parse(localStorage.getItem('maths-favoris-v2') || '[]');
-}
-
-function toggleFavori(leconJson) {
-    const lecon = JSON.parse(decodeURIComponent(leconJson));
-    const leconId = generateId(lecon);
-    let favs = getFavoris();
-    const index = favs.findIndex(f => generateId(f) === leconId);
-    if (index > -1) favs.splice(index, 1); else favs.push(lecon);
-    localStorage.setItem('maths-favoris-v2', JSON.stringify(favs));
-    render(currentLevel);
-}
-
-// --- PARTAGE & PDF ---
-function shareLecon(titre, niveau) {
-    const shareUrl = `${window.location.origin}${window.location.pathname}?search=${encodeURIComponent(titre)}`;
-    const shareText = `Leçon de Maths (${niveau}) : ${titre}`;
+function shareLecon(e, titre) {
+    e.stopPropagation();
+    const url = window.location.href;
     if (navigator.share) {
-        navigator.share({ title: 'Maths Morgan', text: shareText, url: shareUrl }).catch(console.error);
+        navigator.share({ title: titre, url: url });
     } else {
-        navigator.clipboard.writeText(`${shareText} - ${shareUrl}`).then(() => showToast());
+        navigator.clipboard.writeText(`${titre} : ${url}`);
+        showToast("Lien copié !");
     }
 }
 
-function openPDF(url) {
-    document.getElementById("pdf-frame").src = url;
-    document.getElementById("pdfModal").style.display = "block";
-    document.body.classList.add("modal-open");
-}
-
-function closePDF() {
-    document.getElementById("pdfModal").style.display = "none";
-    document.getElementById("pdf-frame").src = "";
-    document.body.classList.remove("modal-open");
-}
-
-// --- MOTEUR DE RENDU ---
-function render(levelId) {
-    currentLevel = levelId;
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    
-    // Rendu de la navigation
-    nav.innerHTML = niveaux.map(n => `
-        <button onclick="resetFilters(); render('${n.id}')" class="tab-btn ${currentLevel === n.id ? 'active' : ''}">
-            ${n.nom}
-        </button>
-    `).join('');
-
-    let finalHTML = "";
-
-    if (searchTerm) {
-        filtersContainer.innerHTML = "";
-        niveaux.forEach(niveau => {
-            if(niveau.id === 'favoris') return;
-            let results = applySort(niveau.data.filter(l => 
-                l.titre.toLowerCase().includes(searchTerm) || 
-                l.desc.toLowerCase().includes(searchTerm) ||
-                l.matiere.toLowerCase().includes(searchTerm)
-            ));
-            if (results.length > 0) {
-                finalHTML += `<div style="grid-column: 1/-1; margin-top: 2rem;"><h2 style="font-size: 1.1rem; border-left: 4px solid var(--primary); padding-left: 10px; color: var(--text-light)">${niveau.nom}</h2></div>`;
-                finalHTML += results.map(l => createCardHTML(l, niveau.id)).join('');
-            }
-        });
-        if (finalHTML === "") finalHTML = `<p class="empty-msg">Aucun résultat pour "${searchTerm}".</p>`;
-    } 
-    else if (levelId === 'favoris') {
-        filtersContainer.innerHTML = "";
-        const favs = applySort(getFavoris());
-        finalHTML = favs.map(l => createCardHTML(l, l.niveau)).join('') || `<p class="empty-msg">Aucun favori enregistré.</p>`;
-    } 
-    else {
-        const selected = niveaux.find(n => n.id === levelId);
-        let list = selected ? [...selected.data] : [];
-
-        if (levelId === 'archives') {
-            const mats = [...new Set(list.map(l => l.matiere))].sort();
-            filtersContainer.innerHTML = `
-                <div class="filter-bar">
-                    <select onchange="filterMatiere=this.value; render('archives')">
-                        <option value="">Tous les domaines</option>
-                        ${mats.map(m => `<option value="${m}" ${filterMatiere === m ? 'selected' : ''}>${m}</option>`).join('')}
-                    </select>
-                </div>`;
-            list = list.filter(l => (filterMatiere === "" || l.matiere === filterMatiere));
-        } else {
-            filtersContainer.innerHTML = "";
-        }
-        finalHTML = applySort(list).map(l => createCardHTML(l, levelId)).join('') || `<p class="empty-msg">Aucune leçon ici pour le moment.</p>`;
-    }
-    content.innerHTML = finalHTML;
-}
-
-function createCardHTML(l, levelId) {
-    const tempLecon = {...l, niveau: l.niveau || levelId};
-    const leconId = generateId(tempLecon);
-    const isFav = getFavoris().some(f => generateId(f) === leconId);
-    const config = STATUTS_CONFIG[getStatus(leconId)];
-    const leconData = encodeURIComponent(JSON.stringify(tempLecon));
-
-    const filesHTML = l.fichiers && l.fichiers.length > 0 
-        ? l.fichiers.map(f => `<a href="javascript:void(0)" class="btn-download" onclick="openPDF('${f.url}')"><i class="fas fa-file-pdf"></i> ${f.nom}</a>`).join('')
-        : `<span>Aucun fichier</span>`;
-
-    return `
-        <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem">
-                <small>${l.matiere} (${tempLecon.niveau})</small>
-                <div style="display:flex; align-items:center">
-                    <span class="year-badge">${l.annee || ''}</span>
-                    <button class="share-btn" onclick="shareLecon('${l.titre}', '${tempLecon.niveau}')"><i class="fas fa-share-nodes"></i></button>
-                    <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavori('${leconData}')"><i class="${isFav ? 'fas' : 'far'} fa-star"></i></button>
-                </div>
-            </div>
-            <h3>${l.titre}</h3>
-            <p>${l.desc}</p>
-            <div class="status-badge ${config.class}" onclick="cycleStatus('${leconId}')"><i class="fas fa-circle"></i> ${config.label}</div>
-            <div class="fichiers-container">${filesHTML}</div>
-        </div>`;
-}
-
-// --- UTILITAIRES ---
-function showToast() {
+function showToast(message) {
     const t = document.getElementById("toast");
+    t.innerText = message;
     t.className = "show";
-    setTimeout(() => t.className = "", 3000);
+    setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
 }
 
-function resetFilters() { filterMatiere = ""; }
-
+// --- THEME & UI ---
 function toggleDarkMode() {
-    const isD = document.body.classList.toggle('dark-theme');
-    const icon = document.querySelector('#theme-toggle i');
-    icon.className = isD ? 'fas fa-sun' : 'fas fa-moon';
-    localStorage.setItem('theme', isD ? 'dark' : 'light');
+    const isDark = document.body.classList.toggle('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.querySelector('.theme-toggle-btn i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
 }
 
-function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
-// --- ÉVÉNEMENTS ---
-window.onscroll = () => { backToTopBtn.style.display = (window.scrollY > 300) ? "block" : "none"; };
+// --- MODAL PDF ---
+function openPDF(u) { 
+    document.getElementById("pdf-frame").src = u; 
+    document.getElementById("pdfModal").style.display = "block"; 
+    document.body.style.overflow = "hidden";
+}
+
+function closePDF() { 
+    document.getElementById("pdfModal").style.display = "none"; 
+    document.getElementById("pdf-frame").src = "";
+    document.body.style.overflow = "auto";
+}
+
+// --- INITIALISATION ---
+window.onscroll = () => {
+    const btn = document.getElementById("back-to-top");
+    if(btn) btn.style.display = (window.scrollY > 300) ? "block" : "none";
+};
 
 window.onclick = (e) => {
     if (e.target == document.getElementById("pdfModal")) closePDF();
 };
 
-// --- INITIALISATION ---
 document.addEventListener('DOMContentLoaded', () => {
-    const s = new URLSearchParams(window.location.search).get('search');
-    if (s) searchInput.value = s;
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-theme');
-        document.querySelector('#theme-toggle i').className = 'fas fa-sun';
+        const icon = document.querySelector('.theme-toggle-btn i');
+        if(icon) icon.className = 'fas fa-sun';
     }
     render('6e');
 });
