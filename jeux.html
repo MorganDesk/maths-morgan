@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maths Morgan - Salle des Jeux</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="jeux.css">  </head>
+<body>
+    <header>
+        <div class="header-top">
+            <h1>🎮 Salle des Jeux</h1>
+            <a href="index.html" class="tab-btn"><i class="fas fa-arrow-left"></i> Retour aux cours</a>
+        </div>
+    </header>
+
+    <main id="main-container">
+        <div id="game-zone" class="grid-lecons">
+            <div class="card game-card">
+                <div class="card-header">
+                    <span class="tag">Calcul mental</span>
+                </div>
+                <h3>Tables de Multiplication</h3>
+                <p>Réponds à un maximum de questions en 60 secondes !</p>
+                <div class="fichiers-liste-verticale">
+                    <button class="btn-download-full" onclick="startTablesGame()">
+                        <i class="fas fa-play"></i> Lancer le défi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+	
+    <script src="js/jeu-tables.js"></script>
+	<script src="js/jeu-relatifs.js"></script>
+	<script src="js/jeu-compte-bon.js"></script>
+</body>
+</html>

@@ -90,3 +90,11 @@ select { padding: 8px; border-radius: 8px; border: 1px solid var(--border-color)
 .section-title:first-of-type {
     margin-top: 0.5rem;
 }
+
+/* Style pour l'Option 1 (Lien dans la navigation) */
+.game-link {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}

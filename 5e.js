@@ -5,7 +5,7 @@ const lecons5e = [
 		niveau: "5e",
         matiere: "Nombres et calcul", 
         titre: "Priorité opératoire", 
-        desc: "Règles à adopter dans un calcul contenant plusieurs opérations.", 
+        desc: "Par quelle opération commencer ?", 
         fichiers: [
             { nom: "Leçon", url: "cours/5e/priorité opératoire.pdf" },
             { nom: "Exercices", url: "cours/5e/exos priorité opératoire.pdf" }
@@ -17,7 +17,7 @@ const lecons5e = [
 		niveau: "5e",
         matiere: "Géométrie", 
         titre: "Inégalité triangulaire", 
-        desc: "Histoire de distance dans un triangle.", 
+        desc: "Le plus court chemin est toujours tout droit !", 
         fichiers: [
             { nom: "Leçon", url: "cours/5e/priorité opératoire.pdf" },
             { nom: "Exercices", url: "cours/5e/exos priorité opératoire.pdf" }

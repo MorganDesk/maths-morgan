@@ -33,13 +33,23 @@ function render(levelId) {
     
     // 1. Mise à jour de la navigation (onglets)
     const nav = document.getElementById('navigation');
-    if (nav) {
-        nav.innerHTML = niveaux.map(n => `
-            <button onclick="render('${n.id}')" class="tab-btn ${currentLevel === n.id ? 'active' : ''}">
-                ${n.nom}
-            </button>
-        `).join('');
-    }
+	if (nav) {
+		// On génère les boutons habituels
+		let navHTML = niveaux.map(n => `
+			<button onclick="render('${n.id}')" class="tab-btn ${currentLevel === n.id ? 'active' : ''}">
+				${n.nom}
+			</button>
+		`).join('');
+
+		// ON AJOUTE LE BOUTON JEUX À LA FIN
+		navHTML += `
+			<a href="jeux.html" class="tab-btn game-link">
+				<i class="fas fa-gamepad"></i> Jeux
+			</a>
+		`;
+		
+		nav.innerHTML = navHTML;
+	}
 
     const content = document.getElementById('content');
     const searchTerm = document.getElementById('globalSearch').value.toLowerCase().trim();
