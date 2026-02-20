@@ -8,15 +8,15 @@ function chargerMenuRelatifs() {
     const gameZone = document.getElementById('game-zone');
     if (!gameZone) return;
 
-    // On récupère le record du mode par défaut (mélange) pour l'affichage initial
-    const highMelange = localStorage.getItem('maths_morgan_highscore_relatifs_melange') || 0;
+    // On récupère le record des ADDITIONS pour l'affichage initial
+    const highInitial = localStorage.getItem('maths_morgan_highscore_relatifs_add') || 0;
 
     gameZone.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
                 <span class="tag">Nombres Relatifs</span>
-                <span id="display-highscore-relatifs" class="tag-highscore" ${highMelange > 0 ? '' : 'style="display:none"'}>
-                    <i class="fas fa-trophy"></i> Record : <span id="valeur-record">${highMelange}</span>
+                <span id="display-highscore-relatifs" class="tag-highscore" ${highInitial > 0 ? '' : 'style="display:none"'}>
+                    <i class="fas fa-trophy"></i> Record : <span id="valeur-record">${highInitial}</span>
                 </span>
             </div>
             <h3>Choc des relatifs</h3>
@@ -24,9 +24,10 @@ function chargerMenuRelatifs() {
             
             <div class="fichiers-liste-verticale">
                 <select id="mode-select" class="game-input" onchange="updateRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
-                    <option value="add">Additions (+)</option>
-                    <option value="sub">Soustractions (-)</option>
-                    <option value="melange" selected>Mélange des deux</option>
+                    <option value="add" selected>Additions (+)</option> <option value="sub">Soustractions (-)</option>
+                    <option value="addsub">Additions & Soustractions (+/-)</option>
+                    <option value="mult">Multiplications (×)</option>
+                    <option value="melange">Mélange total (+/-/×)</option>
                 </select>
                 <button class="btn-download-full" onclick="startRelatifsGame()" style="border:none; cursor:pointer;">
                     <i class="fas fa-play"></i> Lancer le choc
@@ -36,7 +37,6 @@ function chargerMenuRelatifs() {
     `;
 }
 
-// Fonction pour mettre à jour la coupe dorée en temps réel
 function updateRecordDisplay(selectedMode) {
     const valSpan = document.getElementById('valeur-record');
     const badge = document.getElementById('display-highscore-relatifs');
@@ -51,8 +51,6 @@ function updateRecordDisplay(selectedMode) {
 }
 
 document.addEventListener('DOMContentLoaded', chargerMenuRelatifs);
-
-// --- LOGIQUE DU JEU ---
 
 function startRelatifsGame() {
     scoreRelatifs = 0;
@@ -86,7 +84,7 @@ function setupRelatifsUI() {
             </div>
             <div id="game-screen">
                 <h2 style="margin-bottom:10px;">Choc des relatifs</h2>
-                <div class="game-display" id="question-text" style="font-size:3rem;">? + ?</div>
+                <div class="game-display" id="question-text" style="font-size:3rem;">?</div>
                 <input type="number" id="game-input" class="game-input" autofocus>
                 <p style="margin-top:15px; font-size:0.9rem; opacity:0.7;">Signe "-" autorisé. Entrée pour valider.</p>
             </div>
@@ -98,13 +96,31 @@ function setupRelatifsUI() {
 }
 
 function nextQuestionRelatifs() {
-    let a = Math.floor(Math.random() * 21) - 10;
-    let b = Math.floor(Math.random() * 21) - 10;
-    if (a === 0) a = 1; if (b === 0) b = 1;
+    let a, b, op;
+    
+    if (modeRelatifs === 'melange') {
+        const r = Math.random();
+        op = r < 0.33 ? '+' : (r < 0.66 ? '-' : '×');
+    } else if (modeRelatifs === 'addsub') {
+        op = Math.random() > 0.5 ? '+' : '-';
+    } else {
+        const mapOp = { 'add': '+', 'sub': '-', 'mult': '×' };
+        op = mapOp[modeRelatifs];
+    }
 
-    let op = (modeRelatifs === 'melange') ? (Math.random() > 0.5 ? '+' : '-') : (modeRelatifs === 'add' ? '+' : '-');
+    if (op === '×') {
+        // Multiplications (2 à 12, positif ou négatif)
+        a = (Math.floor(Math.random() * 11) + 2) * (Math.random() > 0.5 ? 1 : -1);
+        b = (Math.floor(Math.random() * 11) + 2) * (Math.random() > 0.5 ? 1 : -1);
+        currentAnswerRelatifs = a * b;
+    } else {
+        // Additions / Soustractions (-10 à 10)
+        a = Math.floor(Math.random() * 21) - 10;
+        b = Math.floor(Math.random() * 21) - 10;
+        if (a === 0) a = 1; if (b === 0) b = 1;
+        currentAnswerRelatifs = (op === '+') ? a + b : a - b;
+    }
 
-    currentAnswerRelatifs = (op === '+') ? a + b : a - b;
     const formatA = a < 0 ? `(${a})` : `(+${a})`;
     const formatB = b < 0 ? `(${b})` : `(+${b})`;
     
@@ -115,11 +131,11 @@ function nextQuestionRelatifs() {
 
 function checkResponseRelatifs() {
     const input = document.getElementById('game-input');
-    if (parseInt(input.value) === currentAnswerRelatifs) {
+    if (input.value !== "" && parseInt(input.value) === currentAnswerRelatifs) {
         scoreRelatifs++;
         document.getElementById('score').innerText = scoreRelatifs;
         nextQuestionRelatifs();
-    } else {
+    } else if (input.value !== "") {
         input.value = '';
     }
 }
@@ -132,7 +148,13 @@ function endGameRelatifs() {
 
     if (isNewRecord) localStorage.setItem(storageKey, scoreRelatifs);
 
-    const modeNoms = { 'add': 'Additions', 'sub': 'Soustractions', 'melange': 'Mélange' };
+    const modeNoms = { 
+        'add': 'Additions', 
+        'sub': 'Soustractions', 
+        'addsub': 'Additions & Soustractions',
+        'mult': 'Multiplications', 
+        'melange': 'Mélange Total' 
+    };
 
     container.innerHTML = `
         <div class="game-active-container">
