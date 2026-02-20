@@ -35,7 +35,7 @@ select { padding: 8px; border-radius: 8px; border: 1px solid var(--border-color)
 
 /* --- GRILLE & CARTES --- */
 .grid-lecons { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 1rem; }
-.card { background: var(--card-bg); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; transition: 0.2s; }
+.card { background: var(--card-bg); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; transition: 0.2s; scroll-margin-top: 100px;}
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
 .tag { background: var(--bg-body); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-light); border: 1px solid var(--border-color); }
 .icon-btn { background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 1.1rem; }
