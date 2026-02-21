@@ -35,14 +35,14 @@ select { padding: 8px; border-radius: 8px; border: 1px solid var(--border-color)
 
 /* --- GRILLE & CARTES --- */
 .grid-lecons { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 1rem; }
-.card { background: var(--card-bg); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; transition: 0.2s; scroll-margin-top: 300px;}
+.card { background: var(--card-bg); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; transition: 0.2s; scroll-margin-top: 200px;}
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
 .tag { background: var(--bg-body); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-light); border: 1px solid var(--border-color); }
 .icon-btn { background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 1.1rem; }
 .fav-active { color: #f59e0b !important; }
 
 /* --- STATUTS --- */
-.status-badge { cursor: pointer; font-size: 0.75rem; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); display: inline-flex; align-items: center; gap: 8px; margin: 12px 0; font-weight: 600; background: var(--bg-body); }
+.status-badge { cursor: pointer; font-size: 0.75rem; padding: 8px; border-radius: 8px; border: 1px solid va r(--border-color); display: inline-flex; align-items: center; gap: 8px; margin: 12px 0; font-weight: 600; background: var(--bg-body); }
 .status-badge.rouge { background: #fee2e2; color: #991b1b; }
 .status-badge.jaune { background: #fef3c7; color: #92400e; }
 .status-badge.vert-clair { background: #dcfce7; color: #166534; }
@@ -97,4 +97,19 @@ select { padding: 8px; border-radius: 8px; border: 1px solid var(--border-color)
     display: inline-flex;
     align-items: center;
     gap: 8px;
+}
+
+.tags-container {
+    display: flex;
+    gap: 8px;
+}
+
+.tag-lvl {
+    background-color: var(--primary);
+    color: white;
+}
+
+.tag-matiere {
+    background-color: var(--border-color);
+    color: var(--text-main);
 }

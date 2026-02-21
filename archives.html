@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maths Morgan</title>
+    <title>Archives - Maths Morgan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,20 +14,17 @@
         <h1>📚 Maths Morgan</h1>
         <div class="search-header">
             <i class="fas fa-search"></i>
-            <input type="text" id="globalSearch" placeholder="Rechercher une notion..." oninput="render(currentLevel)">
+            <input type="text" id="globalSearch" placeholder="Rechercher..." oninput="render()">
         </div>
         <div class="header-actions">
-            <button class="theme-toggle-btn" onclick="toggleDarkMode()" id="theme-toggle" title="Changer le mode">
-                <i class="fas fa-moon"></i>
-            </button>
+            <button class="theme-toggle-btn" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
         </div>
     </div>
-    <nav id="navigation" class="nav-tabs"></nav>
-</header>
+    <nav id="navigation" class="nav-tabs"></nav> </header>
 
 <main>
     <div class="controls-bar">
-        <div id="filters-container"></div>
+        <div></div>
         <div class="sort-wrapper">
             <i class="fas fa-sort-amount-down"></i>
             <select id="sortSelect" onchange="updateSort(this.value)">
@@ -37,26 +34,13 @@
             </select>
         </div>
     </div>
-
     <div id="content" class="grid-lecons"></div>
 </main>
 
 <div id="pdfModal" class="pdf-modal">
     <span class="close-modal" onclick="closePDF()">&times;</span>
-    
-    <div class="modal-content">
-        <iframe id="pdf-frame" src=""></iframe>
-    </div>
+    <div class="modal-content"><iframe id="pdf-frame" src=""></iframe></div>
 </div>
-
-<footer class="site-footer">
-    <p class="privacy-info">
-        <i class="fas fa-user-shield"></i> <strong>Confidentialité :</strong><br>
-        Tes favoris et statuts sont liés à <span class="highlight-browser">ce navigateur</span>.<br>
-		Ils ne sont pas synchronisés entre tes appareils. <br>
-        Monsieur Morgan n'y a pas accès.
-    </p>
-</footer>
 
 <script src="config.js"></script>
 <script src="6e.js"></script>
@@ -64,8 +48,8 @@
 <script src="4e.js"></script>
 <script src="3e.js"></script>
 <script src="archives.js"></script>
+
 <script src="search.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>

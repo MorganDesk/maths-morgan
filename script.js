@@ -1,13 +1,11 @@
-// --- CONFIGURATION ---
-const niveaux = [
-    { id: "6e", nom: '<i class="fas fa-seedling"></i> 6ème', data: typeof lecons6e !== 'undefined' ? lecons6e : [] },
-    { id: "5e", nom: '<i class="fas fa-leaf"></i> 5ème', data: typeof lecons5e !== 'undefined' ? lecons5e : [] },
-    { id: "4e", nom: '<i class="fas fa-tree"></i> 4ème', data: typeof lecons4e !== 'undefined' ? lecons4e : [] },
-    { id: "3e", nom: '<i class="fas fa-graduation-cap"></i> 3ème', data: typeof lecons3e !== 'undefined' ? lecons3e : [] },
-    { id: "archives", nom: '<i class="fas fa-box-archive"></i> Archives', data: typeof donneesArchives !== 'undefined' ? donneesArchives : [] },
-    { id: "favoris", nom: '<i class="fas fa-star"></i> Favoris', data: [] }
-];
+// --- ÉTAT GLOBAL ---
+// Récupère le dernier niveau consulté ou défaut sur 6ème
+let currentLevel = localStorage.getItem('maths_morgan_last_lvl') || "6e";
+let currentSort = "recent";
+let favoris = JSON.parse(localStorage.getItem('maths_morgan_favs')) || [];
+let statuts = JSON.parse(localStorage.getItem('maths_morgan_statuts')) || {};
 
+// Configuration des pastilles de progression
 const STATUTS_CONFIG = {
     'neutre': { label: 'Statut : À définir', class: '' },
     'rouge': { label: "Je n'ai pas compris", class: 'rouge' },
@@ -16,143 +14,108 @@ const STATUTS_CONFIG = {
     'vert-fonce': { label: 'Je maîtrise', class: 'vert-fonce' }
 };
 
-let currentLevel = "6e";
-let currentSort = "recent";
-let favoris = JSON.parse(localStorage.getItem('maths_morgan_favs')) || [];
-let statuts = JSON.parse(localStorage.getItem('maths_morgan_statuts')) || {};
-
-// --- GÉNÉRATEUR D'ID UNIQUE ---
-function getLeconId(l) {
+// --- UTILITAIRES ---
+// Génère un ID unique pour chaque leçon afin de stocker favoris et statuts
+function getLeconId(l, niveauFallback) {
+    // 1. On crée le slug à partir du titre
     const slug = l.titre.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
-    return `${l.niveau || currentLevel}-${l.date || '0000'}-${slug}`;
+    
+    // 2. On utilise la propriété 'annee' existante de la leçon.
+    // Si elle est absente pour une raison quelconque, on met "0000".
+    const anneeLecon = l.annee || "0000";
+    
+    // 3. On construit l'ID : niveau-annee-titreslug
+    // Exemple : "6e-2024-fractions-decimales"
+    return `${l.niveau || niveauFallback}-${anneeLecon}-${slug}`;
 }
 
 // --- RENDU PRINCIPAL ---
-function render(levelId) {
-    currentLevel = levelId;
-    
-    const nav = document.getElementById('navigation');
-    if (nav) {
-        let navHTML = niveaux.map(n => `
-            <button onclick="render('${n.id}')" class="tab-btn ${currentLevel === n.id ? 'active' : ''}">
-                ${n.nom}
-            </button>
-        `).join('');
-
-        navHTML += `
-            <a href="jeux.html" class="tab-btn game-link">
-                <i class="fas fa-gamepad"></i> Jeux
-            </a>
-        `;
-        nav.innerHTML = navHTML;
-    }
-
+function render() {
     const content = document.getElementById('content');
-    const searchTerm = document.getElementById('globalSearch').value.toLowerCase().trim();
+    const searchInput = document.getElementById('globalSearch');
+    const searchTerm = (searchInput?.value || "").toLowerCase().trim();
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-    let data = [];
+    // 1. Appel au moteur de recherche (search.js) pour obtenir les données
+    // Le moteur gère si la recherche est globale (index) ou locale (archives/favoris)
+    const rawData = SearchEngine.obtenirDonnees(currentPage, searchTerm, currentLevel, favoris);
+    
+    // 2. Filtrage textuel et tri des résultats
+    const filtered = SearchEngine.filtrerEtTrier(rawData, searchTerm, currentSort);
 
-    if (searchTerm !== "") {
-        data = [
-            ...lecons6e.map(l => ({...l, niveauSource: "6e"})),
-            ...lecons5e.map(l => ({...l, niveauSource: "5e"})),
-            ...lecons4e.map(l => ({...l, niveauSource: "4e"})),
-            ...lecons3e.map(l => ({...l, niveauSource: "3e"})),
-            ...(typeof donneesArchives !== 'undefined' ? donneesArchives.map(l => ({...l, niveauSource: "archives"})) : [])
-        ];
-    } else if (levelId === 'favoris') {
-        const allData = [
-            ...lecons6e.map(l => ({...l, niveauSource: "6e"})),
-            ...lecons5e.map(l => ({...l, niveauSource: "5e"})),
-            ...lecons4e.map(l => ({...l, niveauSource: "4e"})),
-            ...lecons3e.map(l => ({...l, niveauSource: "3e"})),
-            ...(typeof donneesArchives !== 'undefined' ? donneesArchives.map(l => ({...l, niveauSource: "archives"})) : [])
-        ];
-        data = allData.filter(l => favoris.includes(getLeconId(l)));
-    } else {
-        const source = niveaux.find(n => n.id === levelId);
-        data = (source ? source.data : []).map(l => ({...l, niveauSource: levelId}));
-    }
+    // 3. Mise à jour des onglets de navigation
+    updateNavTabs(currentPage, searchTerm);
 
-    let filtered = data.filter(l => 
-        l.titre.toLowerCase().includes(searchTerm) || 
-        l.desc.toLowerCase().includes(searchTerm) ||
-        (l.matiere && l.matiere.toLowerCase().includes(searchTerm))
-    );
-
-    const ordreNiveaux = { "6e": 1, "5e": 2, "4e": 3, "3e": 4, "archives": 5 };
-    filtered.sort((a, b) => {
-        const diffNiveau = (ordreNiveaux[a.niveauSource] || 99) - (ordreNiveaux[b.niveauSource] || 99);
-        if (diffNiveau !== 0) return diffNiveau;
-        if (currentSort === "recent") return new Date(b.date) - new Date(a.date);
-        if (currentSort === "alpha") return a.titre.localeCompare(b.titre);
-        return new Date(a.date) - new Date(b.date);
-    });
-
+    // 4. Affichage des leçons
     if (filtered.length === 0) {
         content.innerHTML = `<div class="empty-msg">Aucun résultat trouvé pour "${searchTerm}".</div>`;
         return;
     }
 
-    const groupes = {};
-    filtered.forEach(l => {
-        if (!groupes[l.niveauSource]) groupes[l.niveauSource] = [];
-        groupes[l.niveauSource].push(l);
-    });
-
-    let htmlFinal = "";
-    const ordreAffichage = ["6e", "5e", "4e", "3e", "archives"];
-    
-    ordreAffichage.forEach(nivId => {
-        if (groupes[nivId] && groupes[nivId].length > 0) {
-            if (searchTerm !== "" || levelId === 'favoris') {
-                const labelNiveau = niveaux.find(n => n.id === nivId).nom;
-                htmlFinal += `<h2 class="section-title">${labelNiveau}</h2>`;
-            }
-            
-            htmlFinal += groupes[nivId].map(l => {
-                const leconId = getLeconId(l);
-                const isFav = favoris.includes(leconId);
-                const config = STATUTS_CONFIG[statuts[leconId] || 'neutre'];
-                
-                return `
-                <div class="card" id="${leconId}">
-                    <div class="card-header">
-                        <span class="tag">${l.matiere || 'Maths'}</span>
-                        <div class="actions">
-                            <button onclick="shareLecon(event, '${l.titre}', '${leconId}')" class="icon-btn" title="Partager">
-                                <i class="fas fa-share-nodes"></i>
-                            </button>
-                            <button onclick="toggleFav(event, '${leconId}')" class="icon-btn ${isFav ? 'fav-active' : ''}">
-                                <i class="${isFav ? 'fas' : 'far'} fa-star"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <h3>${l.titre}</h3>
-                    <p>${l.desc}</p>
-                    <div class="status-badge ${config.class}" onclick="cycleStatus('${leconId}')">
-                        <i class="fas fa-circle"></i> ${config.label}
-                    </div>
-                    <div class="fichiers-liste-verticale">
-                        ${(l.fichiers || []).map(f => `
-                            <a href="javascript:void(0)" class="btn-download-full" onclick="openPDF('${f.url}')">
-                                <i class="fas fa-file-pdf"></i> <span>${f.nom}</span>
-                            </a>`).join('')}
-                    </div>
-                </div>`;
-            }).join('');
-        }
-    });
-
-    content.innerHTML = htmlFinal;
+    content.innerHTML = filtered.map(l => {
+        const leconId = getLeconId(l, l.niveauSource);
+        const isFav = favoris.includes(leconId);
+        const configStatut = STATUTS_CONFIG[statuts[leconId] || 'neutre'];
+        
+        return `
+        <div class="card" id="${leconId}">
+			<div class="card-header">
+				<div class="tags-container">
+					<span class="tag tag-lvl">${l.niveauSource.toUpperCase()}</span>
+					<span class="tag tag-matiere">${l.matiere || 'Maths'}</span>
+				</div>
+				<div class="actions">
+					<button onclick="shareLecon(event, '${l.titre}', '${leconId}')" class="icon-btn" title="Partager">
+						<i class="fas fa-share-nodes"></i>
+					</button>
+					<button onclick="toggleFav(event, '${leconId}')" class="icon-btn ${isFav ? 'fav-active' : ''}">
+						<i class="${isFav ? 'fas' : 'far'} fa-star"></i>
+					</button>
+				</div>
+			</div>
+            <h3>${l.titre}</h3>
+            <p>${l.desc}</p>
+            <div class="status-badge ${configStatut.class}" onclick="cycleStatus('${leconId}')">
+                <i class="fas fa-circle"></i> ${configStatut.label}
+            </div>
+            <div class="fichiers-liste-verticale">
+                ${(l.fichiers || []).map(f => `
+                    <a href="javascript:void(0)" class="btn-download-full" onclick="openPDF('${f.url}')">
+                        <i class="fas fa-file-pdf"></i> <span>${f.nom}</span>
+                    </a>`).join('')}
+            </div>
+        </div>`;
+    }).join('');
 }
 
-// --- FONCTIONS ACTIONS ---
+// Gère l'apparence des onglets de navigation selon la page active
+function updateNavTabs(page, searchTerm) {
+    const nav = document.getElementById('navigation');
+    if (!nav) return;
+
+    // Si on est sur l'index avec une recherche active, on affiche un titre spécial
+    if ((page === 'index.html' || page === '') && searchTerm !== "") {
+        nav.innerHTML = `<h2 class="section-title"><i class="fas fa-search"></i> Résultats de la recherche globale</h2>`;
+        return;
+    }
+
+    // Sinon on génère les onglets à partir du fichier config.js
+    nav.innerHTML = NAV_MENU.map(item => {
+        // Détermine si l'onglet correspond à la page actuelle ou au niveau actuel
+        const isCurrentLevel = page.includes('index.html') && item.url.includes(`lvl=${currentLevel}`);
+        const isCurrentPage = page === item.url;
+        const isActive = (isCurrentLevel || isCurrentPage) ? 'active' : '';
+        
+        return `<button onclick="window.location.href='${item.url}'" class="tab-btn ${isActive}">${item.nom}</button>`;
+    }).join('');
+}
+
+// --- ACTIONS UTILISATEUR ---
 function toggleFav(e, leconId) {
     e.stopPropagation();
     favoris = favoris.includes(leconId) ? favoris.filter(id => id !== leconId) : [...favoris, leconId];
     localStorage.setItem('maths_morgan_favs', JSON.stringify(favoris));
-    render(currentLevel);
+    render();
 }
 
 function cycleStatus(leconId) {
@@ -160,50 +123,40 @@ function cycleStatus(leconId) {
     let index = ordres.indexOf(statuts[leconId] || 'neutre');
     statuts[leconId] = ordres[(index + 1) % ordres.length];
     localStorage.setItem('maths_morgan_statuts', JSON.stringify(statuts));
-    render(currentLevel);
+    render();
 }
 
 function updateSort(val) {
     currentSort = val;
-    render(currentLevel);
+    render();
 }
 
 function shareLecon(e, titre, leconId) {
     e.stopPropagation();
-    // Création de l'URL spécifique avec l'ancre #id
-    const urlPartage = `${window.location.origin}${window.location.pathname}#${leconId}`;
+    // Génère un lien pointant toujours vers l'index avec l'ancre de la leçon
+    const baseUrl = window.location.origin + window.location.pathname.replace(/(archives|favoris)\.html/, 'index.html');
+    const urlPartage = `${baseUrl}#${leconId}`;
     
-    if (navigator.share) {
-        navigator.share({ 
-            title: titre, 
-            text: `Regarde cette leçon : ${titre}`,
-            url: urlPartage 
-        });
-    } else {
-        navigator.clipboard.writeText(urlPartage);
-        showToast("Lien de la leçon copié !");
-    }
+    navigator.clipboard.writeText(urlPartage);
+    showToast("Lien de la leçon copié !");
 }
 
 function showToast(message) {
-    const t = document.getElementById("toast");
+    const t = document.getElementById("toast") || document.createElement('div');
+    if (!t.id) { t.id = "toast"; document.body.appendChild(t); }
     t.innerText = message;
     t.className = "show";
-    setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
+    setTimeout(() => { t.className = ""; }, 3000);
 }
 
-// --- THEME & UI ---
+// --- THEME & PDF ---
 function toggleDarkMode() {
     const isDark = document.body.classList.toggle('dark-theme');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    document.querySelector('.theme-toggle-btn i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    const icon = document.querySelector('.theme-toggle-btn i');
+    if(icon) icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
 }
 
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-// --- MODAL PDF ---
 function openPDF(u) { 
     document.getElementById("pdf-frame").src = u; 
     document.getElementById("pdfModal").style.display = "block"; 
@@ -217,53 +170,33 @@ function closePDF() {
 }
 
 // --- INITIALISATION ---
-window.onscroll = () => {
-    const btn = document.getElementById("back-to-top");
-    if(btn) btn.style.display = (window.scrollY > 300) ? "block" : "none";
-};
-
-window.onclick = (e) => {
-    if (e.target == document.getElementById("pdfModal")) closePDF();
-};
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Gestion du thème
+    // Applique le thème sauvegardé
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-theme');
         const icon = document.querySelector('.theme-toggle-btn i');
         if(icon) icon.className = 'fas fa-sun';
     }
 
-    // Gestion de l'ancre au chargement
+    // Récupère le niveau via l'URL (ex: ?lvl=4e)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('lvl')) {
+        currentLevel = urlParams.get('lvl');
+        localStorage.setItem('maths_morgan_last_lvl', currentLevel);
+    }
+
+    render();
+
+    // Gestion de l'ancre (#) pour scroller vers une leçon précise
     const hash = window.location.hash.replace('#', '');
     if (hash) {
-        // On récupère le niveau depuis l'ID (ex: "5e" depuis "5e-2024-titre")
-        const niveauId = hash.split('-')[0];
-        // On s'assure que le niveau existe bien
-        const niveauExiste = niveaux.some(n => n.id === niveauId);
-        
-        if (niveauExiste) {
-            render(niveauId);
-            setTimeout(() => {
-				const element = document.getElementById(hash);
-				if (element) {
-					element.scrollIntoView({ behavior: 'smooth' });
-					
-					// On prépare la transition longue
-					element.style.transition = "box-shadow 2s ease-in-out";
-					// On applique le halo
-					element.style.boxShadow = "0 0 30px var(--primary)";
-
-					// On attend que l'élève ait bien vu (ex: 3s) avant de le faire disparaître doucement
-					setTimeout(() => {
-						element.style.boxShadow = "none";
-					}, 3000); 
-				}
-			}, 500);
-        } else {
-            render('6e');
-        }
-    } else {
-        render('6e');
+        setTimeout(() => {
+            const el = document.getElementById(hash);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+                el.style.boxShadow = "0 0 30px var(--primary)";
+                setTimeout(() => el.style.boxShadow = "none", 3000);
+            }
+        }, 500);
     }
 });
