@@ -4,19 +4,27 @@ let timeLeft = 60;
 let timer;
 let currentAnswer;
 // On utilise une clé spécifique pour le "Défi des Tables"
-let highScore = localStorage.getItem('maths_morgan_highscore_defi_tables') || 0;
+let highScore = Storage.getItem('maths_morgan_highscore_defi_tables') || 0;
 
 function chargerMenuJeux() {
     const mainContainer = document.getElementById('main-container');
     if (!mainContainer) return;
 
-    // ÉTAPE CRUCIALE : On réinitialise la structure avec la grille
-    mainContainer.innerHTML = `<div id="game-zone" class="grid-lecons"></div>`;
+    // SUPPRIME OU COMMENTE CETTE LIGNE :
+    // mainContainer.innerHTML = `<div id="game-zone" class="grid-lecons"></div>`;
     
-    const gameZone = document.getElementById('game-zone');
-    const currentHigh = localStorage.getItem('maths_morgan_highscore_defi_tables') || 0;
+    // À la place, on vérifie si game-zone existe, sinon on le crée
+    let gameZone = document.getElementById('game-zone');
+    if (!gameZone) {
+        gameZone = document.createElement('div');
+        gameZone.id = 'game-zone';
+        gameZone.className = 'grid-lecons';
+        mainContainer.appendChild(gameZone);
+    }
 
-    gameZone.innerHTML = `
+    const currentHigh = Storage.getItem('maths_morgan_highscore_defi_tables') || 0;
+
+    gameZone.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
                 <span class="tag">Calcul mental</span>
@@ -111,7 +119,7 @@ function endGame() {
 
     if (score > highScore) {
         highScore = score;
-        localStorage.setItem('maths_morgan_highscore_defi_tables', highScore);
+        Storage.setItem('maths_morgan_highscore_defi_tables', highScore);
         isNewRecord = true;
     }
 

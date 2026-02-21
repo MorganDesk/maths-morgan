@@ -9,7 +9,7 @@ function chargerMenuRelatifs() {
     if (!gameZone) return;
 
     // On récupère le record des ADDITIONS pour l'affichage initial
-    const highInitial = localStorage.getItem('maths_morgan_highscore_relatifs_add') || 0;
+    const highInitial = Storage.getItem('maths_morgan_highscore_relatifs_add') || 0;
 
     gameZone.innerHTML += `
         <div class="card game-card">
@@ -40,7 +40,7 @@ function chargerMenuRelatifs() {
 function updateRecordDisplay(selectedMode) {
     const valSpan = document.getElementById('valeur-record');
     const badge = document.getElementById('display-highscore-relatifs');
-    const record = localStorage.getItem(`maths_morgan_highscore_relatifs_${selectedMode}`) || 0;
+    const record = Storage.getItem(`maths_morgan_highscore_relatifs_${selectedMode}`) || 0;
 
     if (record > 0) {
         valSpan.innerText = record;
@@ -143,10 +143,10 @@ function checkResponseRelatifs() {
 function endGameRelatifs() {
     const container = document.getElementById('main-container');
     const storageKey = `maths_morgan_highscore_relatifs_${modeRelatifs}`;
-    const oldHigh = localStorage.getItem(storageKey) || 0;
+    const oldHigh = Storage.getItem(storageKey) || 0;
     let isNewRecord = (scoreRelatifs > oldHigh);
 
-    if (isNewRecord) localStorage.setItem(storageKey, scoreRelatifs);
+    if (isNewRecord) Storage.setItem(storageKey, scoreRelatifs);
 
     const modeNoms = { 
         'add': 'Additions', 

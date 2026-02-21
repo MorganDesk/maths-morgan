@@ -7,7 +7,7 @@ function chargerMenuAngles() {
     const gameZone = document.getElementById('game-zone');
     if (!gameZone) return;
 
-    const high = localStorage.getItem('maths_morgan_highscore_angles') || 0;
+    const high = Storage.getItem('maths_morgan_highscore_angles') || 0;
 
     gameZone.innerHTML += `
         <div class="card game-card">
@@ -171,10 +171,10 @@ function checkAngle() {
 
 function endGameAngles() {
     const container = document.getElementById('main-container');
-    const high = localStorage.getItem('maths_morgan_highscore_angles') || 0;
+    const high = Storage.getItem('maths_morgan_highscore_angles') || 0;
     let isNewRecord = (scoreAngles > high);
 
-    if (isNewRecord) localStorage.setItem('maths_morgan_highscore_angles', scoreAngles);
+    if (isNewRecord) Storage.setItem('maths_morgan_highscore_angles', scoreAngles);
 
     container.innerHTML = `
         <div class="game-active-container">
