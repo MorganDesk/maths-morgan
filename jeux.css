@@ -130,3 +130,72 @@ h2 {
     from { transform: scale(1); }
     to { transform: scale(1.03); }
 }
+
+.admin-actions {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+    margin-top: 20px;
+}
+
+.btn-reset {
+    background-color: #ef4444; /* Rouge vif */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-reset:hover {
+    background-color: #dc2626; /* Rouge plus foncé au survol */
+    transform: scale(1.05);
+}
+
+.btn-reset:active {
+    transform: scale(0.95);
+}
+
+.stats-globales {
+    background: var(--card-bg, #ffffff);
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stat-item {
+    font-size: 1.25rem;
+    color: var(--text-color, #1e293b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+#total-score-display {
+    font-size: 1.8rem;
+    color: #3b82f6; /* Bleu vif pour le score */
+}
+
+#diff-select-cb {
+    cursor: pointer;
+    padding: 10px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#diff-select-cb:hover {
+    border-color: #2563eb;
+    background-color: #f8fafc;
+}

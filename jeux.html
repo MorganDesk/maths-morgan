@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maths Morgan - Salle des Jeux</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="jeux.css">  </head>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="jeux.css">  
+</head>
 <body>
     <header>
         <div class="header-top">
@@ -15,24 +17,69 @@
     </header>
 
     <main id="main-container">
-        <div id="game-zone" class="grid-lecons">
-            
+        <div class="stats-globales">
+            <div class="stat-item">
+                <i class="fas fa-medal" style="color: #ffd700;"></i>
+                <span>Mon Score Total : <strong id="total-score-display">0</strong> points</span>
+            </div>
+        </div>
+
+        <div id="game-zone" class="grid-lecons"></div>
+
+        <div class="admin-actions" style="margin-top: 40px; text-align: center;">
+            <button onclick="confirmReset()" class="btn-reset">
+                <i class="fas fa-trash-alt"></i> Réinitialiser tous les records
+            </button>
         </div>
     </main>
-	
-	<footer class="site-footer">
-    <p class="privacy-info">
-        <i class="fas fa-user-shield"></i> <strong>Confidentialité :</strong><br>
-        Tes favoris et statuts sont liés à <span class="highlight-browser">ce navigateur</span>.<br>
-		Ils ne sont pas synchronisés entre tes appareils. <br>
-        Monsieur Morgan n'y a pas accès.
-    </p>
-</footer>
 
-	<script src="storage.js"></script>
+    <footer class="site-footer">
+        <p class="privacy-info">
+            <i class="fas fa-user-shield"></i> <strong>Confidentialité :</strong><br>
+            Tes records sont enregistrés localement sur <span class="highlight-browser">ce navigateur</span>.<br>
+			Ils ne sont pas synchronisés entre tes appareils. <br>
+			Monsieur Morgan n'y a pas accès.
+        </p>
+    </footer>
+
+    <script src="storage.js"></script>
+    
+    <script>
+        // Fonction pour le bouton reset
+        function confirmReset() {
+            const confirmation = confirm("⚠️ Es-tu sûr de vouloir effacer TOUS tes records ? Cette action est irréversible.");
+            if (confirmation) {
+                // On boucle sur le localStorage pour enlever les clés de records
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('maths_morgan_highscore_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                alert("Records effacés !");
+                location.reload();
+            }
+        }
+
+        // Fonction pour mettre à jour le score total cumulé
+        function majScoreTotal() {
+            let total = 0;
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('maths_morgan_highscore_')) {
+                    total += parseInt(localStorage.getItem(key)) || 0;
+                }
+            });
+            const display = document.getElementById('total-score-display');
+            if (display) display.innerText = total;
+        }
+
+        // On lance la mise à jour du score après un court instant pour laisser les jeux charger
+        window.addEventListener('load', majScoreTotal);
+    </script>
+
     <script src="js/jeu-tables.js"></script>
-	<script src="js/jeu-relatifs.js"></script>
-	<script src="js/jeu-compte-bon.js"></script>
-	<script src="js/jeu-angles.js"></script>
+    <script src="js/jeu-angles.js"></script>
+    <script src="js/jeu-relatifs.js"></script>
+    <script src="js/jeu-compte-bon.js"></script>
+
 </body>
 </html>

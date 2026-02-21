@@ -74,6 +74,7 @@ function setupAnglesUI() {
 
     const input = document.getElementById('angle-input');
     input.focus();
+	
     input.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkAngle(); });
 }
 

@@ -8,13 +8,12 @@ function chargerMenuRelatifs() {
     const gameZone = document.getElementById('game-zone');
     if (!gameZone) return;
 
-    // On récupère le record des ADDITIONS pour l'affichage initial
     const highInitial = Storage.getItem('maths_morgan_highscore_relatifs_add') || 0;
 
     gameZone.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
-                <span class="tag">Nombres Relatifs</span>
+                <span class="tag">Calcul mental</span>
                 <span id="display-highscore-relatifs" class="tag-highscore" ${highInitial > 0 ? '' : 'style="display:none"'}>
                     <i class="fas fa-trophy"></i> Record : <span id="valeur-record">${highInitial}</span>
                 </span>
@@ -23,19 +22,22 @@ function chargerMenuRelatifs() {
             <p>Ne laisse pas un petit signe moins gâcher ta vie... ou ton record !</p>
             
             <div class="fichiers-liste-verticale">
-                <select id="mode-select" class="game-input" onchange="updateRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
-                    <option value="add" selected>Additions (+)</option> <option value="sub">Soustractions (-)</option>
+                <select id="mode-select-relatifs" class="game-input" onchange="updateRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
+                    <option value="add" selected>Additions (+)</option> 
+                    <option value="sub">Soustractions (-)</option>
                     <option value="addsub">Additions & Soustractions (+/-)</option>
                     <option value="mult">Multiplications (×)</option>
                     <option value="melange">Mélange total (+/-/×)</option>
                 </select>
-                <button class="btn-download-full" onclick="startRelatifsGame()" style="border:none; cursor:pointer;">
+                <button class="btn-download-full" onclick="startRelatifsGame()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le choc
                 </button>
             </div>
         </div>
     `;
 }
+
+document.addEventListener('DOMContentLoaded', chargerMenuRelatifs);
 
 function updateRecordDisplay(selectedMode) {
     const valSpan = document.getElementById('valeur-record');
@@ -50,16 +52,22 @@ function updateRecordDisplay(selectedMode) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', chargerMenuRelatifs);
+
 
 function startRelatifsGame() {
+    const select = document.getElementById('mode-select-relatifs');
+    if (!select) return;
+
     scoreRelatifs = 0;
     timeLeftRelatifs = 60;
-    modeRelatifs = document.getElementById('mode-select').value;
+    modeRelatifs = select.value; // On récupère la valeur du bon ID
     
     setupRelatifsUI();
     nextQuestionRelatifs();
     
+    // Nettoyage d'un éventuel timer précédent
+    if (timerRelatifs) clearInterval(timerRelatifs);
+
     timerRelatifs = setInterval(() => {
         timeLeftRelatifs--;
         const timerEl = document.getElementById('timer');
@@ -92,7 +100,16 @@ function setupRelatifsUI() {
     `;
     const input = document.getElementById('game-input');
     input.focus();
-    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkResponseRelatifs(); });
+	input.addEventListener('input', () => {
+        const userAnswer = parseInt(input.value);
+        
+        // On vérifie si le nombre saisi est exactement la réponse attendue
+        if (userAnswer === currentAnswerRelatifs) {
+            scoreRelatifs++;
+            document.getElementById('score').innerText = scoreRelatifs;
+            nextQuestionRelatifs();
+        }
+    });
 }
 
 function nextQuestionRelatifs() {
@@ -164,7 +181,8 @@ function endGameRelatifs() {
             <div class="highscore-display">
                 <i class="fas fa-trophy"></i> Record (${modeNoms[modeRelatifs]}) : <strong>${isNewRecord ? scoreRelatifs : oldHigh}</strong>
             </div>
-            <button class="btn-download-full" onclick="location.reload()" style="margin-top:20px; width:100%; border:none; cursor:pointer;">
+            
+            <button class="btn-download-full" onclick="location.reload()" style="margin-top:20px; width:auto; padding: 12px 30px; border:none; cursor:pointer; background-color: #64748b;">
                 <i class="fas fa-arrow-left"></i> Retour au menu
             </button>
         </div>
