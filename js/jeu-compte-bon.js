@@ -31,7 +31,7 @@ function chargerMenuCompteBon() {
             <p>Atteins la cible en combinant tes plaques. Chaque réussite augmente ta série !</p>
             
             <div class="fichiers-liste-verticale">
-                <select id="diff-select-cb" class="game-input" onchange="updateRecordCB(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
+                <select id="diff-select-cb" class="game-input-select" onchange="updateRecordCB(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
                     <option value="normal" selected>Niveau : Normal (min. 3 étapes)</option>
                     <option value="expert">Niveau : Expert (min. 4 étapes)</option>
                 </select>

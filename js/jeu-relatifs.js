@@ -22,7 +22,7 @@ function chargerMenuRelatifs() {
             <p>Ne laisse pas un petit signe moins gâcher ta vie... ou ton record !</p>
             
             <div class="fichiers-liste-verticale">
-                <select id="mode-select-relatifs" class="game-input" onchange="updateRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
+                <select id="mode-select-relatifs" class="game-input-select" onchange="updateRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
                     <option value="add" selected>Additions (+)</option> 
                     <option value="sub">Soustractions (-)</option>
                     <option value="addsub">Additions & Soustractions (+/-)</option>

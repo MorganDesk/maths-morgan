@@ -26,7 +26,7 @@ function chargerMenuSymetrie() {
             <p>Complète la figure. Chaque réussite augmente ta série !</p>
             
             <div class="fichiers-liste-verticale">
-                <select id="mode-select-sym" class="game-input" onchange="updateSymRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
+                <select id="mode-select-sym" class="game-input-select" onchange="updateSymRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
                     <option value="axial" selected>Symétrie Axiale uniquement</option>
                     <option value="central">Symétrie Centrale uniquement</option>
                     <option value="melange">Mélange des deux</option>
