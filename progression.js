@@ -88,31 +88,67 @@ function updateGlobalRankDisplay() {
     const container = document.getElementById('global-rank-container');
     if (!container) return;
 
+    // --- CONFIGURATION DE LA BARRE FIXE ---
+    container.style.position = "fixed";
+    container.style.top = "120px"; // Se place sous votre header
+    container.style.left = "0";
+    container.style.width = "100%";
+    container.style.zIndex = "999"; // Juste en dessous des éventuels menus d'alerte
+    container.style.padding = "10px";
+    container.style.display = "flex";
+    container.style.justifyContent = "center";
+    container.style.pointerEvents = "none"; // Important : permet de cliquer sur les jeux derrière
+
+    // --- CORRECTION DU CHEVAUCHEMENT ---
+    // On force le décalage de la zone de jeux pour qu'elle commence SOUS la barre
+    const gameZone = document.getElementById('game-zone');
+    if (gameZone) {
+        gameZone.style.marginTop = "80px"; 
+    }
+
     let messageEtape = "";
     if (data.suivant) {
         const reste = (data.suivant.seuil - parseFloat(data.mastery)).toFixed(1);
-        messageEtape = `Encore <strong>${reste} MP</strong> pour devenir <strong>${data.suivant.nom}</strong>`;
+        messageEtape = `Encore <strong>${reste} MP</strong> pour <strong>${data.suivant.nom}</strong>`;
     } else {
-        messageEtape = `Félicitations ! Tu es au rang maximum. (Niveau Prestige ${data.niveauPrestige})`;
+        messageEtape = `Rang Maximum (Niveau Prestige ${data.niveauPrestige})`;
     }
 
     container.innerHTML = `
-        <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); margin-bottom: 30px; border-left: 8px solid ${data.actuel.couleur};">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <div>
-                    <div style="font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 800; letter-spacing: 0.1em;">Ton Grade</div>
-					<div style="font-size: 1.8rem; font-weight: 900; color: ${data.actuel.couleur}; text-shadow: 1px 1px 0px rgba(0,0,0,0.05);">${data.actuel.nom}</div>
-				</div>
-                <div style="text-align: right; background: #f8fafc; padding: 10px 15px; border-radius: 10px;">
-                    <div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">${data.mastery} <span style="font-size: 0.8rem; color: #64748b;">MP</span></div>
+        <div style="
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 8px 18px; 
+            border-radius: 30px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12); 
+            border: 2px solid ${data.actuel.couleur};
+            width: 90%;
+            max-width: 800px; 
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        ">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 12px; height: 12px; border-radius: 50%; background: ${data.actuel.couleur}; box-shadow: 0 0 8px ${data.actuel.couleur}66;"></div>
+                    <span style="font-weight: 900; color: ${data.actuel.couleur}; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        ${data.actuel.nom} ${data.niveauPrestige > 0 ? '✦' + data.niveauPrestige : ''}
+                    </span>
+                </div>
+                <div style="font-weight: 800; font-size: 1rem; color: #1e293b;">
+                    ${data.mastery} <span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">MP</span>
                 </div>
             </div>
 
-            <div style="background: #f1f5f9; height: 18px; border-radius: 9px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
-                <div style="background: ${data.actuel.couleur}; width: ${data.pourcentage}%; height: 100%; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);"></div>
+            <div style="background: #e2e8f0; height: 6px; border-radius: 10px; overflow: hidden; width: 100%;">
+                <div style="background: ${data.actuel.couleur}; width: ${data.pourcentage}%; height: 100%; transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);"></div>
             </div>
 
-            <p style="text-align: center; margin-top: 12px; font-size: 0.9rem; color: #475569;">${messageEtape}</p>
+            <div style="font-size: 0.7rem; color: #475569; text-align: center; letter-spacing: 0.2px;">
+                ${messageEtape}
+            </div>
         </div>
     `;
 }
