@@ -17,12 +17,7 @@
     </header>
 
     <main id="main-container">
-        <div class="stats-globales">
-            <div class="stat-item">
-                <i class="fas fa-medal" style="color: #ffd700;"></i>
-                <span>Mon Score Total : <strong id="total-score-display">0</strong> points</span>
-            </div>
-        </div>
+        <div id="global-rank-container"></div>
 
         <div id="game-zone" class="grid-lecons"></div>
 
@@ -42,49 +37,32 @@
         </p>
     </footer>
 
-    <script src="storage.js"></script>
-    
-    <script>
-        // Fonction pour le bouton reset
-        function confirmReset() {
-            const confirmation = confirm("⚠️ Es-tu sûr de vouloir effacer TOUS tes records ? Cette action est irréversible.");
-            if (confirmation) {
-                // On boucle sur le localStorage pour enlever les clés de records
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('maths_morgan_highscore_') || key.startsWith('maths_morgan_record_')) {
-                        localStorage.removeItem(key);
-                    }
-                });
-                alert("Records effacés !");
-                location.reload();
-            }
-        }
+	<script src="storage.js"></script>
+	<script src="progression.js"></script> <script>
+		// Initialisation au chargement de la page
+		document.addEventListener('DOMContentLoaded', () => {
+			updateGlobalRankDisplay();
+		});
+		
+		// Fonction pour le bouton reset
+		function confirmReset() {
+			const confirmation = confirm("⚠️ Es-tu sûr de vouloir effacer TOUS tes records ? Cette action est irréversible.");
+			if (confirmation) {
+				Object.keys(localStorage).forEach(key => {
+					if (key.startsWith('maths_morgan_highscore_') || key.startsWith('maths_morgan_record_')) {
+						localStorage.removeItem(key);
+					}
+				});
+				alert("Records effacés !");
+				location.reload();
+			}
+		}
+	</script>
 
-        // Fonction pour mettre à jour le score total cumulé
-        function majScoreTotal() {
-            let total = 0;
-            Object.keys(localStorage).forEach(key => {
-                if (key.startsWith('maths_morgan_highscore_')) {
-                    total += parseInt(localStorage.getItem(key)) || 0;
-                }
-            });
-			Object.keys(localStorage).forEach(key => {
-                if (key.startsWith('maths_morgan_record_')) {
-                    total += parseInt(localStorage.getItem(key)) || 0;
-                }
-            });
-            const display = document.getElementById('total-score-display');
-            if (display) display.innerText = total;
-        }
-
-        // On lance la mise à jour du score après un court instant pour laisser les jeux charger
-        window.addEventListener('load', majScoreTotal);
-    </script>
-
-    <script src="js/jeu-tables.js"></script>
-    <script src="js/jeu-angles.js"></script>
-    <script src="js/jeu-relatifs.js"></script>
-    <script src="js/jeu-compte-bon.js"></script>
+	<script src="js/jeu-tables.js"></script>
+	<script src="js/jeu-angles.js"></script>
+	<script src="js/jeu-relatifs.js"></script>
+	<script src="js/jeu-compte-bon.js"></script>
 	<script src="js/jeu-symetrie.js"></script>
 
 </body>
