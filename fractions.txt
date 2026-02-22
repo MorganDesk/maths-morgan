@@ -1,0 +1,45 @@
+### 1. Le "Juste Poids" (Représentation visuelle)
+
+Le but est d'associer une fraction à sa représentation graphique.
+
+* **Mécanique** : Une pizza (ou une barre de chocolat) est partiellement mangée. L'élève doit cliquer sur la fraction correspondante parmi 3 propositions.
+* **Niveaux** :
+* **Niveau 1** : Fractions simples (, , ).
+* **Niveau 2** : Fractions avec des dénominateurs plus grands (, ).
+* **Niveau 3** : Fractions supérieures à 1 (ex: , soit une pizza entière plus un quart).
+
+### 2. "Chasse aux Équivalences" (Simplification)
+
+C'est le jeu parfait pour travailler les fractions égales sans s'en rendre compte.
+
+* **Mécanique** : Une fraction "cible" apparaît en haut (ex: ). Des bulles tombent avec d'autres fractions (, , , ). L'élève doit cliquer uniquement sur celles qui sont égales à la cible.
+* **Piège** : Mettre des fractions qui "ressemblent" mais sont fausses (ex:  pour ).
+
+### 3. "La Course sur la Droite" (Placement)
+
+Placer une fraction sur une demi-droite graduée.
+
+* **Mécanique** : Une droite graduée de 0 à 3 est affichée. On donne une fraction (ex: ), et l'élève doit cliquer sur l'endroit exact de la droite.
+* **Difficulté progressive** : Au début, la droite est graduée selon le dénominateur de la fraction. À haut niveau, la droite est graduée en dixièmes mais la fraction est en cinquièmes ou en demis.
+
+### 4. "Fraction-Attack" (Calcul mental)
+
+Pour les élèves plus avancés (5e/4e).
+
+* **Mode A : Multiplication** : Calculer "Fraction d'une quantité" (ex: ). Très utile pour la vie courante.
+* **Mode B : Sommes simples** : Additionner deux fractions de même dénominateur, ou dont l'un est le multiple de l'autre (ex: ).
+
+### 5. "Le Domino des Fractions"
+
+Associer différentes écritures d'un même nombre.
+
+* **Mécanique** : Faire correspondre une **fraction**, un **nombre décimal** et un **pourcentage**.
+* **Exemple** : Relier  ↔  ↔ . C'est un exercice fondamental pour le cycle 4.
+
+---
+
+### Ma recommandation pour ton système de points :
+
+Si tu devais n'en choisir qu'un pour commencer, **le jeu sur les équivalences (simplification)** est le plus efficace. Il prépare le terrain pour tout le reste (additions, comparaisons, mises au même dénominateur).
+
+**Lequel de ces concepts te semble le plus adapté à l'interface de ton site ?** (On pourrait par exemple imaginer un système de "cartes" que l'on retourne ou des bulles à éclater).

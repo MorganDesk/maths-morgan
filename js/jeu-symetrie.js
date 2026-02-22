@@ -7,36 +7,31 @@ let symCurrentStreak = 0;
 const SYM_GRID_SIZE = 14;
 
 // --- INITIALISATION DU MENU ---
-function chargerMenuSymetrie() {
-    const gameZone = document.getElementById('game-zone');
-    if (!gameZone) return;
-
-    // Récupération du record du mode par défaut (axial) pour l'affichage initial
+function chargerMenuSymetrie(target, gameConfig) {
+    const destination = target || document.getElementById('game-zone');
     const recordInitial = Storage.getItem('maths_morgan_record_sym_axial') || 0;
 
-    gameZone.innerHTML += `
+    destination.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
-                <span class="tag">Géométrie</span>
+                <span class="tag">${gameConfig.category}</span>
                 <span id="record-tag-sym" class="tag-highscore" ${recordInitial > 0 ? '' : 'style="display:none"'}>
                     <i class="fas fa-trophy"></i> Record : <span id="sym-record-val">${recordInitial}</span>
                 </span>
             </div>
-            <h3>Reflets & Symétrie</h3>
-            <p>Complète la figure. Chaque réussite augmente ta série !</p>
-            
+            <h3>${gameConfig.title}</h3>
+            <p>${gameConfig.description}</p>
             <div class="fichiers-liste-verticale">
-                <select id="mode-select-sym" class="game-input-select" onchange="updateSymRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
-                    <option value="axial" selected>Symétrie Axiale uniquement</option>
-                    <option value="central">Symétrie Centrale uniquement</option>
-                    <option value="melange">Mélange des deux</option>
+                <select id="mode-select-sym" class="game-input-select" onchange="updateSymRecordDisplay(this.value)" style="width:100%; margin-bottom:10px;">
+                    <option value="axial">Symétrie Axiale</option>
+                    <option value="central">Symétrie Centrale</option>
+                    <option value="central">Mélange des deux</option>					
                 </select>
                 <button class="btn-download-full" onclick="startSymetrie()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le défi
                 </button>
             </div>
-        </div>
-    `;
+        </div>`;
 }
 
 // Mise à jour de l'affichage du record selon le mode choisi dans le menu
@@ -52,8 +47,6 @@ function updateSymRecordDisplay(mode) {
         tag.style.display = 'none';
     }
 }
-
-document.addEventListener('DOMContentLoaded', chargerMenuSymetrie);
 
 function startSymetrie() {
     const select = document.getElementById('mode-select-sym');

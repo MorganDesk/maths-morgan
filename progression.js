@@ -34,7 +34,13 @@ function getGlobalMasteryLevel() {
 		'maths_morgan_highscore_angles',
 		// Fractions équivalentes
 		'maths_morgan_highscore_fractions_equiv',
-		'maths_morgan_highscore_fractions_expert'
+		'maths_morgan_highscore_fractions_expert',
+		//numération position
+		'maths_morgan_highscore_num_chiffre',
+		'maths_morgan_highscore_num_nombre',
+		'maths_morgan_highscore_num_expert',
+		// Critères de divisibilité
+		'maths_morgan_highscore_divisibilite'
     ];
 
     const saturationMax = 50; // Points max qu'un seul mode peut rapporter

@@ -12,36 +12,30 @@ const POSSIBLES = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 25,
 let cbCurrentStreak = 0; // Nouvelle variable pour la série en cours
 let currentModeCB = 'normal'; // Pour suivre le mode sélectionné
 
-function chargerMenuCompteBon() {
-    const gameZone = document.getElementById('game-zone');
-    if (!gameZone) return;
-
-    // Record initial pour le mode Normal
+function chargerMenuCompteBon(target, gameConfig) {
+    const destination = target || document.getElementById('game-zone');
     const recordInitial = Storage.getItem('maths_morgan_record_cb_normal') || 0;
 
-    gameZone.innerHTML += `
+    destination.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
-                <span class="tag">Calcul mental</span>
+                <span class="tag">${gameConfig.category}</span>
                 <span id="record-tag-cb" class="tag-highscore" ${recordInitial > 0 ? '' : 'style="display:none"'}>
                     <i class="fas fa-trophy"></i> Record : <span id="cb-record-val">${recordInitial}</span>
                 </span>
             </div>
-            <h3>Le Compte est Bon</h3>
-            <p>Atteins la cible en combinant tes plaques. Chaque réussite augmente ta série !</p>
-            
+            <h3>${gameConfig.title}</h3>
+            <p>${gameConfig.description}</p>
             <div class="fichiers-liste-verticale">
-                <select id="diff-select-cb" class="game-input-select" onchange="updateRecordCB(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
-                    <option value="normal" selected>Niveau : Normal (min. 3 étapes)</option>
-                    <option value="expert">Niveau : Expert (min. 4 étapes)</option>
+                <select id="diff-select-cb" class="game-input-select" onchange="updateCBRecordDisplay(this.value)" style="width:100%; margin-bottom:10px;">
+                    <option value="normal">Mode Normal</option>
+                    <option value="expert">Mode Expert</option>
                 </select>
-                
                 <button class="btn-download-full" onclick="preStartCompteBon()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le défi
                 </button>
             </div>
-        </div>
-    `;
+        </div>`;
 }
 
 // Fonction pour mettre à jour l'affichage du record dans le menu
@@ -58,7 +52,6 @@ function updateRecordCB(mode) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', chargerMenuCompteBon);
 
 function preStartCompteBon() {
     const select = document.getElementById('diff-select-cb');

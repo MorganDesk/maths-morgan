@@ -4,24 +4,20 @@ let timeLeftTables = 60;
 let timerTables;
 let currentAnswerTables;
 
-function chargerMenuTables() {
-    const gameZone = document.getElementById('game-zone');
-    if (!gameZone) return;
-
-    // Récupération du record via l'objet Storage
+function chargerMenuTables(target, gameConfig) {
+    const destination = target || document.getElementById('game-zone');
     const high = Storage.getItem('maths_morgan_highscore_defi_tables') || 0;
 
-    // Utilisation de += pour AJOUTER la carte
-    gameZone.innerHTML += `
+    destination.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
-                <span class="tag">Calcul mental</span>
+                <span class="tag">${gameConfig.category}</span>
                 <span id="display-highscore-tables" class="tag-highscore" ${high > 0 ? '' : 'style="display:none"'}>
                     <i class="fas fa-trophy"></i> Record : <span id="valeur-record-tables">${high}</span>
                 </span>
             </div>
-            <h3>Défi des Tables</h3>
-            <p>Deviens plus rapide qu'une calculatrice et pulvérise ton record.</p>
+            <h3>${gameConfig.title}</h3>
+            <p>${gameConfig.description}</p>
             <div class="fichiers-liste-verticale">
                 <button class="btn-download-full" onclick="startTablesGame()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le défi
@@ -30,8 +26,6 @@ function chargerMenuTables() {
         </div>`;
 }
 
-// On écoute le chargement du DOM
-document.addEventListener('DOMContentLoaded', chargerMenuTables);
 
 function startTablesGame() {
     scoreTables = 0;

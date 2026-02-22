@@ -38,10 +38,14 @@
     </footer>
 
 	<script src="storage.js"></script>
-	<script src="progression.js"></script> <script>
-		// Initialisation au chargement de la page
+	<script src="progression.js"></script> 
+	<script src="js/games-config.js"></script>
+	<script src="js/games-manager.js"></script>
+	<script>
+	
 		document.addEventListener('DOMContentLoaded', () => {
 			updateGlobalRankDisplay();
+			initGamesManager(); // Il va charger les .js tout seul comme un grand !
 		});
 		
 		// Fonction pour le bouton reset
@@ -58,13 +62,7 @@
 			}
 		}
 	</script>
-
-	<script src="js/jeu-tables.js"></script>
-	<script src="js/jeu-angles.js"></script>
-	<script src="js/jeu-relatifs.js"></script>
-	<script src="js/jeu-compte-bon.js"></script>
-	<script src="js/jeu-symetrie.js"></script>
-	<script src="js/fractions-equivalentes.js"></script>
+	
 
 </body>
 </html>

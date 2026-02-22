@@ -6,37 +6,32 @@ let bubbleInterval;
 let targetFraction = { num: 1, den: 2 };
 let gameMode = 'classique';
 
-function chargerMenuFractions() {
-    const gameZone = document.getElementById('game-zone');
-    if (!gameZone) return;
-
-    // On récupère les deux records
+function chargerMenuFractions(target, gameConfig) {
+    const destination = target || document.getElementById('game-zone');
     const highClassique = parseInt(Storage.getItem('maths_morgan_highscore_fractions_equiv')) || 0;
-    const highExpert = parseInt(Storage.getItem('maths_morgan_highscore_fractions_expert')) || 0;
 
-    gameZone.innerHTML += `
+    destination.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
-                <span class="tag">Numération</span>
+                <span class="tag">${gameConfig.category}</span>
                 <span id="badge-record-fractions" class="tag-highscore" ${(highClassique > 0) ? '' : 'style="display:none"'}>
                     <i class="fas fa-trophy"></i> Record : <span id="valeur-record-fractions">${highClassique}</span>
                 </span>
             </div>
-            <h3>Chasse aux Fractions</h3>
-            <p>Éclate les bulles équivalentes à la cible. Attention aux pièges !</p>
+            <h3>${gameConfig.title}</h3>
+            <p>${gameConfig.description}</p>
             <div class="fichiers-liste-verticale">
-                <select id="select-mode-fractions" class="game-input-select" style="width:100%; margin-bottom:10px;" onchange="updateRecordDisplay()">
-                    <option value="classique">Mode Classique (1 cible)</option>
-                    <option value="expert">Mode Expert (Cible changeante)</option>
+                <select id="select-mode-fractions" class="game-input-select" style="width:100%; margin-bottom:10px;" onchange="updateRecordFractions()">
+                    <option value="classique">Mode Classique</option>
+                    <option value="expert">Mode Expert</option>
                 </select>
-                <button class="btn-download-full" onclick="preStartFractions()" style="border:none; cursor:pointer; width:100%;">
-                    <i class="fas fa-play"></i> Lancer la chasse
+                <button class="btn-download-full" onclick="startFractionsGame()" style="border:none; cursor:pointer; width:100%;">
+                    <i class="fas fa-play"></i> Lancer le défi
                 </button>
             </div>
         </div>`;
 }
 
-document.addEventListener('DOMContentLoaded', chargerMenuFractions);
 
 function updateRecordDisplay() {
     const mode = document.getElementById('select-mode-fractions').value;

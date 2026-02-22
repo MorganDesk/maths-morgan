@@ -4,40 +4,35 @@ let timerRelatifs;
 let currentAnswerRelatifs;
 let modeRelatifs = 'add';
 
-function chargerMenuRelatifs() {
-    const gameZone = document.getElementById('game-zone');
-    if (!gameZone) return;
-
+function chargerMenuRelatifs(target, gameConfig) {
+    const destination = target || document.getElementById('game-zone');
     const highInitial = Storage.getItem('maths_morgan_highscore_relatifs_add') || 0;
 
-    gameZone.innerHTML += `
+    destination.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
-                <span class="tag">Calcul mental</span>
+                <span class="tag">${gameConfig.category}</span>
                 <span id="display-highscore-relatifs" class="tag-highscore" ${highInitial > 0 ? '' : 'style="display:none"'}>
                     <i class="fas fa-trophy"></i> Record : <span id="valeur-record">${highInitial}</span>
                 </span>
             </div>
-            <h3>Choc des relatifs</h3>
-            <p>Ne laisse pas un petit signe moins gâcher ta vie... ou ton record !</p>
-            
+            <h3>${gameConfig.title}</h3>
+            <p>${gameConfig.description}</p>
             <div class="fichiers-liste-verticale">
-                <select id="mode-select-relatifs" class="game-input-select" onchange="updateRecordDisplay(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
-                    <option value="add" selected>Additions (+)</option> 
-                    <option value="sub">Soustractions (-)</option>
-                    <option value="addsub">Additions & Soustractions (+/-)</option>
-                    <option value="mult">Multiplications (×)</option>
-                    <option value="melange">Mélange total (+/-/×)</option>
+                <select id="mode-select-relatifs" class="game-input-select" onchange="updateRecordDisplay(this.value)" style="width:100%; margin-bottom:12px;">
+                    <option value="add" selected>Mode : Additions (+)</option> 
+                    <option value="sub">Mode : Soustractions (-)</option>
+                    <option value="addsub">Mode : Mélange (±)</option>
+                    <option value="mult">Mode : Multiplications (×)</option>
+                    <option value="melange">Mode : Mélange Total</option>
                 </select>
                 <button class="btn-download-full" onclick="startRelatifsGame()" style="border:none; cursor:pointer; width:100%;">
-                    <i class="fas fa-play"></i> Lancer le choc
+                    <i class="fas fa-play"></i> Lancer le défi
                 </button>
             </div>
-        </div>
-    `;
+        </div>`;
 }
 
-document.addEventListener('DOMContentLoaded', chargerMenuRelatifs);
 
 function updateRecordDisplay(selectedMode) {
     const valSpan = document.getElementById('valeur-record');

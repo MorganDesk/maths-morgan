@@ -3,32 +3,28 @@ let timeLeftAngles = 60;
 let timerAngles;
 let currentAngle = 0;
 
-function chargerMenuAngles() {
-    const gameZone = document.getElementById('game-zone');
-    if (!gameZone) return;
-
+function chargerMenuAngles(target, gameConfig) {
+    const destination = target || document.getElementById('game-zone');
     const high = Storage.getItem('maths_morgan_highscore_angles') || 0;
 
-    gameZone.innerHTML += `
+    destination.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
-                <span class="tag">Géométrie</span>
+                <span class="tag">${gameConfig.category}</span>
                 <span id="display-highscore-angles" class="tag-highscore" ${high > 0 ? '' : 'style="display:none"'}>
                     <i class="fas fa-trophy"></i> Record : <span id="valeur-record-angles">${high}</span>
                 </span>
             </div>
-            <h3>Angle Master</h3>
-            <p>Développe ton radar interne. Précision chirurgicale exigée !</p>
+            <h3>${gameConfig.title}</h3>
+            <p>${gameConfig.description}</p>
             <div class="fichiers-liste-verticale">
-                <button class="btn-download-full" onclick="startAnglesGame()" style="border:none; cursor:pointer;">
+                <button class="btn-download-full" onclick="startAnglesGame()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le défi
                 </button>
             </div>
-        </div>
-    `;
+        </div>`;
 }
 
-document.addEventListener('DOMContentLoaded', chargerMenuAngles);
 
 function startAnglesGame() {
     scoreAngles = 0;
