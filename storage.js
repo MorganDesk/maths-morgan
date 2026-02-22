@@ -33,13 +33,26 @@ const Storage = {
     },
 	
 	getTotalRecords: () => {
-        // On récupère chaque score proprement
-        const tables = parseInt(localStorage.getItem('maths_morgan_highscore_defi_tables')) || 0;
-        const angles = parseInt(localStorage.getItem('maths_morgan_highscore_angles')) || 0;
-        
-        // Pour les relatifs, on peut additionner le record du mode 'add' par défaut
-        const relatifs = parseInt(localStorage.getItem('maths_morgan_highscore_relatifs_add')) || 0;
+		let total = 0;
+		
+		// Tables
+        total += parseInt(localStorage.getItem('maths_morgan_highscore_defi_tables')) || 0;
+		// Angles
+        total += parseInt(localStorage.getItem('maths_morgan_highscore_angles')) || 0;
+        // Relatifs
+		const modesRelatifs = ['add', 'sub', 'addsub', 'mult', 'melange'];
+		modesRelatifs.forEach(mode => {
+			total += parseInt(Storage.getItem(`maths_morgan_highscore_relatifs_${mode}`)) || 0;
+		});
+		// Compte est bon
+		total += parseInt(Storage.getItem('maths_morgan_record_cb_normal')) || 0;
+		total += parseInt(Storage.getItem('maths_morgan_record_cb_expert')) || 0;
+		// Symétrie
+		const modesSym = ['axial', 'central', 'melange'];
+		modesSym.forEach(mode => {
+			total += parseInt(Storage.getItem(`maths_morgan_record_sym_${mode}`)) || 0;
+		});
 
-        return tables + angles + relatifs;
+        return total;
     }
 };

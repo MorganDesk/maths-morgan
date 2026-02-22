@@ -51,7 +51,7 @@
             if (confirmation) {
                 // On boucle sur le localStorage pour enlever les clés de records
                 Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('maths_morgan_highscore_')) {
+                    if (key.startsWith('maths_morgan_highscore_') || key.startsWith('maths_morgan_record_')) {
                         localStorage.removeItem(key);
                     }
                 });
@@ -68,6 +68,11 @@
                     total += parseInt(localStorage.getItem(key)) || 0;
                 }
             });
+			Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('maths_morgan_record_')) {
+                    total += parseInt(localStorage.getItem(key)) || 0;
+                }
+            });
             const display = document.getElementById('total-score-display');
             if (display) display.innerText = total;
         }
@@ -80,6 +85,7 @@
     <script src="js/jeu-angles.js"></script>
     <script src="js/jeu-relatifs.js"></script>
     <script src="js/jeu-compte-bon.js"></script>
+	<script src="js/jeu-symetrie.js"></script>
 
 </body>
 </html>

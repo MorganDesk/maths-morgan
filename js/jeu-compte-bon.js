@@ -9,20 +9,29 @@ let currentDifficulty = 3; // Par défaut : Normal (min 3)
 const POSSIBLES = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 25, 50, 75, 100];
 
 // --- INITIALISATION ---
+let cbCurrentStreak = 0; // Nouvelle variable pour la série en cours
+let currentModeCB = 'normal'; // Pour suivre le mode sélectionné
+
 function chargerMenuCompteBon() {
     const gameZone = document.getElementById('game-zone');
     if (!gameZone) return;
+
+    // Record initial pour le mode Normal
+    const recordInitial = Storage.getItem('maths_morgan_record_cb_normal') || 0;
 
     gameZone.innerHTML += `
         <div class="card game-card">
             <div class="card-header">
                 <span class="tag">Calcul mental</span>
+                <span id="record-tag-cb" class="tag-highscore" ${recordInitial > 0 ? '' : 'style="display:none"'}>
+                    <i class="fas fa-trophy"></i> Record : <span id="cb-record-val">${recordInitial}</span>
+                </span>
             </div>
             <h3>Le Compte est Bon</h3>
-            <p>Atteins la cible en combinant tes plaques.</p>
+            <p>Atteins la cible en combinant tes plaques. Chaque réussite augmente ta série !</p>
             
             <div class="fichiers-liste-verticale">
-                <select id="diff-select-cb" class="game-input" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
+                <select id="diff-select-cb" class="game-input" onchange="updateRecordCB(this.value)" style="width:100%; font-size:1rem; margin-bottom:10px; height:40px; cursor:pointer;">
                     <option value="normal" selected>Niveau : Normal (min. 3 étapes)</option>
                     <option value="expert">Niveau : Expert (min. 4 étapes)</option>
                 </select>
@@ -35,15 +44,29 @@ function chargerMenuCompteBon() {
     `;
 }
 
+// Fonction pour mettre à jour l'affichage du record dans le menu
+function updateRecordCB(mode) {
+    const record = Storage.getItem(`maths_morgan_record_cb_${mode}`) || 0;
+    const tag = document.getElementById('record-tag-cb');
+    const val = document.getElementById('cb-record-val');
+    
+    if (record > 0) {
+        tag.style.display = 'inline-block';
+        val.innerText = record;
+    } else {
+        tag.style.display = 'none';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', chargerMenuCompteBon);
 
 function preStartCompteBon() {
     const select = document.getElementById('diff-select-cb');
     if (!select) return;
 
-    const diff = select.value;
-    // Normal = au moins 3 / Expert = au moins 4
-    currentDifficulty = (diff === 'normal') ? 3 : 4;
+    currentModeCB = select.value;
+    cbCurrentStreak = 0;
+    currentDifficulty = (currentModeCB === 'normal') ? 3 : 4;
     
     setupCompteBonUI();
     generatePuzzle();
@@ -134,6 +157,15 @@ function generatePuzzle() {
     // Si vraiment rien n'est trouvé après 3000 essais (cas rarissime), on recommence
     if (result === 0) return generatePuzzle(); 
     
+    const msgZone = document.getElementById('cb-message');
+    if (msgZone) msgZone.innerHTML = '';
+    
+    const grid = document.getElementById('numbers-grid');
+    if (grid) {
+        grid.style.opacity = "1";
+        grid.style.pointerEvents = "auto";
+    }
+
     targetCB = result;
     resetPuzzle();
 }
@@ -148,9 +180,13 @@ function setupCompteBonUI() {
                 <button class="btn-download-full" onclick="location.reload()" style="width:auto; padding: 8px 20px; background-color: #64748b;">
                     <i class="fas fa-arrow-left"></i> Retour
                 </button>
-                <h2 style="margin-top:15px;">Le Compte est Bon</h2>
+                <div style="text-align:right;">
+                    <div style="font-weight:bold; color:var(--primary);">Série (${currentModeCB}) : <span id="cb-streak-val">0</span></div>
+                </div>
             </div>
             
+            <div id="cb-message" style="min-height: 60px; margin: 10px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;"></div>
+
             <div class="game-display" id="target-cb">0</div>
             
             <div id="numbers-grid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px auto; max-width: 320px;"></div>
@@ -162,16 +198,13 @@ function setupCompteBonUI() {
                 <button class="op-btn" onclick="setOp('/')">÷</button>
             </div>
             
-            <div style="display:flex; justify-content:center; gap:12px; flex-wrap: wrap;">
-                
+            <div id="cb-controls" style="display:flex; justify-content:center; gap:12px; flex-wrap: wrap;">
                 <button class="btn-download-full" onclick="resetPuzzle()" style="width:auto; background-color: #ef4444; padding: 12px 20px;">
                     <i class="fas fa-undo"></i> Réinitialiser
                 </button>
-
-                <button class="btn-download-full" onclick="generatePuzzle()" style="width:auto; background-color: var(--primary); padding: 12px 20px;">
+                <button class="btn-download-full" onclick="generatePuzzle()" style="width:auto; background-color: #64748b; padding: 12px 20px;">
                     <i class="fas fa-sync-alt"></i> Nouveau puzzle
                 </button>
-
             </div>
         </div>
     `;
@@ -259,12 +292,28 @@ function resetPuzzle() {
 }
 
 function displayWin() {
-    if (typeof Storage !== 'undefined') {
-        let record = parseInt(Storage.getItem('maths_morgan_highscore_compte_bon')) || 0;
-        Storage.setItem('maths_morgan_highscore_compte_bon', record + 1);
+    cbCurrentStreak++;
+    
+    // Sauvegarde du record par mode
+    const storageKey = `maths_morgan_record_cb_${currentModeCB}`;
+    const oldRecord = parseInt(Storage.getItem(storageKey)) || 0;
+    if (cbCurrentStreak > oldRecord) {
+        Storage.setItem(storageKey, cbCurrentStreak);
     }
 
-    const container = document.getElementById('numbers-grid');
-    container.innerHTML = `<div class="win-banner" style="grid-column: 1 / -1;">🎉 Bravo ! 🎉</div>`;
-    setTimeout(generatePuzzle, 2000);
+    // Mise à jour de l'affichage de la série
+    document.getElementById('cb-streak-val').innerText = cbCurrentStreak;
+
+    // Affichage du message et du bouton Rejouer
+    const msgZone = document.getElementById('cb-message');
+    msgZone.innerHTML = `
+        <div style="color: #059669; font-weight: bold; font-size: 1.2rem;">🎉 Bravo ! Le compte est bon.</div>
+        <button class="btn-download-full" onclick="generatePuzzle()" style="width:auto; background-color: var(--primary); padding: 8px 20px;">
+            <i class="fas fa-play"></i> Continuer la série
+        </button>
+    `;
+
+    // Cacher la grille pour forcer l'usage du bouton
+    document.getElementById('numbers-grid').style.opacity = "0.3";
+    document.getElementById('numbers-grid').style.pointerEvents = "none";
 }
