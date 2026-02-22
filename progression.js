@@ -8,8 +8,8 @@ const PALIERS_GRADES = [
     { seuil: 200, nom: "Maître", couleur: "#9d174d" },         // Bordeaux / Framboise
     { seuil: 270, nom: "Grand Maître", couleur: "#a16207" },   // Bronze / Ambre
     { seuil: 350, nom: "Érudit", couleur: "#9a3412" },         // Terre cuite / Cuivre
-    { seuil: 430, nom: "Légende", couleur: "#991b1b" },        // Rouge brique
-    { seuil: 500, nom: "Architecte de l'Infini", couleur: "#0f172a" } // Bleu-Noir sidéral
+    { seuil: 440, nom: "Légende", couleur: "#991b1b" },        // Rouge brique
+    { seuil: 540, nom: "Architecte de l'Infini", couleur: "#0f172a" } // Bleu-Noir sidéral
 ];
 
 // --- CALCUL DU SCORE GLOBAL ---
@@ -88,65 +88,69 @@ function updateGlobalRankDisplay() {
     const container = document.getElementById('global-rank-container');
     if (!container) return;
 
-    // --- CONFIGURATION DE LA BARRE FIXE ---
+    // Détection sécurisée de la largeur
+    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const isMobile = width < 768;
+
+    // --- STYLE DU CONTENEUR FIXE ---
     container.style.position = "fixed";
-    container.style.top = "120px"; // Se place sous votre header
+    container.style.top = isMobile ? "170px" : "125px"; 
     container.style.left = "0";
     container.style.width = "100%";
-    container.style.zIndex = "999"; // Juste en dessous des éventuels menus d'alerte
-    container.style.padding = "10px";
+    container.style.zIndex = "1000";
+    container.style.padding = "5px 10px";
     container.style.display = "flex";
     container.style.justifyContent = "center";
-    container.style.pointerEvents = "none"; // Important : permet de cliquer sur les jeux derrière
+    container.style.pointerEvents = "none";
 
-    // --- CORRECTION DU CHEVAUCHEMENT ---
-    // On force le décalage de la zone de jeux pour qu'elle commence SOUS la barre
-    const gameZone = document.getElementById('game-zone');
+    // --- AJUSTEMENT DE LA ZONE DE JEUX ---
+    // On cherche game-zone OU main-container pour décaler le contenu
+    const gameZone = document.getElementById('game-zone') || document.getElementById('main-container');
     if (gameZone) {
-        gameZone.style.marginTop = "80px"; 
+        gameZone.style.marginTop = isMobile ? "60px" : "80px"; 
     }
 
     let messageEtape = "";
     if (data.suivant) {
         const reste = (data.suivant.seuil - parseFloat(data.mastery)).toFixed(1);
-        messageEtape = `Encore <strong>${reste} MP</strong> pour <strong>${data.suivant.nom}</strong>`;
+        messageEtape = isMobile ? `<strong>${reste} MP</strong> avant le rang suivant` : `Encore <strong>${reste} MP</strong> pour devenir <strong>${data.suivant.nom}</strong>`;
     } else {
-        messageEtape = `Rang Maximum (Niveau Prestige ${data.niveauPrestige})`;
+        messageEtape = `Prestige : Niveau ${data.niveauPrestige}`;
     }
 
     container.innerHTML = `
         <div style="
-            background: rgba(255, 255, 255, 0.9); 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            padding: 8px 18px; 
-            border-radius: 30px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12); 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: ${isMobile ? '5px 12px' : '10px 25px'}; 
+            border-radius: ${isMobile ? '12px' : '30px'}; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
             border: 2px solid ${data.actuel.couleur};
-            width: 90%;
+            width: 95%;
             max-width: 800px; 
             pointer-events: auto;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: ${isMobile ? '1px' : '4px'};
         ">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <div style="width: 12px; height: 12px; border-radius: 50%; background: ${data.actuel.couleur}; box-shadow: 0 0 8px ${data.actuel.couleur}66;"></div>
-                    <span style="font-weight: 900; color: ${data.actuel.couleur}; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                        ${data.actuel.nom} ${data.niveauPrestige > 0 ? '✦' + data.niveauPrestige : ''}
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: ${data.actuel.couleur};"></div>
+                    <span style="font-weight: 900; color: ${data.actuel.couleur}; font-size: ${isMobile ? '0.7rem' : '0.9rem'}; text-transform: uppercase;">
+                        ${data.actuel.nom}
                     </span>
                 </div>
-                <div style="font-weight: 800; font-size: 1rem; color: #1e293b;">
-                    ${data.mastery} <span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">MP</span>
+                <div style="font-weight: 800; font-size: ${isMobile ? '0.8rem' : '1rem'}; color: #1e293b;">
+                    ${data.mastery} <span style="font-size: 0.6rem; color: #94a3b8;">MP</span>
                 </div>
             </div>
 
-            <div style="background: #e2e8f0; height: 6px; border-radius: 10px; overflow: hidden; width: 100%;">
-                <div style="background: ${data.actuel.couleur}; width: ${data.pourcentage}%; height: 100%; transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);"></div>
+            <div style="background: #e2e8f0; height: ${isMobile ? '4px' : '7px'}; border-radius: 10px; overflow: hidden; width: 100%;">
+                <div style="background: ${data.actuel.couleur}; width: ${data.pourcentage}%; height: 100%; transition: width 1s ease-out;"></div>
             </div>
 
-            <div style="font-size: 0.7rem; color: #475569; text-align: center; letter-spacing: 0.2px;">
+            <div style="font-size: ${isMobile ? '0.55rem' : '0.7rem'}; color: #475569; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 ${messageEtape}
             </div>
         </div>
