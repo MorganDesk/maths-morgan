@@ -8,6 +8,7 @@ let gameMode = 'classique';
 
 function chargerMenuFractions(target, gameConfig) {
     const destination = target || document.getElementById('game-zone');
+    // On récupère le record du mode par défaut (classique)
     const highClassique = parseInt(Storage.getItem('maths_morgan_highscore_fractions_equiv')) || 0;
 
     destination.innerHTML += `
@@ -21,11 +22,11 @@ function chargerMenuFractions(target, gameConfig) {
             <h3>${gameConfig.title}</h3>
             <p>${gameConfig.description}</p>
             <div class="fichiers-liste-verticale">
-                <select id="select-mode-fractions" class="game-input-select" style="width:100%; margin-bottom:10px;" onchange="updateRecordFractions()">
-                    <option value="classique">Mode Classique</option>
-                    <option value="expert">Mode Expert</option>
+                <select id="select-mode-fractions" class="game-input-select" style="width:100%; margin-bottom:12px;" onchange="updateRecordFractions(this.value)">
+                    <option value="classique">Mode : Classique</option>
+                    <option value="expert">Mode : Expert</option>
                 </select>
-                <button class="btn-download-full" onclick="startFractionsGame()" style="border:none; cursor:pointer; width:100%;">
+                <button class="btn-download-full" onclick="preStartFractions()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le défi
                 </button>
             </div>
@@ -33,21 +34,16 @@ function chargerMenuFractions(target, gameConfig) {
 }
 
 
-function updateRecordDisplay() {
-    const mode = document.getElementById('select-mode-fractions').value;
-    const badge = document.getElementById('badge-record-fractions');
-    const valeurSpan = document.getElementById('valeur-record-fractions');
+f// Nouvelle version de la mise à jour du record
+function updateRecordFractions(mode) {
+    const storageKey = mode === 'expert' ? 'maths_morgan_highscore_fractions_expert' : 'maths_morgan_highscore_fractions_equiv';
+    const high = parseInt(Storage.getItem(storageKey)) || 0;
     
-    // On définit la clé de stockage selon le mode
-    const storageKey = (mode === 'expert') ? 'maths_morgan_highscore_fractions_expert' : 'maths_morgan_highscore_fractions_equiv';
-    const record = Storage.getItem(storageKey) || 0;
-
-    if (record > 0) {
-        badge.style.display = ''; // Affiche le badge
-        valeurSpan.innerText = record;
-    } else {
-        badge.style.display = 'none'; // Cache si pas de record pour ce mode
-    }
+    const badge = document.getElementById('badge-record-fractions');
+    const valeur = document.getElementById('valeur-record-fractions');
+    
+    if (valeur) valeur.innerText = high;
+    if (badge) badge.style.display = high > 0 ? '' : 'none';
 }
 
 function preStartFractions() {
@@ -61,6 +57,11 @@ function startFractionsGame() {
     timeLeftFractions = 60;
     setupFractionsUI();
     generateTarget();
+	
+	const modeSelect = document.getElementById('select-mode-fractions');
+    if (modeSelect) {
+        gameMode = modeSelect.value; 
+    }
     
     timerFractions = setInterval(() => {
         timeLeftFractions--;

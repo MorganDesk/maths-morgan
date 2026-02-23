@@ -16,6 +16,13 @@ body.dark-theme {
     --border-color: #334155;
 }
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden; /* Empêche le scroll horizontal sur toute la page */
+    margin: 0;
+    padding: 0;
+}
+
 body { font-family: 'Segoe UI', sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; transition: 0.3s; }
 
 /* --- HEADER --- */

@@ -14,7 +14,8 @@ let currentModeCB = 'normal'; // Pour suivre le mode sélectionné
 
 function chargerMenuCompteBon(target, gameConfig) {
     const destination = target || document.getElementById('game-zone');
-    const recordInitial = Storage.getItem('maths_morgan_record_cb_normal') || 0;
+    // Record par défaut pour le mode normal
+    const recordInitial = parseInt(Storage.getItem('maths_morgan_record_cb_normal')) || 0;
 
     destination.innerHTML += `
         <div class="card game-card">
@@ -27,9 +28,9 @@ function chargerMenuCompteBon(target, gameConfig) {
             <h3>${gameConfig.title}</h3>
             <p>${gameConfig.description}</p>
             <div class="fichiers-liste-verticale">
-                <select id="diff-select-cb" class="game-input-select" onchange="updateCBRecordDisplay(this.value)" style="width:100%; margin-bottom:10px;">
-                    <option value="normal">Mode Normal</option>
-                    <option value="expert">Mode Expert</option>
+                <select id="diff-select-cb" class="game-input-select" onchange="updateCBRecordDisplay(this.value)" style="width:100%; margin-bottom:12px;">
+                    <option value="normal">Mode : Normal</option>
+                    <option value="expert">Mode : Expert</option>
                 </select>
                 <button class="btn-download-full" onclick="preStartCompteBon()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le défi
@@ -38,18 +39,16 @@ function chargerMenuCompteBon(target, gameConfig) {
         </div>`;
 }
 
-// Fonction pour mettre à jour l'affichage du record dans le menu
-function updateRecordCB(mode) {
-    const record = Storage.getItem(`maths_morgan_record_cb_${mode}`) || 0;
-    const tag = document.getElementById('record-tag-cb');
-    const val = document.getElementById('cb-record-val');
+// Fonction de mise à jour corrigée
+function updateCBRecordDisplay(mode) {
+    const storageKey = `maths_morgan_record_cb_${mode}`;
+    const high = parseInt(Storage.getItem(storageKey)) || 0;
     
-    if (record > 0) {
-        tag.style.display = 'inline-block';
-        val.innerText = record;
-    } else {
-        tag.style.display = 'none';
-    }
+    const badge = document.getElementById('record-tag-cb');
+    const valeur = document.getElementById('cb-record-val');
+    
+    if (valeur) valeur.innerText = high;
+    if (badge) badge.style.display = high > 0 ? '' : 'none';
 }
 
 

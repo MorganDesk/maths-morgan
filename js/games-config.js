@@ -2,66 +2,66 @@
 const GAMES_LIST = [
     {
         id: 'fractions-equivalentes',
-        title: 'Chasse aux Fractions',
+        title: '🎯 Chasse aux Fractions',
         category: 'Numération',
-        description: 'Éclate les bulles équivalentes à la cible. Attention aux pièges !',
-        tags: ['équivalence', 'proportions', 'fractions'],
+        description: 'Deviens un as des proportions ! Éclate les bulles équivalentes à la fraction cible et évite les pièges. Rapidité et précision exigées !',
+        tags: ['équivalence', 'proportions', 'fractions', 'simplifier', 'numérateur', 'dénominateur', 'partage', 'chasse', 'bulles'],
         initFunction: 'chargerMenuFractions'
     },
     {
         id: 'numeration-position',
-        title: 'Chiffre ou Nombre de...',
+        title: '💎 Le Maître du Chiffre',
         category: 'Numération',
-        description: 'Ne confonds plus la position et la quantité dans les nombres décimaux.',
-        tags: ['décimaux', 'position', 'quantité'],
+        description: 'Dizaine ou dixième ? Ne te laisse plus piéger par la virgule et maîtrise la valeur de chaque chiffre sur le bout des doigts.',
+        tags: ['décimaux', 'position', 'quantité', 'rang', 'virgule', 'unités', 'dizaines', 'centaines', 'millièmes', 'numération'],
         initFunction: 'chargerMenuNumeration'
     },
     {
         id: 'divisibilite',
-        title: 'Critères de Divisibilité',
+        title: '⚡ L\'Éclair de Divisibilité',
         category: 'Arithmétique',
-        description: 'Sélectionne tous les diviseurs valides pour le nombre affiché.',
-        tags: ['multiples', 'diviseurs', 'calcul'],
+        description: '2, 3, 5, 9 ou 10 ? Scanne les nombres à la vitesse de l\'éclair et débusque tous leurs diviseurs cachés.',
+        tags: ['multiples', 'diviseurs', 'calcul', 'arithmétique', 'critères', 'division', 'expert', 'nombres'],
         initFunction: 'chargerMenuDivisibilite'
     },
     {
         id: 'jeu-tables',
-        title: 'Défi des Tables',
+        title: '🚀 Défi des Tables',
         category: 'Calcul Mental',
-        description: 'Réponds le plus vite possible aux multiplications. 60s top chrono !',
-        tags: ['tables', 'vitesse', 'multiplication'],
+        description: 'Plus rapide qu\'une calculatrice ? Pulvérise ton record de multiplications avant que le temps ne s\'écoule !',
+        tags: ['tables', 'vitesse', 'multiplication', 'calcul', 'mental', 'chrono', 'défi', 'score'],
         initFunction: 'chargerMenuTables'
     },
     {
         id: 'jeu-compte-bon',
-        title: 'Le Compte est Bon',
+        title: '🧩 Le Compte est Bon',
         category: 'Calcul Mental',
-        description: 'Atteins le nombre cible en utilisant les opérations de base.',
-        tags: ['priorités', 'opérations', 'stratégie'],
+        description: 'Le casse-tête ultime ! Combine tes nombres avec ruse pour atteindre la cible exacte. Chaque opération compte.',
+        tags: ['priorités', 'opérations', 'stratégie', 'calcul', 'mental', 'addition', 'soustraction', 'multiplication', 'division', 'énigme'],
         initFunction: 'chargerMenuCompteBon'
     },
     {
         id: 'jeu-symetrie',
-        title: 'Le Miroir Magique',
+        title: '🪞 Le Miroir Magique',
         category: 'Géométrie',
-        description: 'Identifie ou complète des figures par symétrie axiale.',
-        tags: ['symétrie', 'axes', 'géométrie'],
+        description: 'Plonge dans le monde des reflets ! Complète les figures par symétrie sans trembler et deviens un virtuose du dessin.',
+        tags: ['symétrie', 'axes', 'géométrie', 'axial', 'central', 'miroir', 'repérage', 'espace', 'reflet', 'construction'],
         initFunction: 'chargerMenuSymetrie'
     },
     {
         id: 'jeu-angles',
-        title: 'Expert des Angles',
+        title: '📐 Angle Master',
         category: 'Géométrie',
-        description: 'Estime ou mesure des angles le plus précisément possible.',
-        tags: ['degrés', 'angles', 'mesure'],
+        description: 'Développe ton radar interne ! Estime les degrés avec une précision chirurgicale pour devenir le maître des angles.',
+        tags: ['degrés', 'angles', 'mesure', 'rapporteur', 'géométrie', 'aigu', 'obtus', 'droit', 'estimation', 'précision'],
         initFunction: 'chargerMenuAngles'
     },
     {
         id: 'jeu-relatifs',
-        title: 'Le Choc des Relatifs',
+        title: '⚔️ Le Choc des Relatifs',
         category: 'Calcul Mental',
-        description: 'Domine les nombres positifs et négatifs dans des duels rapides.',
-        tags: ['relatifs', 'signes', 'somme'],
+        description: 'Signe moins ou signe plus ? Ne laisse pas les nombres négatifs te faire perdre pied dans ce duel acharné.',
+        tags: ['relatifs', 'négatifs', 'positifs', 'calcul', 'mental', 'priorités', 'signes', 'addition', 'soustraction', 'multiplication'],
         initFunction: 'chargerMenuRelatifs'
     }
 ];
