@@ -25,7 +25,7 @@ function chargerMenuSymetrie(target, gameConfig) {
                 <select id="mode-select-sym" class="game-input-select" onchange="updateSymRecordDisplay(this.value)" style="width:100%; margin-bottom:10px;">
                     <option value="axial">Symétrie Axiale</option>
                     <option value="central">Symétrie Centrale</option>
-                    <option value="central">Mélange des deux</option>					
+                    <option value="melange">Mélange des deux</option>					
                 </select>
                 <button class="btn-download-full" onclick="startSymetrie()" style="border:none; cursor:pointer; width:100%;">
                     <i class="fas fa-play"></i> Lancer le défi
@@ -76,7 +76,8 @@ function generateSymLevel() {
 
     let sources = [];
     let attempts = 0;
-    while (sources.length < 6 && attempts < 1000) {
+	let numTiles = Math.floor(Math.random() * 4) + 6; // Génère un nombre entre 6 et 9
+    while (sources.length < numTiles && attempts < 1000) {
         let r, c;
         if (sources.length === 0) {
             r = Math.floor(Math.random() * SYM_GRID_SIZE);
