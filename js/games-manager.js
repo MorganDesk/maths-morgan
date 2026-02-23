@@ -21,18 +21,21 @@ function initGamesManager() {
 
     // Structure de l'interface : Recherche -> Filtres -> Grille de cartes
     gameZone.innerHTML = `
-        <div class="games-header" style="width: 100%; max-width: 800px; margin: 0 auto 2.5rem auto;">
-            <div class="search-bar-container" style="position: relative; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+        <div class="games-header" style="width: 100%; max-width: 800px; margin: 0 auto 2.5rem auto; display: flex; flex-direction: column; align-items: center;">
+            
+            <div class="search-bar-container" style="position: relative; margin-bottom: 1.5rem; width: 100%; max-width: 500px;">
                 <input type="text" id="game-search" class="game-input-select" 
                        placeholder="Rechercher une notion (ex: fractions, angles...)" 
                        oninput="handleSearch(this.value)" 
                        style="padding-left: 42px; height: 42px; width: 100%; font-size: 0.95rem; border-radius: 10px;">
                 <i class="fas fa-search" style="position: absolute; left: 15px; top: 13px; color: var(--text-light); font-size: 1rem;"></i>
             </div>
-            <div id="categories-container" class="categories-filter" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+
+            <div id="categories-container" class="categories-filter" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%;">
                 ${generateCategoryButtons()}
             </div>
         </div>
+
         <div id="games-grid" class="grid-lecons" 
 			 style="width: 100%; 
 					display: grid; 

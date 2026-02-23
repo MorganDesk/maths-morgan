@@ -278,12 +278,9 @@ h2 {
     cursor: pointer;
     transition: all 0.3s ease; /* Pour le halo fluide */
     appearance: none; /* Enlève le style par défaut du navigateur */
-    background-image: url("data:image/svg+xml,..."); /* Ta flèche personnalisée */
-    background-repeat: no-repeat;
-    background-position: right 15px center;
 }
 
-/* L'effet de halo / survol que tu as perdu */
+/* L'effet de halo */
 .game-input-select:hover {
     border-color: var(--primary);
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); /* Le halo lumineux */
@@ -302,7 +299,6 @@ h2 {
     font-size: 0.9rem !important;
     font-weight: 500;
 }
-}
 
 /* Style pour les boutons de filtres actifs */
 .tag-active {
@@ -318,7 +314,16 @@ h2 {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-/* Assure que la zone de jeu prend toute la largeur */
+/* AJOUT : Centrage de la barre de recherche et filtres */
+.games-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre horizontalement le contenu */
+    width: 100%;
+    margin-bottom: 2.5rem;
+}
+
+/* Assure que la zone de jeu prend toute la largeur et centre ses enfants */
 #game-zone {
     display: flex;
     flex-direction: column;
@@ -334,14 +339,32 @@ h2 {
     width: 100%;
 }
 
-/* Pour éviter que les cartes soient trop larges sur très grand écran */
-@media (max-width: 480px) {
-    .game-card h3 {
-        font-size: 1.2rem;
-    }
-    .game-header {
-        padding: 0 10px; /* Évite que la barre de recherche touche les bords */
-    }
+#rank-display-container {
+    position: relative !important;
+    display: block !important;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto !important;
+    padding: 0 15px;
+    top: 0 !important;
+    right: auto !important;
+    left: auto !important;
+    z-index: 10;
+}
+
+.rank-card-standard {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rank-card-floating {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-radius: 12px;
 }
 
 /* La grille : on utilise auto-fit au lieu de auto-fill pour un meilleur comportement */

@@ -34,7 +34,7 @@ function chargerMenuFractions(target, gameConfig) {
 }
 
 
-f// Nouvelle version de la mise à jour du record
+// Nouvelle version de la mise à jour du record
 function updateRecordFractions(mode) {
     const storageKey = mode === 'expert' ? 'maths_morgan_highscore_fractions_expert' : 'maths_morgan_highscore_fractions_equiv';
     const high = parseInt(Storage.getItem(storageKey)) || 0;
