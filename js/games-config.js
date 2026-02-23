@@ -63,5 +63,13 @@ const GAMES_LIST = [
         description: 'Signe moins ou signe plus ? Ne laisse pas les nombres négatifs te faire perdre pied dans ce duel acharné.',
         tags: ['relatifs', 'négatifs', 'positifs', 'calcul', 'mental', 'priorités', 'signes', 'addition', 'soustraction', 'multiplication'],
         initFunction: 'chargerMenuRelatifs'
-    }
+    },
+	{
+		id: 'batisseur-nombres',
+		title: '🏗️ Le Bâtisseur de Nombres',
+		category: 'Arithmétique',
+		description: 'Décompose les nombres en produits de facteurs premiers. Sois précis pour bâtir la tour la plus haute !',
+		tags: ['arithmétique', 'nombres premiers', 'décomposition', 'facteurs', 'divisibilité', 'calcul'],
+		initFunction: 'chargerMenuBatisseur'
+	}
 ];

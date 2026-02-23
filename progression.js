@@ -40,7 +40,11 @@ function getGlobalMasteryLevel() {
 		'maths_morgan_highscore_num_nombre',
 		'maths_morgan_highscore_num_expert',
 		// Critères de divisibilité
-		'maths_morgan_highscore_divisibilite'
+		'maths_morgan_highscore_divisibilite',
+		// Batisseur de nombres
+		'maths_morgan_highscore_bn_facile',
+		'maths_morgan_highscore_bn_normal',
+		'maths_morgan_highscore_bn_expert'
     ];
 
     const saturationMax = 50; // Points max qu'un seul mode peut rapporter
