@@ -133,7 +133,7 @@ function updateGlobalRankDisplay() {
 
     container.innerHTML = `
         <div style="
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.70); 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: ${isMobile ? '5px 12px' : '10px 25px'}; 
