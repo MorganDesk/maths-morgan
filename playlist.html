@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Archives - Maths Morgan</title>
+    <title>Parcours de Révision - Maths Morgan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,31 +11,30 @@
 
 <header>
     <div class="header-top">
-        <h1>📚 Maths Morgan</h1>
+        <a href="index.html" style="text-decoration:none; color:inherit;"><h1>📚 Maths Morgan</h1></a>
         <div class="search-header">
             <i class="fas fa-search"></i>
-            <input type="text" id="globalSearch" placeholder="Rechercher..." oninput="render()">
+            <input type="text" id="globalSearch" placeholder="Chercher un parcours..." oninput="PlaylistManager.handleSearch()">
         </div>
         <div class="header-actions">
-            <button class="theme-toggle-btn" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
+            <button class="theme-toggle-btn" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </div>
-    <nav id="navigation" class="nav-tabs"></nav>
+    <nav id="navigation" class="nav-tabs">
+        <a href="index.html" class="tab-btn"><i class="fas fa-arrow-left"></i> Retour aux cours</a>
+    </nav>
 </header>
 
 <main>
     <div class="controls-bar">
-        <div></div>
-        <div class="sort-wrapper">
-            <i class="fas fa-sort-amount-down"></i>
-            <select id="sortSelect" onchange="updateSort(this.value)">
-                <option value="recent">Plus récents</option>
-                <option value="ancien">Plus anciens</option>
-                <option value="alpha">Ordre A-Z</option>
-            </select>
-        </div>
+        <h2 id="playlist-title" style="margin:0; font-size: 1.2rem; color: var(--primary);">Parcours disponibles</h2>
+        <div id="playlist-breadcrumb"></div>
     </div>
-    <div id="content" class="grid-lecons"></div>
+
+    <div id="content" class="grid-lecons">
+        </div>
 </main>
 
 <div id="pdfModal" class="pdf-modal">
@@ -53,13 +52,35 @@
 </footer>
 
 <script src="config.js"></script>
+
 <script src="6e.js"></script>
 <script src="5e.js"></script>
 <script src="4e.js"></script>
 <script src="3e.js"></script>
+
 <script src="archives.js"></script>
 
 <script src="search.js"></script>
+
+<script src="ui.js"></script>
+
+<script src="playlists_data.js"></script>
+<script src="playlist.js"></script>
+
 <script src="script.js"></script>
+
+<script src="playlist.js"></script>
+<script>
+    // On simule un niveau pour que script.js ne s'arrête pas
+    window.currentLevel = "5e"; 
+</script>
+<script src="script.js"></script> <script>
+    // On attend un tout petit peu (100ms) pour laisser script.js finir ses bêtises
+    // puis on impose l'affichage de la playlist.
+    setTimeout(() => {
+        console.log("Forçage du rendu Playlist...");
+        PlaylistManager.init();
+    }, 100);
+</script>
 </body>
 </html>

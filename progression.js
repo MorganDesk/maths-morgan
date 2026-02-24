@@ -76,22 +76,47 @@ function calculateMasteryData(totalPoints) {
         pourcentage = (avancee / plage) * 100;
         pointsRestants = Math.ceil(suivant.seuil - totalPoints);
     } else {
-        // Mode prestige après le dernier grade (tous les 50 MP)
-        const dernierSeuil = PALIERS_GRADES[PALIERS_GRADES.length - 1].seuil;
-        const depassement = totalPoints - dernierSeuil;
-        niveauPrestige = Math.floor(depassement / 50) + 1;
-        pourcentage = ((depassement % 50) / 50) * 100;
-        pointsRestants = Math.ceil(50 - (depassement % 50));
+        // --- SYSTÈME DE PRESTIGE EXPONENTIEL ---
+        const dernierSeuilPalier = PALIERS_GRADES[PALIERS_GRADES.length - 1].seuil; // 540
+        let pointsRestantsDansPrestige = totalPoints - dernierSeuilPalier;
+        
+        let niveauPrestige = 0;
+        let incrementDifficulte = 10; 
+        let pointsRequisPourNiveauSuivant = 50; 
+
+        // On calcule combien de paliers ont été ENTIÈREMENT complétés
+        while (pointsRestantsDansPrestige >= pointsRequisPourNiveauSuivant) {
+            pointsRestantsDansPrestige -= pointsRequisPourNiveauSuivant;
+            niveauPrestige++; // On ne gagne un niveau que si le palier est fini
+            
+            pointsRequisPourNiveauSuivant += incrementDifficulte;
+            incrementDifficulte *= 2; 
+        }
+
+        // Si niveauPrestige est 0, l'élève est entre 540 et 590.
+        // Le label ne s'affichera que s'il est > 0.
+        const labelPrestige = niveauPrestige > 0 ? ` (Prestige ${niveauPrestige})` : "";
+        
+        return { 
+            mastery: totalPoints.toFixed(1), 
+            actuel, 
+            suivant: null, 
+            pourcentage: (pointsRestantsDansPrestige / pointsRequisPourNiveauSuivant) * 100, 
+            pointsRestants: Math.ceil(pointsRequisPourNiveauSuivant - pointsRestantsDansPrestige), 
+            labelPrestige 
+        };
     }
 
-    return { 
-        mastery: totalPoints.toFixed(1), 
-        actuel, 
-        suivant, 
-        pourcentage, 
-        pointsRestants, 
-        niveauPrestige 
-    };
+    const labelPrestige = niveauPrestige > 0 ? ` (Prestige ${niveauPrestige})` : "";
+        
+	return { 
+		mastery: totalPoints.toFixed(1), 
+		actuel, 
+		suivant: null, // Plus de grade suivant
+		pourcentage, 
+		pointsRestants, 
+		labelPrestige // On retourne le texte déjà formaté
+	};
 }
 
 // --- MISE À JOUR DE L'INTERFACE ---
@@ -113,9 +138,9 @@ function updateGlobalRankDisplay() {
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <div style="width: 12px; height: 12px; border-radius: 50%; background: ${data.actuel.couleur};"></div>
-                    <span style="font-weight: 900; color: ${data.actuel.couleur}; font-size: ${isMobile ? '0.8rem' : '1rem'}; text-transform: uppercase;">
-                        ${data.actuel.nom} ${data.niveauPrestige > 0 ? `(Prestige ${data.niveauPrestige})` : ''}
-                    </span>
+                    <span style="font-weight: 900; color: ${data.actuel.couleur}; font-size: ${isMobile ? '0.85rem' : '1.1rem'}; text-transform: uppercase;">
+						${data.actuel.nom}${data.labelPrestige}
+					</span>
                 </div>
                 <div style="font-weight: 800; font-size: ${isMobile ? '1rem' : '1.2rem'}; color: var(--text-main);">
                     ${data.mastery} <span style="font-size: 0.7rem; color: var(--text-light);">MP</span>

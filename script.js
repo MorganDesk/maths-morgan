@@ -17,16 +17,20 @@ const STATUTS_CONFIG = {
 // --- UTILITAIRES ---
 // Génère un ID unique pour chaque leçon afin de stocker favoris et statuts
 function getLeconId(l, niveauFallback) {
-    // 1. On crée le slug à partir du titre
-    const slug = l.titre.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+    // 1. On normalise pour séparer les accents (ex: 'é' devient 'e' + '´')
+    // 2. On supprime les accents via l'expression régulière Unicode
+    // 3. On passe en minuscules et on remplace les espaces par des tirets
+    const titreNettoye = l.titre
+        .normalize("NFD") 
+        .replace(/[\u0300-\u036f]/g, "") 
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, ''); // On ne garde que l'essentiel
     
-    // 2. On utilise la propriété 'annee' existante de la leçon.
-    // Si elle est absente pour une raison quelconque, on met "0000".
     const anneeLecon = l.annee || "0000";
+    const niv = l.niveau || niveauFallback || "inconnu";
     
-    // 3. On construit l'ID : niveau-annee-titreslug
-    // Exemple : "6e-2024-fractions-decimales"
-    return `${l.niveau || niveauFallback}-${anneeLecon}-${slug}`;
+    return `${niv}-${anneeLecon}-${titreNettoye}`;
 }
 
 // --- RENDU PRINCIPAL ---
@@ -133,9 +137,10 @@ function updateSort(val) {
 
 function shareLecon(e, titre, leconId) {
     e.stopPropagation();
-    // Génère un lien pointant toujours vers l'index avec l'ancre de la leçon
-    const baseUrl = window.location.origin + window.location.pathname.replace(/(archives|favoris)\.html/, 'index.html');
-    const urlPartage = `${baseUrl}#${leconId}`;
+    const niveau = leconId.split('-')[0];
+    const baseUrl = window.location.origin + window.location.pathname.replace(/(archives|favoris|playlist)\.html/, 'index.html');
+    
+    const urlPartage = `${baseUrl}?lvl=${niveau}#${leconId}`;
     
     navigator.clipboard.writeText(urlPartage);
     showToast("Lien de la leçon copié !");
