@@ -7,7 +7,7 @@ let statuts = JSON.parse(localStorage.getItem('maths_morgan_statuts')) || {};
 
 // Configuration des pastilles de progression
 const STATUTS_CONFIG = {
-    'neutre': { label: 'Statut : À définir', class: '' },
+    'neutre': { label: 'Maîtrise : À définir', class: '' },
     'rouge': { label: "Je n'ai pas compris", class: 'rouge' },
     'jaune': { label: 'À approfondir', class: 'jaune' },
     'vert-clair': { label: "J'ai compris", class: 'vert-clair' },
