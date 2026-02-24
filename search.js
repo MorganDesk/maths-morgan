@@ -8,19 +8,46 @@ const SearchEngine = {
             return SearchEngine.agregatToutLeSite();
         }
 
-        // 2. ARCHIVES
+        // 2. RECHERCHE DANS LES PLAYLISTS (Ajouté)
+        if (currentPage.includes('playlists.html')) {
+            const playlistsRaw = typeof PLAYLISTS_DATA !== 'undefined' ? PLAYLISTS_DATA : [];
+            
+            if (searchTerm !== "") {
+                const toutesLecons = SearchEngine.agregatToutLeSite(true);
+                
+                return playlistsRaw.map(p => {
+                    // On prépare une chaîne qui contient TOUT le texte des leçons rattachées
+                    const texteDetailleLecons = p.items.map(id => {
+                        const lecon = toutesLecons.find(l => getLeconId(l, l.niveauSource) === id);
+                        if (!lecon) return "";
+                        
+                        // On indexe : Titre + Matière de la leçon + Tags de la leçon
+                        return `${lecon.titre} ${lecon.matiere || ''} ${lecon.tags ? lecon.tags.join(' ') : ''}`;
+                    }).join(' ');
+                    
+                    return { 
+                        ...p, 
+                        contenuRechercheLecons: texteDetailleLecons,
+                        isPlaylist: true 
+                    };
+                });
+            }
+            return playlistsRaw.map(p => ({...p, isPlaylist: true}));
+        }    
+
+        // 3. ARCHIVES
         if (currentPage.includes('archives.html')) {
             return (typeof donneesArchives !== 'undefined' ? donneesArchives : [])
                    .map(l => ({...l, niveauSource: "archives"}));
         }
 
-        // 3. FAVORIS
+        // 4. FAVORIS
         if (currentPage.includes('favoris.html')) {
             const tous = SearchEngine.agregatToutLeSite(true);
             return tous.filter(l => favoris.includes(getLeconId(l, l.niveauSource)));
         }
 
-        // 4. PAR DÉFAUT (Niveau actuel)
+        // 5. PAR DÉFAUT (Niveau actuel)
         const sourceMap = { 
             "6e": typeof lecons6e !== 'undefined' ? lecons6e : [], 
             "5e": typeof lecons5e !== 'undefined' ? lecons5e : [], 
@@ -49,24 +76,39 @@ const SearchEngine = {
         const term = searchTerm.toLowerCase().trim();
         
         let result = data.filter(l => {
-            // On vérifie le titre, la description et la matière
+            // 1. Recherche dans les champs de base (Titre, Desc)
             const inTitre = l.titre ? l.titre.toLowerCase().includes(term) : false;
             const inDesc = l.desc ? l.desc.toLowerCase().includes(term) : false;
+            
+            // 2. Recherche dans la MATIÈRE 
+            // (Cherche soit dans la matière de la leçon, soit dans celle de la playlist)
             const inMatiere = l.matiere ? l.matiere.toLowerCase().includes(term) : false;
             
-            // On vérifie dans le tableau des tags s'il existe
+            // 3. Recherche dans les TAGS (Leçons classiques)
             const inTags = (l.tags && Array.isArray(l.tags)) 
                 ? l.tags.some(tag => tag.toLowerCase().includes(term)) 
                 : false;
 
-            return inTitre || inDesc || inMatiere || inTags;
+            // 4. Recherche dans le CONTENU DES LEÇONS (Playlists)
+            // (Inclut titres, matières et tags des leçons contenues)
+            const inContenuLecons = l.contenuRechercheLecons 
+                ? l.contenuRechercheLecons.toLowerCase().includes(term) 
+                : false;
+
+            // 5. Recherche dans le NIVEAU (ex: "5e/4e")
+            const inNiveau = l.niveau ? l.niveau.toLowerCase().includes(term) : false;
+
+            return inTitre || inDesc || inMatiere || inTags || inContenuLecons || inNiveau;
         });
 
-        // Tri des résultats
+        // Tri
         result.sort((a, b) => {
             if (currentSort === "alpha") return a.titre.localeCompare(b.titre);
+            // Pour les playlists, on peut trier par titre par défaut si la date n'existe pas
+            if (!a.date || !b.date) return a.titre.localeCompare(b.titre);
+            
             if (currentSort === "ancien") return new Date(a.date) - new Date(b.date);
-            return new Date(b.date) - new Date(a.date); // "recent" par défaut
+            return new Date(b.date) - new Date(a.date);
         });
 
         return result;

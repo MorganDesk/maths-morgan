@@ -1,4 +1,4 @@
-const lecons5e = [
+var lecons5e = [
     { 
         annee: "2025-2026",
 		date: "2025-09-01",

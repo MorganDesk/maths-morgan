@@ -1,4 +1,1 @@
-// Fichier : 6e.js
-const lecons6e = [
-    
-];
+var lecons6e = [];
