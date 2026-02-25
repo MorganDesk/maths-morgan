@@ -160,7 +160,6 @@ main {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    /* Correction du Scroll (Offset) - Déjà parfait ! */
     scroll-margin-top: 100px;
 }
 
@@ -179,7 +178,6 @@ main {
     align-items: center;
 }
 
-/* Ergonomie tactile (Touch) */
 .share-icon,
 .favorite-star,
 .share-playlist-button {
@@ -238,19 +236,17 @@ main {
     background-color: #6c757d;
 }
 
+/* --- Card Titles & Descriptions --- */
 .cours-card h2,
 .playlist-card h2 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin: 0 0 0.5rem 0;
-}
-
-.cours-card h2 {
-    padding-right: 5rem;
+    padding-right: 5rem; 
 }
 
 .cours-card p,
 .playlist-card p {
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1rem 0; 
     font-size: 0.95rem;
     color: #555;
     flex-grow: 1; 
@@ -279,7 +275,6 @@ main {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    /* Ergonomie tactile */
     min-height: 44px;
 }
 
@@ -288,7 +283,6 @@ main {
 }
 
 /* --- Modal, Toast & Highlight --- */
-
 .modal {
     position: fixed;
     z-index: 1000;
@@ -320,7 +314,6 @@ main {
     font-weight: bold;
     cursor: pointer;
     padding: 10px 20px;
-    /* Ergonomie tactile */
     min-width: 44px;
     min-height: 44px;
     text-align: center;
@@ -355,7 +348,7 @@ main {
 }
 
 .cours-card.highlight,
-.playlist-card.highlight {
+.playlist-card.highlight  {
     animation: pulse-shadow 1.5s 3;
 }
 
@@ -366,66 +359,68 @@ main {
 }
 
 /* =========== Responsive Design =========== */
-
-/* --- Tablette (et grands téléphones en paysage) --- */
 @media (max-width: 900px) {
     #cours-container {
-        /* Passe à 2 colonnes sur tablette */
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     }
 }
 
-/* --- Mobile --- */
 @media (max-width: 600px) {
     body { font-size: 16px; }
     main { padding: 0.5rem; }
     header { padding: 1.5rem 1rem; }
+    #cours-container { grid-template-columns: 1fr; }
+}
 
-    #filter-menu ul {
-        gap: 0.5rem;
-    }
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+    background-color: #e9ecef;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
 
-    #filter-menu .filter-link {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
+footer p { margin: 0; }
+footer i { margin-right: 0.5rem; }
 
-    .toolbar {
-        /* Navigation et Recherche */
-        flex-wrap: wrap; /* Permet aux éléments de passer à la ligne */
-    }
+/* --- Mastery Banner --- */
+.mastery-banner {
+    width: 100%;
+    margin-top: 1rem;       /* Space between description and banner */
+    margin-bottom: 0;       /* Glue to the file list's border-top */
+    padding: 0.2rem 0;      /* Minimal vertical padding */
+    border-radius: 0;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.8rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-    #back-to-playlists-button {
-        /* Le bouton prend toute la largeur et apparaît en premier */
-        width: 100%;
-        order: -1; /* Place le bouton en premier */
-        margin-bottom: 0.5rem;
-    }
+.mastery-banner.m-undefined {
+    background-color: #f0f0f0;
+    color: #6c757d;
+}
 
-    .search-container {
-        width: 100%; /* La recherche prend toute la largeur */
-    }
+.mastery-banner.m-none {
+    background-color: #ffcdd2;
+    color: #c62828;
+}
 
-    #cours-container {
-        /* Grille de cartes : 1 seule colonne */
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
+.mastery-banner.m-struggle {
+    background-color: #fff9c4;
+    color: #f57f17;
+}
 
-    .cours-card h2, .playlist-card h2 {
-        font-size: 1.2rem;
-    }
+.mastery-banner.m-ok {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+}
 
-    .modal-content {
-        width: 100%;
-        height: 100%;
-        border-radius: 0;
-    }
-
-    /* Le Toast prend la largeur avec des marges */
-    .toast {
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-    }
+.mastery-banner.m-pro {
+    background-color: #a5d6a7;
+    color: #1b5e20;
 }

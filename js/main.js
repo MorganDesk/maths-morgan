@@ -5,6 +5,7 @@ import { getLessonId, getPlaylistId } from './id.js';
 import { copyShareLink, copyPlaylistShareLink } from './share.js';
 import { renderPlaylistCards, getPlaylistById } from './playlist.js';
 import { renderFilterMenu } from './menu.js';
+import { createMasteryElement } from './mastery.js';
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -51,23 +52,39 @@ document.addEventListener('DOMContentLoaded', function() {
             activePlaylist: activePlaylist
         };
 
+        let coursesToDisplay = [];
         let contentHtml = '';
         updateToolbarVisibility();
 
         if (activePlaylist) {
-            const coursesToDisplay = processCourses(allCourses, config);
+            coursesToDisplay = processCourses(allCourses, config);
             contentHtml = renderCourseCards(coursesToDisplay, favorites);
         } else if (currentLevelFilter === 'Parcours') {
             const playlistsToDisplay = processPlaylists(allPlaylists, allCourses, config);
             contentHtml = renderPlaylistCards(playlistsToDisplay, allCourses);
+            coursesToDisplay = []; // Ensure mastery is not applied to playlists
         } else {
-            const coursesToDisplay = processCourses(allCourses, config);
+            coursesToDisplay = processCourses(allCourses, config);
             contentHtml = renderCourseCards(coursesToDisplay, favorites);
         }
 
         container.innerHTML = contentHtml;
+
+        if (coursesToDisplay.length > 0) {
+            coursesToDisplay.forEach(course => {
+                const cardElement = document.getElementById(course.id);
+                if (cardElement) {
+                    const filesListElement = cardElement.querySelector('.files-list');
+                    if (filesListElement) {
+                        const masteryElement = createMasteryElement(course.id);
+                        filesListElement.insertAdjacentElement('beforebegin', masteryElement);
+                    }
+                }
+            });
+        }
+
         updateTitleFromState();
-        handleHash(); // Handle highlighting after rendering
+        handleHighlighting();
     }
 
     function renderCourseCards(courses, favorites) {
@@ -106,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }).join('');
     }
 
-    // --- UI Update Functions ---
     function updateToolbarVisibility() {
         if (activePlaylist) {
             backToPlaylistsButton.style.display = 'inline-flex';
@@ -137,10 +153,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         const fullTitle = `Maths Morgan - ${title}`;
         document.title = fullTitle;
-        mainHeading.textContent = fullTitle;
+        mainHeading.innerHTML = `<i class="fa-solid fa-book"></i> ${fullTitle}`;
     }
-
-    // --- Event Listeners ---
 
     document.addEventListener('filterChanged', function(event) {
         activePlaylist = null;
@@ -165,8 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (viewPlaylistButton) {
             const playlistCard = viewPlaylistButton.closest('.playlist-card');
             activePlaylist = getPlaylistById(playlistCard.dataset.playlistId, allPlaylists);
-            currentSearchTerm = ''; // Clear search term
-            searchInput.value = ''; // Clear search input
+            currentSearchTerm = '';
+            searchInput.value = '';
             render();
             return;
         }
@@ -212,7 +226,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // --- Modal Logic ---
     function closeModal() {
         modal.style.display = 'none';
         pdfViewer.src = '';
@@ -221,27 +234,16 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('click', (event) => (event.target === modal) && closeModal());
     window.addEventListener('keydown', (event) => (event.key === 'Escape') && closeModal());
 
-    // --- Hash and URL Handling ---
-    function handleHash() {
+    function handleHighlighting() {
         const hash = window.location.hash.substring(1);
         if (!hash) return;
 
-        if (hash.startsWith('playlist-')) {
-            if (currentLevelFilter !== 'Parcours') {
-                // Dispatch event to switch to 'Parcours' view
-                 document.dispatchEvent(new CustomEvent('filterChanged', { detail: { level: 'Parcours' } }));
-            }
-            // The rest will be handled once the view is rendered
-        }
-
-        // Use requestAnimationFrame to wait for the next paint, ensuring the DOM is ready
         requestAnimationFrame(() => {
             const targetElement = document.getElementById(hash);
             if (targetElement) {
                 targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 targetElement.classList.add('highlight');
                 
-                // Update title with the lesson's title if it's a course card
                 if (targetElement.classList.contains('cours-card')) {
                     const lessonTitle = targetElement.querySelector('h2').textContent;
                     updateTitleFromState(lessonTitle);
@@ -254,43 +256,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Initial Load ---
     function initialize() {
-        // Listen for hash changes to re-render and/or highlight
-        window.addEventListener('hashchange', () => {
-             // We need to re-evaluate the level based on the new hash
+        function syncFilterFromURL() {
             const hash = window.location.hash.substring(1);
             const levelMatch = hash.match(/^([3-6]e)-/);
+            let level = 'Tous'; // Default filter
 
             if (hash.startsWith('playlist-')) {
-                // This will trigger a re-render via the 'filterChanged' event
-                document.dispatchEvent(new CustomEvent('filterChanged', { detail: { level: 'Parcours' } }));
+                level = 'Parcours';
             } else if (levelMatch && levelMatch[1]) {
-                 // Switch to the correct level, which will then trigger a render
-                document.dispatchEvent(new CustomEvent('filterChanged', { detail: { level: levelMatch[1] } }));
-            } else {
-                // Default render for cases like clearing the hash
-                render();
+                level = levelMatch[1];
             }
-        }, false);
 
-        // --- Initial page load logic ---
-        const initialHash = window.location.hash.substring(1);
-        const initialLevelMatch = initialHash.match(/^([3-6]e)-/);
-
-        if (initialHash.startsWith('playlist-')) {
-            currentLevelFilter = 'Parcours';
-            document.dispatchEvent(new CustomEvent('setActiveFilter', { detail: { level: 'Parcours' } }));
-        } else if (initialLevelMatch && initialLevelMatch[1]) {
-            const level = initialLevelMatch[1];
-            currentLevelFilter = level;
-            // Also update the menu to show the active state
             document.dispatchEvent(new CustomEvent('setActiveFilter', { detail: { level: level } }));
+            document.dispatchEvent(new CustomEvent('filterChanged', { detail: { level: level } }));
         }
-        
-        // Initial render call
-        render();
+
+        window.addEventListener('hashchange', syncFilterFromURL, false);
+
+        syncFilterFromURL();
     }
 
-    initialize(); // Start the app
+    initialize();
 });
