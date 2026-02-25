@@ -1,4 +1,4 @@
-import { getFavorites, addFavorite, removeFavorite } from 'storage.js';
+import { getFavorites, addFavorite, removeFavorite } from './storage.js';
 
 /**
  * Bascule l'état de favori pour un cours donné.

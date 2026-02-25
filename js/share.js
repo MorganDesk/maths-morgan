@@ -1,4 +1,4 @@
-import { getLessonId, getPlaylistId } from 'id.js';
+import { getLessonId, getPlaylistId } from './id.js';
 
 /**
  * Copies a shareable link for a specific course to the clipboard.

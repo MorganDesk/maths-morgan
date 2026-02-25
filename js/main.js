@@ -1,10 +1,10 @@
-import { getFavorites } from 'storage.js';
-import { toggleFavorite, updateStarIcon } from 'favoris.js';
-import { processCourses, processPlaylists } from 'search.js';
-import { getLessonId, getPlaylistId } from 'id.js';
-import { copyShareLink, copyPlaylistShareLink } from 'share.js';
-import { renderPlaylistCards, getPlaylistById } from 'playlist.js';
-import { renderFilterMenu } from 'menu.js';
+import { getFavorites } from './storage.js';
+import { toggleFavorite, updateStarIcon } from './favoris.js';
+import { processCourses, processPlaylists } from './search.js';
+import { getLessonId, getPlaylistId } from './id.js';
+import { copyShareLink, copyPlaylistShareLink } from './share.js';
+import { renderPlaylistCards, getPlaylistById } from './playlist.js';
+import { renderFilterMenu } from './menu.js';
 
 document.addEventListener('DOMContentLoaded', function() {
 

@@ -1,4 +1,4 @@
-import { getLessonId } from 'id.js';
+import { getLessonId } from './id.js';
 
 /**
  * Normalizes a string by converting it to lower case and removing accents.
