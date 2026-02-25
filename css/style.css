@@ -1,0 +1,431 @@
+:root {
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --background-color: #f9f9f9;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-hover-color: rgba(0, 0, 0, 0.15);
+    --primary-blue: #007aff;
+    --favorite-yellow: #FFC700;
+    --highlight-glow: rgba(0, 122, 255, 0.7);
+
+    --level-6e: #4CAF50;
+    --level-5e: #2196F3;
+    --level-4e: #ff9800;
+    --level-3e: #f44336;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.6;
+}
+
+header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background-color: var(--card-background);
+    border-bottom: 1px solid #e0e0e0;
+}
+
+header h1 {
+    margin-bottom: 1.5rem;
+}
+
+#filter-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+#filter-menu .filter-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    background-color: #eef0f2;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#filter-menu .filter-link:hover {
+    background-color: #e1e4e8;
+}
+
+#filter-menu .filter-link.active {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+#filter-menu .filter-link i {
+    font-size: 1.1em;
+    width: 20px;
+    text-align: center;
+}
+
+main {
+    padding: 1rem;
+}
+
+/* --- Toolbar --- */
+.toolbar {
+    max-width: 1200px;
+    margin: 1rem auto;
+    display: flex;
+    align-items: center; 
+    gap: 1rem;
+}
+
+#back-to-playlists-button {
+    flex-shrink: 0;
+    background-color: #eef0f2;
+    color: var(--text-color);
+    border: 1px solid #ddd;
+}
+
+#back-to-playlists-button:hover {
+    background-color: #e1e4e8;
+}
+
+#back-to-playlists-button i {
+    margin-right: 0.5rem;
+}
+
+.search-container {
+    flex-grow: 1;
+    position: relative;
+}
+
+.search-container i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+#search-input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem; 
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: white;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+#sort-select {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: white;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* --- Cards Grid --- */
+#cours-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 1rem auto;
+}
+
+/* Generic Card Styles */
+.cours-card,
+.playlist-card {
+    position: relative;
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    /* Correction du Scroll (Offset) - Déjà parfait ! */
+    scroll-margin-top: 100px;
+}
+
+.cours-card:hover,
+.playlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-hover-color);
+}
+
+.card-actions {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Ergonomie tactile (Touch) */
+.share-icon,
+.favorite-star,
+.share-playlist-button {
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.2s, transform 0.2s;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.share-icon:hover, .favorite-star:hover, .share-playlist-button:hover {
+    transform: scale(1.1);
+    background-color: #f0f0f0;
+}
+
+.favorite-star.active {
+    color: var(--favorite-yellow);
+}
+
+.share-icon:hover {
+    color: var(--primary-blue);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.card-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25em 0.75em;
+    border-radius: 20px;
+    color: white;
+}
+
+.badge.niveau-6e { background-color: var(--level-6e); }
+.badge.niveau-5e { background-color: var(--level-5e); }
+.badge.niveau-4e { background-color: var(--level-4e); }
+.badge.niveau-3e { background-color: var(--level-3e); }
+
+.badge.matiere {
+    background-color: #6c757d;
+}
+
+.cours-card h2,
+.playlist-card h2 {
+    font-size: 1.4rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.cours-card h2 {
+    padding-right: 5rem;
+}
+
+.cours-card p,
+.playlist-card p {
+    margin: 0 0 1.5rem 0;
+    font-size: 0.95rem;
+    color: #555;
+    flex-grow: 1; 
+}
+
+.files-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+    margin-top: auto; 
+}
+
+.file-button {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* Ergonomie tactile */
+    min-height: 44px;
+}
+
+.file-button:hover {
+    background-color: #0056b3;
+}
+
+/* --- Modal, Toast & Highlight --- */
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 12px;
+    width: 95%;
+    height: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-button {
+    color: #aaa;
+    align-self: flex-end;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px 20px;
+    /* Ergonomie tactile */
+    min-width: 44px;
+    min-height: 44px;
+    text-align: center;
+}
+
+#pdf-viewer {
+    flex-grow: 1;
+    border: none;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    transform: translateY(150%);
+    background-color: #333;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 10px;
+    z-index: 1000;
+    opacity: 0;
+    text-align: center;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s, transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.cours-card.highlight,
+.playlist-card.highlight {
+    animation: pulse-shadow 1.5s 3;
+}
+
+@keyframes pulse-shadow {
+    0% { box-shadow: 0 4px 12px var(--shadow-color); }
+    50% { box-shadow: 0 6px 25px var(--highlight-glow), 0 0 15px var(--highlight-glow); }
+    100% { box-shadow: 0 4px 12px var(--shadow-color); }
+}
+
+/* =========== Responsive Design =========== */
+
+/* --- Tablette (et grands téléphones en paysage) --- */
+@media (max-width: 900px) {
+    #cours-container {
+        /* Passe à 2 colonnes sur tablette */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* --- Mobile --- */
+@media (max-width: 600px) {
+    body { font-size: 16px; }
+    main { padding: 0.5rem; }
+    header { padding: 1.5rem 1rem; }
+
+    #filter-menu ul {
+        gap: 0.5rem;
+    }
+
+    #filter-menu .filter-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .toolbar {
+        /* Navigation et Recherche */
+        flex-wrap: wrap; /* Permet aux éléments de passer à la ligne */
+    }
+
+    #back-to-playlists-button {
+        /* Le bouton prend toute la largeur et apparaît en premier */
+        width: 100%;
+        order: -1; /* Place le bouton en premier */
+        margin-bottom: 0.5rem;
+    }
+
+    .search-container {
+        width: 100%; /* La recherche prend toute la largeur */
+    }
+
+    #cours-container {
+        /* Grille de cartes : 1 seule colonne */
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .cours-card h2, .playlist-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    /* Le Toast prend la largeur avec des marges */
+    .toast {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+    }
+}

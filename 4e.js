@@ -1,3 +1,0 @@
-var lecons4e = [
-
-];

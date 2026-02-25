@@ -3,69 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cours - Maths Morgan</title>	
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <title>Maths Morgan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-<header>
-    <div class="header-top">
-        <h1><i class="fa-solid fa-book"></i> Maths Morgan</h1>
-        <div class="search-header">
-            <i class="fas fa-search"></i>
-            <input type="text" id="globalSearch" placeholder="Rechercher une notion..." oninput="render(currentLevel)">
-        </div>
-        <div class="header-actions">
-            <button class="theme-toggle-btn" onclick="toggleDarkMode()" id="theme-toggle" title="Changer le mode">
-                <i class="fas fa-moon"></i>
+    <header>
+        <h1>Maths Morgan</h1>
+        <nav id="filter-menu">
+            <!-- Les filtres seront injectés ici par JS -->
+        </nav>
+    </header>
+    <main>
+        <div class="toolbar">
+            <button id="back-to-playlists-button" class="file-button" style="display: none;">
+                <i class="fas fa-arrow-left"></i>
+                Retour aux parcours
             </button>
+            <div class="search-container">
+                 <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Rechercher un cours ou un parcours...">
+            </div>
+            <div id="sort-controls">
+                <select id="sort-select">
+                    <option value="date-desc">Plus récents</option>
+                    <option value="date-asc">Plus anciens</option>
+                    <option value="title-asc">Titre (A-Z)</option>
+                    <option value="title-desc">Titre (Z-A)</option>
+                </select>
+            </div>
+        </div>
+        <div id="cours-container">
+            <!-- Les cartes de cours seront injectées ici -->
+        </div>
+    </main>
+
+    <!-- Modale pour l'affichage des PDF -->
+    <div id="pdf-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <iframe id="pdf-viewer" src=""></iframe>
         </div>
     </div>
-    <nav id="navigation" class="nav-tabs"></nav>
-</header>
-
-<main>
-    <div class="controls-bar">
-        <div id="filters-container"></div>
-        <div class="sort-wrapper">
-            <i class="fas fa-sort-amount-down"></i>
-            <select id="sortSelect" onchange="updateSort(this.value)">
-                <option value="recent">Plus récents</option>
-                <option value="ancien">Plus anciens</option>
-                <option value="alpha">Ordre A-Z</option>
-            </select>
-        </div>
-    </div>
-
-    <div id="content" class="grid-lecons"></div>
-</main>
-
-<div id="pdfModal" class="pdf-modal">
-    <span class="close-modal" onclick="closePDF()">&times;</span>
     
-    <div class="modal-content">
-        <iframe id="pdf-frame" src=""></iframe>
-    </div>
-</div>
+    <!-- Toast pour les notifications -->
+    <div class="toast" id="toast-notification"></div>
 
-<footer class="site-footer">
-    <p class="privacy-info">
-        <i class="fas fa-user-shield"></i> <strong>Confidentialité :</strong><br>
-        Tes favoris et statuts sont liés à <span class="highlight-browser">ce navigateur</span>.<br>
-		Ils ne sont pas synchronisés entre tes appareils. <br>
-        Monsieur Morgan n'y a pas accès.
-    </p>
-</footer>
-
-<script src="config.js"></script>
-<script src="6e.js"></script>
-<script src="5e.js"></script>
-<script src="4e.js"></script>
-<script src="3e.js"></script>
-<script src="archives.js"></script>
-<script src="search.js"></script>
-<script src="script.js"></script>
-
+    <!-- Datas -->
+    <script src="/datas/6e.js"></script>
+    <script src="/datas/5e.js"></script>
+    <script src="/datas/4e.js"></script>
+    <script src="/datas/3e.js"></script>
+    <script src="/datas/playlists_data.js"></script>
+    
+    <!-- Main app logic -->
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

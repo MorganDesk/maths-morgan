@@ -1,6 +1,6 @@
-var PLAYLISTS_DATA = [
+var playlists_data = [
     {
-        "id": "5e-triangles",
+        "id": "playlist-les-triangles-en-cinquieme",
         "titre": "Les triangles en cinquième",
         "desc": "Tout pour maîtriser les triangles et les angles.",
         "niveau": "5e",
@@ -15,7 +15,7 @@ var PLAYLISTS_DATA = [
         ]
     },
     {
-        "id": "gestion-donnees-3e",
+        "id": "playlist-gestion-de-donnees",
         "titre": "Gestion de données",
         "desc": "Maîtriser le hasard et l'analyse de données (Probabilités et Statistiques).",
         "niveau": "3e",
@@ -23,10 +23,13 @@ var PLAYLISTS_DATA = [
         "items": [
             "3e-2025-2026-probabilites",
             "3e-2025-2026-statistiques"
+        ],
+        "tags": [
+            "huehue"
         ]
     },
     {
-        "id": "geometrie-3e-brevet",
+        "id": "playlist-geometrie-du-brevet",
         "titre": "Géométrie du Brevet",
         "desc": "Les deux piliers de la 3ème : Théorème de Thalès et Trigonométrie.",
         "niveau": "3e",
@@ -34,10 +37,13 @@ var PLAYLISTS_DATA = [
         "items": [
             "3e-2025-2026-theoreme-de-thales",
             "3e-2025-2026-trigonometrie"
+        ],
+        "tags": [
+            "zob"
         ]
     },
     {
-        "id": "fonctions-3e",
+        "id": "playlist-le-monde-des-fonctions",
         "titre": "Le monde des Fonctions",
         "desc": "Comprendre les bases des fonctions et l'étude des droites (affines et linéaires).",
         "niveau": "3e",
@@ -48,7 +54,7 @@ var PLAYLISTS_DATA = [
         ]
     },
     {
-        "id": "calcul-litteral-3e",
+        "id": "playlist-calcul-litteral",
         "titre": "Calcul littéral",
         "desc": "S'entraîner au développement, à la factorisation et aux équations.",
         "niveau": "3e",
@@ -56,5 +62,16 @@ var PLAYLISTS_DATA = [
         "items": [
             "3e-2025-2026-calcul-litteral"
         ]
-    }
+    },
+     {
+        "id": "playlist-test",
+        "titre": "Playlist Test",
+        "desc": "une description foireuse",
+        "niveau": "3e",
+        "matiere": "Nombres et calcul",
+        "items": [
+            "3e-2025-2026-calcul-litteral",
+            "5e-2025-2026-inegalite-triangulaire"
+        ]
+     }
 ];

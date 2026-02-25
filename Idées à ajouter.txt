@@ -1,6 +1,0 @@
-### 6. Statistiques de "Vibe" (Optionnel & Fun)
-Ajouter un petit compteur de "Vues" ou de "Merci" (clics) pour que tu puisses voir quelles leçons sont les plus consultées, ce qui te donne un retour gratifiant sur ton travail.
-
-
-### 3. Les "Parcours" ou "Collections" (Playlists de Maths)
-Au lieu de simplement lister des leçons, tu pourrais créer un onglet "Objectif Brevet" ou "Réviser le prochain contrôle". Ce serait un onglet qui regroupe dynamiquement des ressources venant de différents chapitres (ex: Fractions de 6e + Calcul littéral de 3e) pour un objectif précis.

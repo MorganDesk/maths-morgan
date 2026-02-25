@@ -1,10 +1,11 @@
-var lecons6e = [
+var data6e = [
     {
         "annee": "2025-2026",
         "date": "2025-09-01",
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N1 - Désignations d'un nombre entier",
+        "id": "6e-2025-2026-n1-designations-dun-nombre-entier",
         "desc": "Je sais écrire et décomposer un nombre entier.",
         "fichiers": [
             {
@@ -26,6 +27,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N2 - Comparer, ranger et encadrer des nombres entiers",
+        "id": "6e-2025-2026-n2-comparer-ranger-et-encadrer-des-nombres-entiers",
         "desc": "Je sais comparer, ranger et encadrer des nombres entiers.",
         "fichiers": [
             {
@@ -51,6 +53,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N3 - Nombres entiers et demi-droite graduée",
+        "id": "6e-2025-2026-n3-nombres-entiers-et-demi-droite-graduee",
         "desc": "Je sais repérer et placer un nombre entier sur une demi-droite graduée.",
         "fichiers": [
             {
@@ -72,6 +75,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N4 - Additionner et soustraire des nombres entiers",
+        "id": "6e-2025-2026-n4-additionner-et-soustraire-des-nombres-entiers",
         "desc": "Je sais additionner et soustraire des nombres entiers.",
         "fichiers": [
             {
@@ -96,6 +100,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N5 - Multiplier des nombres entiers",
+        "id": "6e-2025-2026-n5-multiplier-des-nombres-entiers",
         "desc": "Je sais multiplier des nombres entiers.",
         "fichiers": [
             {
@@ -117,6 +122,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N6 - Division euclidienne",
+        "id": "6e-2025-2026-n6-division-euclidienne",
         "desc": "Je sais effectuer une division euclidienne.",
         "fichiers": [
             {
@@ -140,6 +146,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N7 - Critères de divisibilité",
+        "id": "6e-2025-2026-n7-criteres-de-divisibilite",
         "desc": "Je connais la notion de multiple, diviseur et les principaux critères de divisibilité.",
         "fichiers": [
             {
@@ -161,6 +168,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N8 - Ordre de grandeur",
+        "id": "6e-2025-2026-n8-ordre-de-grandeur",
         "desc": "Je sais calculer un ordre de grandeur.",
         "fichiers": [
             {
@@ -187,6 +195,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N9 - Fractions décimales",
+        "id": "6e-2025-2026-n9-fractions-decimales",
         "desc": "Je connais la notion de fractions décimales.",
         "fichiers": [
             {
@@ -208,6 +217,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N10 - Différentes écritures d'un nombre décimal",
+        "id": "6e-2025-2026-n10-differentes-ecritures-dun-nombre-decimal",
         "desc": "Je sais utiliser les différentes écritures d'un nombre décimal.",
         "fichiers": [
             {
@@ -230,6 +240,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N11 - Nombres décimaux et demi-droite graduée",
+        "id": "6e-2025-2026-n11-nombres-decimaux-et-demi-droite-graduee",
         "desc": "Je sais repérer et placer des nombres décimaux sur une demi-droite graduée.",
         "fichiers": [
             {
@@ -252,6 +263,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N12 - Comparer et ranger des nombres décimaux",
+        "id": "6e-2025-2026-n12-comparer-et-ranger-des-nombres-decimaux",
         "desc": "Je sais comparer et ranger des nombres décimaux.",
         "fichiers": [
             {
@@ -277,6 +289,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N13 - Intercaler, encadrer et arrondir des nombres décimaux",
+        "id": "6e-2025-2026-n13-intercaler-encadrer-et-arrondir-des-nombres-decimaux",
         "desc": "Je sais encadrer et intercaler des nombres décimaux.",
         "fichiers": [
             {
@@ -300,6 +313,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N14 et N15 - Additionner et soustraire des nombres décimaux",
+        "id": "6e-2025-2026-n14-et-n15-additionner-et-soustraire-des-nombres-decimaux",
         "desc": "Je sais additionner et soustraire des nombres décimaux.",
         "fichiers": [
             {
@@ -322,6 +336,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N16 - Multiplier des nombres décimaux",
+        "id": "6e-2025-2026-n16-multiplier-des-nombres-decimaux",
         "desc": "Je sais multiplier des nombres décimaux.",
         "fichiers": [
             {
@@ -343,6 +358,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N17 - Division décimale",
+        "id": "6e-2025-2026-n17-division-decimale",
         "desc": "Je sais effectuer une division décimale.",
         "fichiers": [
             {
@@ -370,6 +386,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N18 - Calculer une expression",
+        "id": "6e-2025-2026-n18-calculer-une-expression",
         "desc": "Je sais calculer une expression.",
         "fichiers": [
             {
@@ -394,6 +411,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N19 - Fraction partage",
+        "id": "6e-2025-2026-n19-fraction-partage",
         "desc": "Je connais la notion de fraction partage.",
         "fichiers": [
             {
@@ -417,6 +435,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N21 - Fraction et demi-droite graduée",
+        "id": "6e-2025-2026-n21-fraction-et-demi-droite-graduee",
         "desc": "Je sais repérer et placer des fractions sur une demi-droite graduée.",
         "fichiers": [
             {
@@ -438,6 +457,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N23 - Comparer et encadrer des fractions",
+        "id": "6e-2025-2026-n23-comparer-et-encadrer-des-fractions",
         "desc": "Je sais comparer et encadrer des fractions.",
         "fichiers": [
             {
@@ -460,6 +480,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N24 - Additionner et soustraire des fractions",
+        "id": "6e-2025-2026-n24-additionner-et-soustraire-des-fractions",
         "desc": "Je sais additionner et soustraire des fractions.",
         "fichiers": [
             {
@@ -482,6 +503,7 @@ var lecons6e = [
         "niveau": "6e",
         "matiere": "Nombres et calcul",
         "titre": "N25 - Prendre une fraction d'une quantité",
+        "id": "6e-2025-2026-n25-prendre-une-fraction-dune-quantite",
         "desc": "Je sais prendre une fraction d'une quantité.",
         "fichiers": [
             {
