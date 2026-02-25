@@ -1,4 +1,4 @@
-import { getPlaylistId } from './id.js';
+import { getPlaylistId } from 'id.js';
 
 /**
  * Generates the HTML for a list of playlist cards.
