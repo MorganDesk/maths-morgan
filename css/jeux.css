@@ -166,13 +166,15 @@
 }
 
 #defi-des-tables-game,
-#choc-des-relatifs-game {
+#choc-des-relatifs-game,
+#compte-bon-game {
     background-color: #ffffff;
     border-radius: 12px;
     border: 3px solid #4f46e5;
     padding: 2rem;
-    max-width: 500px;
+    max-width: 600px;
     margin: auto;
+    text-align: center;
 }
 
 .game-stats, .game-area, .game-over-screen {
@@ -187,7 +189,8 @@
     font-weight: 500;
 }
 
-#question-container {
+#question-container,
+.target-number {
     font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
@@ -210,6 +213,85 @@
 }
 .feedback.correct { color: #16a34a; }
 .feedback.incorrect { color: #dc2626; }
+
+/* Compte est bon Specifics */
+#compte-bon-game .game-area p {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.tiles-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.tile {
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 60px;
+    text-align: center;
+    box-shadow: 0 4px #999;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.number-tile {
+    background-color: #4f46e5;
+    color: white;
+    box-shadow: 0 4px #3a32b4;
+}
+
+.operator-tile {
+    background-color: #e0e0e0;
+    color: #333;
+    box-shadow: 0 4px #bdbdbd;
+}
+
+.tile.selected {
+    transform: translateY(2px);
+    box-shadow: 0 2px #666;
+}
+
+.number-tile.selected { box-shadow: 0 2px #2b248a; }
+.operator-tile.selected { box-shadow: 0 2px #9e9e9e; }
+
+.game-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem; /* Espace entre les boutons */
+    margin-top: 1.5rem;
+}
+
+.reset-button, .action-button, #next-puzzle-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+#new-draw-button {
+    background-color: #2196F3; /* Couleur bleue pour le nouveau tirage */
+}
+
+.reset-button:hover, .action-button:hover, #next-puzzle-button:hover {
+    background-color: #d32f2f;
+}
+
+#new-draw-button:hover {
+    background-color: #1976D2;
+}
+
 
 /* Game Over Screen */
 .new-record-message {

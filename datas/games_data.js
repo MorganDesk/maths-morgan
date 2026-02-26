@@ -15,5 +15,14 @@ const gamesData = [
         tags: ['addition', 'soustraction', 'multiplication', 'vitesse', 'relatifs'],
         modes: ['Addition (+)', 'Soustraction (-)', 'Mélange (+/-)', 'Multiplication (x)', 'Mélange total (+/-/x)'],
         entryPoint: 'jeux/choc-des-relatifs.js'
+    },
+    {
+        id: 'compte-bon',
+        title: 'Le Compte est Bon',
+        matiere: 'Logique',
+        description: 'Trouvez le nombre cible en utilisant les 6 plaques et les 4 opérations. Un casse-tête classique !',
+        tags: ['logique', 'calcul', 'stratégie'],
+        modes: ['Normal', 'Extrême'],
+        entryPoint: 'jeux/compte-bon.js'
     }
 ];
