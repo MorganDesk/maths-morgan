@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const menuContainer = document.getElementById('filter-menu');
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
     const menuItems = [
         { id: 'tous', text: 'Tout', icon: 'fa-solid fa-infinity', href: 'index.html#tous' },
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'jeux', text: 'Jeux', icon: 'fa-solid fa-gamepad', href: 'jeux.html' }
     ];
 
-    // 1. Créer et injecter les boutons du menu
+    // 1. Create and inject menu buttons
     menuItems.forEach(item => {
         const button = document.createElement('button');
         button.id = `filter-${item.id}`;
@@ -23,17 +22,33 @@ document.addEventListener('DOMContentLoaded', () => {
         menuContainer.appendChild(button);
     });
 
-    // 2. Écouter l'événement pour définir le bouton actif
-    document.addEventListener('setActiveFilter', (event) => {
-        const filter = event.detail.filter;
-        menuContainer.querySelectorAll('.file-button').forEach(btn => btn.classList.remove('active'));
-        const activeButton = document.getElementById(`filter-${filter}`);
-        if (activeButton) {
-            activeButton.classList.add('active');
-        }
-    });
+    // 2. Function to update the active button based on the current URL
+    function updateActiveButton() {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const currentHash = window.location.hash.replace('#', '');
 
-    // 3. Gérer les clics sur le menu pour la navigation/filtrage
+        let activeFilterId = null;
+
+        if (currentPage === 'jeux.html') {
+            activeFilterId = 'jeux';
+        } else if (currentPage === 'index.html') {
+            // If there's a valid hash, use it. Otherwise, default to 'tous'.
+            activeFilterId = menuItems.some(item => item.id === currentHash) ? currentHash : 'tous';
+        }
+
+        // Deactivate all buttons
+        menuContainer.querySelectorAll('.file-button').forEach(btn => btn.classList.remove('active'));
+
+        // Activate the correct button if an active filter was determined
+        if (activeFilterId) {
+            const activeButton = document.getElementById(`filter-${activeFilterId}`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+    }
+
+    // 3. Handle menu clicks for navigation and filtering
     menuContainer.addEventListener('click', (event) => {
         const button = event.target.closest('.file-button');
         if (!button) return;
@@ -44,17 +59,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!targetItem) return;
 
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
         const isIndexPage = currentPage === 'index.html';
         const targetIsIndex = targetItem.href.startsWith('index.html');
 
         if (isIndexPage && targetIsIndex) {
-            // Clic sur un filtre de la page d'accueil
-            window.history.pushState({}, '', `#${filter}`);
+            // Internal navigation on the index page
+            const newHash = targetItem.href.split('#')[1] || '';
+            window.history.pushState({ filter }, '', `#${newHash}`);
             document.dispatchEvent(new CustomEvent('filterChange', { detail: { filter } }));
-            document.dispatchEvent(new CustomEvent('setActiveFilter', { detail: { filter } }));
+            updateActiveButton(); // Update button state immediately
         } else {
-            // Naviguer vers une autre page
+            // Navigate to a different page
             window.location.href = targetItem.href;
         }
     });
+
+    // 4. Listen for browser back/forward navigation changes
+    window.addEventListener('popstate', updateActiveButton);
+
+    // 5. Set the initial active button on page load
+    updateActiveButton();
 });
