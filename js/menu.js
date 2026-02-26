@@ -1,80 +1,60 @@
-export function renderFilterMenu() {
-    const filterMenu = document.getElementById('filter-menu');
-    if (!filterMenu) {
-        console.error("L'élément #filter-menu est introuvable. Le menu ne peut pas être affiché.");
-        return;
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const menuContainer = document.getElementById('filter-menu');
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-    // Levels and their specific icons
-    const levels = ['Tous', '6e', '5e', '4e', '3e'];
-    const levelIcons = {
-        'Tous': 'fa-border-all',
-        '6e': 'fa-shapes',
-        '5e': 'fa-ruler-combined',
-        '4e': 'fa-flask-vial',
-        '3e': 'fa-atom'
-    };
+    const menuItems = [
+        { id: 'tous', text: 'Tout', icon: 'fa-solid fa-infinity', href: 'index.html#tous' },
+        { id: '6e', text: '6e', icon: 'fa-solid fa-shapes', href: 'index.html#6e' },
+        { id: '5e', text: '5e', icon: 'fa-solid fa-ruler-combined', href: 'index.html#5e' },
+        { id: '4e', text: '4e', icon: 'fa-solid fa-calculator', href: 'index.html#4e' },
+        { id: '3e', text: '3e', icon: 'fa-solid fa-flask', href: 'index.html#3e' },
+        { id: 'parcours', text: 'Parcours', icon: 'fa-solid fa-map-signs', href: 'index.html#parcours' },
+        { id: 'favoris', text: 'Favoris', icon: 'fa-solid fa-star', href: 'index.html#favoris' },
+        { id: 'jeux', text: 'Jeux', icon: 'fa-solid fa-gamepad', href: 'jeux.html' }
+    ];
 
-    // Create the main level filter items
-    let menuItems = levels.map(level => `
-        <li>
-            <a href="#" class="filter-link${level === 'Tous' ? ' active' : ''}" data-level="${level}">
-                <i class="fas ${levelIcons[level]}"></i>
-                <span>${level}</span>
-            </a>
-        </li>
-    `).join('');
+    // 1. Créer et injecter les boutons du menu
+    menuItems.forEach(item => {
+        const button = document.createElement('button');
+        button.id = `filter-${item.id}`;
+        button.className = 'file-button';
+        button.dataset.filter = item.id;
+        button.innerHTML = `<i class="${item.icon}"></i> ${item.text}`;
+        menuContainer.appendChild(button);
+    });
 
-    // Insert the 'Parcours' button right after the levels
-    const parcoursItem = `
-        <li>
-            <a href="#" class="filter-link" data-level="Parcours">
-                <i class="fas fa-layer-group"></i>
-                <span>Parcours</span>
-            </a>
-        </li>
-    `;
-
-    // Add the 'Favoris' button at the end
-    const favorisItem = `
-        <li>
-            <a href="#" class="filter-link" data-level="Favoris">
-                <i class="fas fa-star"></i>
-                <span>Mes Favoris</span>
-            </a>
-        </li>
-    `;
-
-    filterMenu.innerHTML = `<ul>${menuItems}${parcoursItem}${favorisItem}</ul>`;
-
-    function setActiveFilter(level) {
-        document.querySelectorAll('#filter-menu .filter-link').forEach(l => l.classList.remove('active'));
-        const linkToActivate = document.querySelector(`#filter-menu .filter-link[data-level="${level}"]`);
-        if (linkToActivate) {
-            linkToActivate.classList.add('active');
+    // 2. Écouter l'événement pour définir le bouton actif
+    document.addEventListener('setActiveFilter', (event) => {
+        const filter = event.detail.filter;
+        menuContainer.querySelectorAll('.file-button').forEach(btn => btn.classList.remove('active'));
+        const activeButton = document.getElementById(`filter-${filter}`);
+        if (activeButton) {
+            activeButton.classList.add('active');
         }
-    }
+    });
 
-    filterMenu.addEventListener('click', (event) => {
-        const link = event.target.closest('.filter-link');
-        if (!link) return;
+    // 3. Gérer les clics sur le menu pour la navigation/filtrage
+    menuContainer.addEventListener('click', (event) => {
+        const button = event.target.closest('.file-button');
+        if (!button) return;
 
         event.preventDefault();
-        
-        // Clear the URL hash to prevent being stuck
-        history.pushState("", document.title, window.location.pathname + window.location.search);
+        const filter = button.dataset.filter;
+        const targetItem = menuItems.find(item => item.id === filter);
 
-        const level = link.dataset.level;
-        setActiveFilter(level);
+        if (!targetItem) return;
 
-        const filterChangeEvent = new CustomEvent('filterChanged', { 
-            detail: { level: level }
-        });
-        document.dispatchEvent(filterChangeEvent);
+        const isIndexPage = currentPage === 'index.html';
+        const targetIsIndex = targetItem.href.startsWith('index.html');
+
+        if (isIndexPage && targetIsIndex) {
+            // Clic sur un filtre de la page d'accueil
+            window.history.pushState({}, '', `#${filter}`);
+            document.dispatchEvent(new CustomEvent('filterChange', { detail: { filter } }));
+            document.dispatchEvent(new CustomEvent('setActiveFilter', { detail: { filter } }));
+        } else {
+            // Naviguer vers une autre page
+            window.location.href = targetItem.href;
+        }
     });
-
-    document.addEventListener('setActiveFilter', (event) => {
-        const level = event.detail.level;
-        setActiveFilter(level);
-    });
-}
+});

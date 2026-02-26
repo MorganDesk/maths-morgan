@@ -62,5 +62,16 @@ var playlists_data = [
         "items": [
             "3e-2025-2026-calcul-litteral"
         ]
-    }
+    },
+     {
+        "id": "playlist-test",
+        "titre": "Playlist Test",
+        "desc": "une description foireuse",
+        "niveau": "3e",
+        "matiere": "Nombres et calcul",
+        "items": [
+            "3e-2025-2026-calcul-litteral",
+            "5e-2025-2026-inegalite-triangulaire"
+        ]
+     }
 ];

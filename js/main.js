@@ -4,13 +4,11 @@ import { processCourses, processPlaylists } from './search.js';
 import { getLessonId, getPlaylistId } from './id.js';
 import { copyShareLink, copyPlaylistShareLink } from './share.js';
 import { renderPlaylistCards, getPlaylistById } from './playlist.js';
-import { renderFilterMenu } from './menu.js';
 import { createMasteryElement } from './mastery.js';
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    // --- Initial UI Setup ---
-    renderFilterMenu(); // This will create the menu structure
+    const filterItems = ['tous', '6e', '5e', '4e', '3e', 'parcours', 'favoris'];
 
     // --- Data Loading ---
     let allCourses = [];
@@ -84,7 +82,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         updateTitleFromState();
-        handleHighlighting();
+        // The highlighting will be called after render, which is more reliable
+        setTimeout(handleHighlighting, 0);
     }
 
     function renderCourseCards(courses, favorites) {
@@ -156,9 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
         mainHeading.innerHTML = `<i class="fa-solid fa-book"></i> ${fullTitle}`;
     }
 
-    document.addEventListener('filterChanged', function(event) {
+    document.addEventListener('filterChange', function(event) {
+        const { filter } = event.detail;
         activePlaylist = null;
-        currentLevelFilter = event.detail.level;
+        currentLevelFilter = filter.charAt(0).toUpperCase() + filter.slice(1);
         currentSearchTerm = '';
         searchInput.value = '';
         render();
@@ -259,22 +259,27 @@ document.addEventListener('DOMContentLoaded', function() {
     function initialize() {
         function syncFilterFromURL() {
             const hash = window.location.hash.substring(1);
-            const levelMatch = hash.match(/^([3-6]e)-/);
-            let level = 'Tous'; // Default filter
+            let filter = 'tous'; // Default filter
 
-            if (hash.startsWith('playlist-')) {
-                level = 'Parcours';
-            } else if (levelMatch && levelMatch[1]) {
-                level = levelMatch[1];
+            // 1. Déterminer le filtre approprié à partir de l'ancre
+            if (filterItems.includes(hash)) {
+                filter = hash;
+            } else if (hash.startsWith('playlist-')) {
+                filter = 'parcours';
+            } else {
+                const levelMatch = hash.match(/^([3-6]e)-/);
+                if (levelMatch && levelMatch[1]) {
+                    filter = levelMatch[1];
+                }
             }
 
-            document.dispatchEvent(new CustomEvent('setActiveFilter', { detail: { level: level } }));
-            document.dispatchEvent(new CustomEvent('filterChanged', { detail: { level: level } }));
+            // 2. Envoyer les événements pour mettre à jour l'UI
+            document.dispatchEvent(new CustomEvent('filterChange', { detail: { filter } }));
+            document.dispatchEvent(new CustomEvent('setActiveFilter', { detail: { filter } }));
         }
 
-        window.addEventListener('hashchange', syncFilterFromURL, false);
-
-        syncFilterFromURL();
+        window.addEventListener('hashchange', syncFilterFromURL);
+        syncFilterFromURL(); // Appel initial
     }
 
     initialize();

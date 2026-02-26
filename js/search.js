@@ -33,6 +33,7 @@ export function processCourses(courses, config) {
         filteredCourses = filteredCourses.filter(course => 
             normalizeString(course.titre).includes(normalizedSearchTerm) ||
             normalizeString(course.desc).includes(normalizedSearchTerm) ||
+            normalizeString(course.matiere).includes(normalizedSearchTerm) ||
             (course.tags && course.tags.some(tag => normalizeString(tag).includes(normalizedSearchTerm)))
         );
     }
@@ -63,6 +64,7 @@ export function processPlaylists(allPlaylists, allCourses, config) {
                 return course && (
                     normalizeString(course.titre).includes(normalizedSearchTerm) ||
                     normalizeString(course.desc).includes(normalizedSearchTerm) ||
+                    normalizeString(course.matiere).includes(normalizedSearchTerm) ||
                     (course.tags && course.tags.some(tag => normalizeString(tag).includes(normalizedSearchTerm)))
                 );
             });
