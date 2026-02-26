@@ -22,7 +22,7 @@ const gamesData = [
         matiere: 'Logique',
         description: 'Trouvez le nombre cible en utilisant les 6 plaques et les 4 opérations. Un casse-tête classique !',
         tags: ['logique', 'calcul', 'stratégie'],
-        modes: ['Normal', 'Extrême'],
+        modes: ['Facile', 'Normal', 'Extrême'],
         entryPoint: 'jeux/compte-bon.js'
     }
 ];

@@ -266,6 +266,7 @@
     justify-content: center;
     gap: 1rem; /* Espace entre les boutons */
     margin-top: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .reset-button, .action-button, #next-puzzle-button {
@@ -280,16 +281,34 @@
     transition: background-color 0.2s;
 }
 
-#new-draw-button {
-    background-color: #2196F3; /* Couleur bleue pour le nouveau tirage */
-}
-
 .reset-button:hover, .action-button:hover, #next-puzzle-button:hover {
     background-color: #d32f2f;
 }
 
+.reset-button:disabled {
+    background-color: #ffcdd2;
+    cursor: not-allowed;
+}
+
+#new-draw-button {
+    background-color: #2196F3; /* Couleur bleue pour le nouveau tirage */
+}
+
 #new-draw-button:hover {
     background-color: #1976D2;
+}
+
+#undo-button {
+    background-color: #4CAF50; /* Vert */
+}
+
+#undo-button:hover {
+    background-color: #45a049; /* Vert un peu plus foncé */
+}
+
+#undo-button:disabled {
+    background-color: #a5d6a7;
+    cursor: not-allowed;
 }
 
 

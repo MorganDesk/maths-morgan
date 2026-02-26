@@ -75,8 +75,16 @@ export function start(container, gameId, mode) {
             attempts++;
             if (attempts > 1000) {
                 console.error("Could not generate a valid problem. Using fallback.");
-                initialTiles = mode === 'Extrême' ? [2, 4, 5, 8, 10, 25] : [1, 2, 3, 4, 10, 25];
-                targetNumber = mode === 'Extrême' ? 891 : 101; 
+                 if (mode === 'Extrême') {
+                    initialTiles = [2, 4, 5, 8, 10, 25];
+                    targetNumber = 891;
+                } else if (mode === 'Normal') {
+                    initialTiles = [1, 2, 3, 4, 10, 25];
+                    targetNumber = 101;
+                } else { // Facile
+                    initialTiles = [1, 2, 3, 4, 5, 10];
+                    targetNumber = 53; // 10 * 5 + 3
+                }
                 return;
             }
 
@@ -90,15 +98,30 @@ export function start(container, gameId, mode) {
             shuffleArray(smallPlates);
             for (let i = 0; i < (6 - numLarge); i++) candidateTiles.push(smallPlates[i]);
 
-            // 2. Decide on the target number of operations
-            const targetOps = mode === 'Extrême' 
-                ? 4 + Math.floor(Math.random() * 2) // 4 or 5 ops
-                : 3 + Math.floor(Math.random() * 2); // 3 or 4 ops
+            // 2. Decide on the target number of operations and target range
+            let targetOps;
+            let minTarget;
+
+            switch (mode) {
+                case 'Extrême':
+                    targetOps = 4 + Math.floor(Math.random() * 2); // 4 or 5 ops
+                    minTarget = 101;
+                    break;
+                case 'Normal':
+                    targetOps = 3 + Math.floor(Math.random() * 2); // 3 or 4 ops
+                    minTarget = 101;
+                    break;
+                case 'Facile':
+                default:
+                    targetOps = 2 + Math.floor(Math.random() * 2); // 2 or 3 ops
+                    minTarget = 50;
+                    break;
+            }
 
             // 3. Generate all reachable numbers for that depth
             const allReachable = generateAllReachableByOps(candidateTiles, targetOps);
             const candidateTargets = Array.from(allReachable[targetOps])
-                                            .filter(n => n >= 101 && n <= 999);
+                                            .filter(n => n >= minTarget && n <= 999);
 
             // 4. If we found suitable targets, pick one.
             if (candidateTargets.length > 0) {
@@ -119,9 +142,9 @@ export function start(container, gameId, mode) {
             <div id="tiles-container" class="tiles-container"></div>
             <div id="operators-container" class="tiles-container"></div>
             <div class="game-actions">
-                <button id="new-draw-button" class="action-button"><i class="fas fa-dice"></i> Nouveau tirage</button>
-                <button id="reset-board" class="reset-button"><i class="fas fa-undo"></i> Réinitialiser</button>
                 <button id="undo-button" class="action-button" disabled><i class="fas fa-history"></i> Annuler</button>
+                <button id="reset-board" class="reset-button" disabled><i class="fas fa-undo"></i> Réinitialiser</button>
+                <button id="new-draw-button" class="action-button"><i class="fas fa-dice"></i> Nouveau tirage</button>
             </div>
         `;
         const tilesContainer = gameWrapper.querySelector('#tiles-container');
@@ -162,6 +185,7 @@ export function start(container, gameId, mode) {
         const currentTiles = Array.from(gameWrapper.querySelectorAll('#tiles-container .number-tile')).map(t => parseInt(t.dataset.value));
         historyStack.push(currentTiles);
         gameWrapper.querySelector('#undo-button').disabled = false;
+        gameWrapper.querySelector('#reset-board').disabled = false;
 
         const num1 = parseInt(tile1.dataset.value), op = opTile.dataset.value, num2 = parseInt(tile2.dataset.value);
         let result, error = false;
@@ -172,7 +196,10 @@ export function start(container, gameId, mode) {
         else if (op === '÷') { if (b === 0 || a % b !== 0) error = true; else result = a / b; }
         if (error) { 
             historyStack.pop(); // Remove the state if the calculation was invalid
-            if(historyStack.length === 0) gameWrapper.querySelector('#undo-button').disabled = true;
+            if(historyStack.length === 0) {
+                 gameWrapper.querySelector('#undo-button').disabled = true;
+                 gameWrapper.querySelector('#reset-board').disabled = true;
+            }
             resetSelection(); 
             return; 
         }
@@ -192,7 +219,10 @@ export function start(container, gameId, mode) {
         tilesContainer.innerHTML = '';
         lastState.forEach(val => tilesContainer.appendChild(createTile(val, 'number')));
 
-        gameWrapper.querySelector('#undo-button').disabled = historyStack.length === 0;
+        const isInitialState = historyStack.length === 0;
+        gameWrapper.querySelector('#undo-button').disabled = isInitialState;
+        gameWrapper.querySelector('#reset-board').disabled = isInitialState;
+
         resetSelection();
     }
     
@@ -206,6 +236,7 @@ export function start(container, gameId, mode) {
         initialTiles.forEach(val => gameWrapper.querySelector('#tiles-container').appendChild(createTile(val, 'number')));
         historyStack = [];
         gameWrapper.querySelector('#undo-button').disabled = true;
+        gameWrapper.querySelector('#reset-board').disabled = true;
         resetSelection();
     }
     
