@@ -1,4 +1,5 @@
 import { getHighScore, saveHighScore } from '../js/storage.js';
+import { updateProgressionWidget } from '../js/progression.js';
 
 export function start(container, gameId, mode) {
     const GRID_SIZE = 14;
@@ -94,7 +95,7 @@ export function start(container, gameId, mode) {
 
         gameWrapper.innerHTML = `
             <div class="game-area">
-                <p>Reproduisez la figure par symétrie ${symmetryText}.</p>
+                <p class="game-instruction">Reproduisez la figure par symétrie ${symmetryText}.</p>
                 <div id="grid-container" style="--grid-size: ${GRID_SIZE}">${gridHtml}</div>
                 <div class="feedback-message"></div>
             </div>
@@ -162,6 +163,7 @@ export function start(container, gameId, mode) {
             </div>
         `;
         gameWrapper.querySelector('#next-puzzle-button').addEventListener('click', runGame);
+        updateProgressionWidget();
     }
 
     runGame();

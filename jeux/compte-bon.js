@@ -1,5 +1,6 @@
 
 import { getHighScore, saveHighScore } from '../js/storage.js';
+import { updateProgressionWidget } from '../js/progression.js';
 
 export function start(container, gameId, mode) {
     const gameWrapper = document.createElement('div');
@@ -257,6 +258,7 @@ export function start(container, gameId, mode) {
             </div>
         `;
         gameWrapper.querySelector('#next-puzzle-button').addEventListener('click', runGame);
+        updateProgressionWidget();
     }
     
     function shuffleArray(array) {

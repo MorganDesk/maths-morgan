@@ -13,10 +13,12 @@ const PALIERS_GRADES = [
     { seuil: 540, nom: "Architecte de l'Infini", couleur: "#0f172a" }
 ];
 
-const SATURATION_MAX = 50;
+const SATURATION_MAX = 60;
 
 function calculateMP(score) {
     if (score === 0) return 0;
+    // Utilise une courbe de saturation pour que chaque point de score rapporte de moins en moins de MP.
+    // Atteint environ 46 MP pour un score de 150, se rapprochant de 50 sans jamais l'atteindre.
     return SATURATION_MAX * (score / (score + 15));
 }
 
@@ -30,45 +32,78 @@ function calculateTotalMP() {
 }
 
 function getCurrentGrade(totalMP) {
-    let currentGrade = PALIERS_GRADES[0];
-    for (let i = PALIERS_GRADES.length - 1; i >= 0; i--) {
-        if (totalMP >= PALIERS_GRADES[i].seuil) {
-            currentGrade = PALIERS_GRADES[i];
-            break;
+    const finalGrade = PALIERS_GRADES[PALIERS_GRADES.length - 1];
+
+    // Gère les niveaux avant le prestige
+    if (totalMP < finalGrade.seuil) {
+        let currentGrade = PALIERS_GRADES[0];
+        for (let i = PALIERS_GRADES.length - 1; i >= 0; i--) {
+            if (totalMP >= PALIERS_GRADES[i].seuil) {
+                currentGrade = PALIERS_GRADES[i];
+                break;
+            }
         }
-    }
+        
+        const nextGradeIndex = PALIERS_GRADES.indexOf(currentGrade) + 1;
+        const nextGrade = PALIERS_GRADES[nextGradeIndex];
 
-    const nextGradeIndex = PALIERS_GRADES.indexOf(currentGrade) + 1;
-    const nextGrade = nextGradeIndex < PALIERS_GRADES.length ? PALIERS_GRADES[nextGradeIndex] : null;
-
-    let progression = {
-        currentGrade: currentGrade,
-        nextGrade: nextGrade,
-        mpToNext: 0,
-        percentage: 100
-    };
-
-    if (nextGrade) {
         const mpInCurrentTier = totalMP - currentGrade.seuil;
         const mpForNextTier = nextGrade.seuil - currentGrade.seuil;
-        progression.mpToNext = nextGrade.seuil - totalMP;
-        progression.percentage = (mpInCurrentTier / mpForNextTier) * 100;
-    } 
 
-    return progression;
+        return {
+            currentGrade: currentGrade,
+            nextGrade: nextGrade,
+            mpToNext: nextGrade.seuil - totalMP,
+            percentage: (mpInCurrentTier / mpForNextTier) * 100
+        };
+    }
+
+    // Gère les niveaux de prestige
+    const prestigeBaseMP = totalMP - finalGrade.seuil; // MP gagnés après avoir atteint le dernier grade
+    let prestigeLevel = 0;
+    let costForNextLevel = 50; // Coût pour le Prestige 1
+    let mpLeftForPrestigeCalc = prestigeBaseMP;
+
+    // Calcule le niveau de prestige actuel
+    while (mpLeftForPrestigeCalc >= costForNextLevel) {
+        mpLeftForPrestigeCalc -= costForNextLevel;
+        prestigeLevel++;
+        costForNextLevel *= 2; // Double le coût pour le niveau suivant
+    }
+
+    const currentGradeName = prestigeLevel > 0 
+        ? `${finalGrade.nom} (Prestige ${prestigeLevel})`
+        : finalGrade.nom;
+        
+    // Calcule la progression vers le prochain niveau de prestige
+    return {
+        currentGrade: {
+            nom: currentGradeName,
+            couleur: finalGrade.couleur
+        },
+        nextGrade: {
+            nom: `Prestige ${prestigeLevel + 1}`
+        },
+        mpToNext: costForNextLevel - mpLeftForPrestigeCalc,
+        percentage: (mpLeftForPrestigeCalc / costForNextLevel) * 100
+    };
 }
+
 
 function createProgressionWidget(totalMP, gradeInfo) {
     const widget = document.createElement('div');
     widget.id = 'progression-widget';
     widget.className = 'progression-widget';
 
-    const mpToNextText = gradeInfo.nextGrade ? `<p>${gradeInfo.mpToNext.toFixed(1)} MP restants avant ${gradeInfo.nextGrade.nom}</p>` : '<p>Vous avez atteint le plus haut grade !</p>';
+    // Adapte le message pour le prestige
+    const mpToNextText = gradeInfo.nextGrade 
+        ? `<p>${gradeInfo.mpToNext.toFixed(1)} MP restants avant ${gradeInfo.nextGrade.nom}</p>` 
+        : '<p>Vous avez atteint le plus haut grade !</p>';
 
     widget.innerHTML = `
         <div class="grade-info">
             <h2 style="color: ${gradeInfo.currentGrade.couleur};">${gradeInfo.currentGrade.nom}</h2>
-            <span>${Math.round(totalMP)} MP</span>
+            <span>${totalMP.toFixed(1)} MP</span>
         </div>
         <div class="xp-bar-container">
             <div class="xp-bar" style="width: ${gradeInfo.percentage}%; background-color: ${gradeInfo.currentGrade.couleur};"></div>
@@ -95,10 +130,12 @@ export function updateProgressionWidget() {
     } else {
         widget.querySelector('.grade-info h2').textContent = gradeInfo.currentGrade.nom;
         widget.querySelector('.grade-info h2').style.color = gradeInfo.currentGrade.couleur;
-        widget.querySelector('.grade-info span').textContent = `${Math.round(totalMP)} MP`;
+        widget.querySelector('.grade-info span').textContent = `${totalMP.toFixed(1)} MP`;
         widget.querySelector('.xp-bar').style.width = `${gradeInfo.percentage}%`;
         widget.querySelector('.xp-bar').style.backgroundColor = gradeInfo.currentGrade.couleur;
-        const mpToNextText = gradeInfo.nextGrade ? `<p>${gradeInfo.mpToNext.toFixed(1)} MP restants avant ${gradeInfo.nextGrade.nom}</p>` : '<p>Vous avez atteint le plus haut grade !</p>';
+        const mpToNextText = gradeInfo.nextGrade 
+            ? `<p>${gradeInfo.mpToNext.toFixed(1)} MP restants avant ${gradeInfo.nextGrade.nom}</p>` 
+            : '<p>Vous avez atteint le plus haut grade !</p>';
         widget.querySelector('.mp-to-next').innerHTML = mpToNextText;
     }
     

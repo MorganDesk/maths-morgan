@@ -1,4 +1,5 @@
 import { getHighScore, saveHighScore } from '../js/storage.js';
+import { updateProgressionWidget } from '../js/progression.js';
 
 export function start(container, gameId, mode) {
     let gameWrapper = container.querySelector(`#${gameId}-wrapper`);
@@ -58,6 +59,7 @@ export function start(container, gameId, mode) {
             </div>
         `;
         gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
+        updateProgressionWidget();
     }
 
     function updateTimer() {

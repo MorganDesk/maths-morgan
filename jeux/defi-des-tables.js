@@ -1,4 +1,5 @@
 import { getHighScore, saveHighScore } from '../js/storage.js';
+import { updateProgressionWidget } from '../js/progression.js';
 
 export function start(container, gameId) {
     // Ensure the main container for the game is created with the correct ID
@@ -40,6 +41,7 @@ export function start(container, gameId) {
 
         gameWrapper.innerHTML = gameOverHTML;
         gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
+        updateProgressionWidget();
     }
 
     function updateTimer() {
@@ -98,6 +100,7 @@ export function start(container, gameId) {
                 <span>Score: <span id="score">0</span></span>
                 <span>Temps: <span id="time-left">${GAME_DURATION}</span>s</span>
             </div>
+            <p class="game-instruction">Répondez correctement au plus grand nombre de multiplications en ${GAME_DURATION} secondes !</p>
             <div class="game-area">
                 <div id="question-container" class="game-question"></div>
                 <input type="number" pattern="[0-9]*" inputmode="numeric" id="answer-input" autofocus autocomplete="off" />

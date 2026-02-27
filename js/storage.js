@@ -65,3 +65,7 @@ export function getHighScore(gameId, mode) {
 export function getAllScores() {
     return getHighScores();
 }
+
+export function resetGameHighScores() {
+    localStorage.removeItem(HIGH_SCORES_KEY);
+}

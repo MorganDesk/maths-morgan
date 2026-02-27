@@ -1,4 +1,4 @@
-import { getHighScore } from './storage.js';
+import { getHighScore, resetGameHighScores } from './storage.js';
 import { updateProgressionWidget } from './progression.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const mainHeader = document.querySelector('header h1');
     const progressionContainer = document.getElementById('progression-container');
+    const resetButton = document.getElementById('reset-progression-button');
+    const resetContainer = document.querySelector('.reset-container');
 
     let allGames = [];
     if (typeof gamesData !== 'undefined') {
@@ -18,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gamesGrid.classList.remove('hidden');
         searchInput.parentElement.classList.remove('hidden');
         progressionContainer.classList.remove('hidden');
+        resetContainer.classList.remove('hidden'); // Afficher le bouton reset
         gameContainer.classList.add('hidden');
         gameContainer.innerHTML = ''; // Vider le conteneur de jeu
         mainHeader.innerHTML = '<i class="fa-solid fa-gamepad"></i> Maths Morgan - Jeux';
@@ -84,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startGame = async (gameId, mode) => {
         const game = allGames.find(g => g.id === gameId);
         if (!game || !game.entryPoint) {
-            console.error("Jeu non trouvé ou point d'entrée manquant !");
+            console.error("Jeu non trouvé ou point d\'entrée manquant !");
             return;
         }
 
@@ -95,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gamesGrid.classList.add('hidden');
             searchInput.parentElement.classList.add('hidden');
             progressionContainer.classList.add('hidden');
+            resetContainer.classList.add('hidden'); // Cacher le bouton reset
             gameContainer.classList.remove('hidden');
             gameContainer.innerHTML = ''; // Vider complètement avant de commencer
 
@@ -120,6 +124,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- GESTIONNAIRES D'ÉVÉNEMENTS ---
+
+    resetButton.addEventListener('click', () => {
+        if (confirm("Êtes-vous sûr de vouloir réinitialiser toute votre progression ? Cette action est irréversible.")) {
+            resetGameHighScores();
+            showGamesGrid(); // Rafraîchir l'affichage pour mettre à jour les scores et le widget
+            // Optionnel : afficher une notification de succès
+            const notification = document.createElement('div');
+            notification.className = 'notification show';
+            notification.textContent = 'Progression réinitialisée avec succès !';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    });
 
     gamesGrid.addEventListener('change', (e) => {
         if (e.target.classList.contains('mode-selector')) {
