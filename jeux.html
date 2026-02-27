@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/jeux.css">
+    <link rel="stylesheet" href="css/progression.css">
 </head>
 <body>
     <header>
@@ -17,7 +18,11 @@
         </nav>
     </header>
     <main>
-        <div class="toolbar">
+        <div id="progression-container" class="cours-container">
+            <!-- Le widget de progression sera injecté ici -->
+        </div>
+
+        <div class="cours-container">
             <div class="search-container">
                  <i class="fas fa-search"></i>
                 <input type="text" id="search-input" placeholder="Rechercher un jeu par titre ou tag...">
@@ -42,6 +47,7 @@
     <script src="datas/games_data.js"></script>
 
     <!-- App logic -->
+    <script type="module" src="js/progression.js"></script>
     <script type="module" src="js/games_manager.js"></script>
     <script type="module" src="js/menu.js"></script>
 </body>

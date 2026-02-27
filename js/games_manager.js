@@ -1,15 +1,29 @@
 import { getHighScore } from './storage.js';
+import { updateProgressionWidget } from './progression.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const gamesGrid = document.getElementById('games-grid');
     const gameContainer = document.getElementById('game-container');
     const searchInput = document.getElementById('search-input');
     const mainHeader = document.querySelector('header h1');
+    const progressionContainer = document.getElementById('progression-container');
 
     let allGames = [];
     if (typeof gamesData !== 'undefined') {
         allGames = gamesData;
     }
+
+    // Fonction pour afficher la grille des jeux
+    const showGamesGrid = () => {
+        gamesGrid.classList.remove('hidden');
+        searchInput.parentElement.classList.remove('hidden');
+        progressionContainer.classList.remove('hidden');
+        gameContainer.classList.add('hidden');
+        gameContainer.innerHTML = ''; // Vider le conteneur de jeu
+        mainHeader.innerHTML = '<i class="fa-solid fa-gamepad"></i> Maths Morgan - Jeux';
+        renderGameCards(allGames);
+        updateProgressionWidget();
+    };
 
     const renderGameCards = (gamesToRender) => {
         if (!gamesGrid) return;
@@ -19,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         gamesGrid.innerHTML = gamesToRender.map(game => {
-            const initialMode = game.modes && game.modes.length > 0 ? game.modes[0] : undefined;
+            const initialMode = game.modes && game.modes.length > 0 ? game.modes[0] : null;
             const highScore = getHighScore(game.id, initialMode);
 
             const highScoreBadge = highScore > 0 ? `
@@ -75,35 +89,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const gameModule = await import(`../${game.entryPoint}`);
+            // Ajout d'un timestamp pour forcer le rechargement du module (cache-busting)
+            const gameModule = await import(`../${game.entryPoint}?v=${new Date().getTime()}`);
             
             gamesGrid.classList.add('hidden');
             searchInput.parentElement.classList.add('hidden');
+            progressionContainer.classList.add('hidden');
             gameContainer.classList.remove('hidden');
-            gameContainer.innerHTML = ''; // Clear previous game
+            gameContainer.innerHTML = ''; // Vider complètement avant de commencer
 
             const backButton = document.createElement('button');
             backButton.innerHTML = '<i class="fas fa-arrow-left"></i> Retour aux jeux';
             backButton.className = 'back-to-games';
-            backButton.addEventListener('click', () => {
-                gamesGrid.classList.remove('hidden');
-                searchInput.parentElement.classList.remove('hidden');
-                gameContainer.classList.add('hidden');
-                mainHeader.innerHTML = '<i class="fa-solid fa-gamepad"></i> Maths Morgan - Jeux';
-                filterGames(); // Re-render cards to update scores
-            });
+            backButton.addEventListener('click', showGamesGrid);
             gameContainer.appendChild(backButton);
 
-            mainHeader.textContent = `${game.title} - ${mode}`;
+            const gameContentContainer = document.createElement('div');
+            gameContentContainer.id = 'game-content-container';
+            gameContainer.appendChild(gameContentContainer);
 
-            // Pass the container, gameId, and selected mode to the game module
-            gameModule.start(gameContainer, game.id, mode);
+            mainHeader.textContent = mode ? `${game.title} - ${mode}` : game.title;
+
+            gameModule.start(gameContentContainer, game.id, mode);
 
         } catch (error) {
             console.error("Erreur lors du chargement du module de jeu:", error);
             alert("Impossible de charger le jeu. Vérifiez la console pour plus de détails.");
+            showGamesGrid(); // Revenir à la grille si le chargement échoue
         }
     };
+
+    // --- GESTIONNAIRES D'ÉVÉNEMENTS ---
 
     gamesGrid.addEventListener('change', (e) => {
         if (e.target.classList.contains('mode-selector')) {
@@ -130,16 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = playButton.closest('.card');
             const gameId = card.dataset.gameId;
             const game = allGames.find(g => g.id === gameId);
-            let selectedMode;
-
+            
             const modeSelector = card.querySelector('.mode-selector');
-            if (modeSelector) {
-                selectedMode = modeSelector.value;
-            } else if (game.modes && game.modes.length > 0) {
-                selectedMode = game.modes[0];
-            } else {
-                selectedMode = 'default';
-            }
+            const selectedMode = modeSelector ? modeSelector.value : (game.modes && game.modes.length > 0 ? game.modes[0] : null);
             
             startGame(gameId, selectedMode);
         }
@@ -147,6 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     searchInput.addEventListener('input', filterGames);
 
-    // Initial render
-    renderGameCards(allGames);
+    // Lancement initial
+    showGamesGrid();
 });

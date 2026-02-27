@@ -61,3 +61,7 @@ export function getHighScore(gameId, mode) {
     const key = getModeSpecificKey(gameId, mode);
     return highScores[key] || 0;
 }
+
+export function getAllScores() {
+    return getHighScores();
+}

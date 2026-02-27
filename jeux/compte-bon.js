@@ -136,8 +136,8 @@ export function start(container, gameId, mode) {
         historyStack = []; // Clear history on new board
         gameWrapper.innerHTML = `
             <div class="game-area">
-                <p>Trouvez :</p>
-                <div id="target-number-container" class="target-number">${targetNumber}</div>
+                 <p class="game-instruction">Trouvez le nombre cible :</p>
+                <div class="game-question">${targetNumber}</div>
             </div>
             <div id="tiles-container" class="tiles-container"></div>
             <div id="operators-container" class="tiles-container"></div>

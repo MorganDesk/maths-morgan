@@ -27,24 +27,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
         const currentHash = window.location.hash.replace('#', '');
 
-        let activeFilterId = null;
+        let activeFilterId = 'tous'; // Default to 'tous'
 
         if (currentPage === 'jeux.html') {
             activeFilterId = 'jeux';
-        } else if (currentPage === 'index.html') {
-            // If there's a valid hash, use it. Otherwise, default to 'tous'.
-            activeFilterId = menuItems.some(item => item.id === currentHash) ? currentHash : 'tous';
+        } else if (currentPage === 'index.html' && currentHash) {
+            // Check for a direct match in menu items first (e.g., #favoris, #6e)
+            if (menuItems.some(item => item.id === currentHash)) {
+                activeFilterId = currentHash;
+            } else {
+                // If no direct match, parse the hash
+                const hashPart = currentHash.split('-')[0];
+                if (hashPart === 'playlist') {
+                    activeFilterId = 'parcours';
+                } else if (menuItems.some(item => item.id === hashPart)) {
+                    activeFilterId = hashPart;
+                }
+            }
         }
 
         // Deactivate all buttons
         menuContainer.querySelectorAll('.file-button').forEach(btn => btn.classList.remove('active'));
 
-        // Activate the correct button if an active filter was determined
-        if (activeFilterId) {
-            const activeButton = document.getElementById(`filter-${activeFilterId}`);
-            if (activeButton) {
-                activeButton.classList.add('active');
-            }
+        // Activate the correct button
+        const activeButton = document.getElementById(`filter-${activeFilterId}`);
+        if (activeButton) {
+            activeButton.classList.add('active');
         }
     }
 

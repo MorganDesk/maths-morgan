@@ -24,5 +24,30 @@ const gamesData = [
         tags: ['logique', 'calcul', 'stratégie'],
         modes: ['Facile', 'Normal', 'Extrême'],
         entryPoint: 'jeux/compte-bon.js'
+    },
+    {
+        id: 'miroir-magique',
+        title: 'Miroir Magique',
+        matiere: 'Géométrie',
+        description: 'Reproduis la figure en utilisant la symétrie axiale ou centrale. Un test de précision et de vision géométrique !',
+        tags: ['géométrie', 'symétrie', 'logique'],
+        modes: ['Axiale', 'Centrale', 'Mélange'],
+        entryPoint: 'jeux/miroir-magique.js'
+    },
+    {
+        id: 'angle-master',
+        title: 'Angle Master',
+        matiere: 'Géométrie',
+        description: 'Estime la mesure de l\'angle affiché à l\'œil nu. Prouve que tu as le compas dans l\'œil !',
+        tags: ['géométrie', 'estimation', 'angles', 'degrés', 'vitesse'],
+        entryPoint: 'jeux/angle-master.js'
+    },
+    {
+        id: 'criteres-divisibilite',
+        title: 'Critères de Divisibilité',
+        matiere: 'Calcul mental',
+        description: 'Ce nombre est-il divisible par 2, 3, 5, 9, 10 ? Coche les bonnes cases et montre ta maîtrise des critères de divisibilité.',
+        tags: ['calcul', 'divisibilité', 'logique', 'vitesse'],
+        entryPoint: 'jeux/divisibilite.js'
     }
 ];
