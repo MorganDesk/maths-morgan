@@ -1,8 +1,7 @@
 import { getHighScore, saveHighScore } from '../js/storage.js';
-import { updateProgressionWidget } from '../js/progression.js';
+import { completeGame } from '../js/progression.js';
 
-export function start(container, gameId) {
-    // Ensure the main container for the game is created with the correct ID
+export function start(container, gameId, mode, modeIndex) {
     let gameWrapper = container.querySelector('#defi-des-tables-game');
     if (!gameWrapper) {
         gameWrapper = document.createElement('div');
@@ -14,19 +13,24 @@ export function start(container, gameId) {
     let score = 0;
     let timeLeft = GAME_DURATION;
     let timerInterval = null;
+    let isGameOver = false;
 
     function endGame() {
+        if (isGameOver) return; // Empêcher les exécutions multiples
+        isGameOver = true;
         clearInterval(timerInterval);
         
-        const oldHighScore = getHighScore(gameId, 'default'); // Use default mode
+        completeGame(gameId, modeIndex, score); // Gère le gain de MP et l'animation
+        
+        const oldHighScore = getHighScore(gameId, 'default');
         let isNewRecord = false;
         if (score > oldHighScore) {
-            saveHighScore(gameId, 'default', score); // Use default mode
+            saveHighScore(gameId, 'default', score);
             isNewRecord = true;
         }
         const finalHighScore = isNewRecord ? score : oldHighScore;
 
-        let gameOverHTML = `
+        gameWrapper.innerHTML = `
             <div class="game-over-screen">
                 <h2>Temps écoulé !</h2>
                 ${isNewRecord ? `<div class="new-record-message"><i class="fas fa-trophy"></i> Nouveau Record !</div>` : ''}
@@ -39,9 +43,7 @@ export function start(container, gameId) {
             </div>
         `;
 
-        gameWrapper.innerHTML = gameOverHTML;
         gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
-        updateProgressionWidget();
     }
 
     function updateTimer() {
@@ -79,14 +81,18 @@ export function start(container, gameId) {
                 feedbackEl.textContent = 'Correct !';
                 feedbackEl.className = 'feedback correct';
                 setTimeout(() => { 
-                    generateQuestion();
-                    feedbackEl.textContent = '' 
+                    if (!isGameOver) {
+                        generateQuestion();
+                        feedbackEl.textContent = '';
+                    }
                 }, 300);
             } else {
                 feedbackEl.textContent = 'Incorrect !';
                 feedbackEl.className = 'feedback incorrect';
                 answerInput.value = ''; 
-                setTimeout(() => { feedbackEl.textContent = '' }, 1000);
+                setTimeout(() => { 
+                    if(feedbackEl) feedbackEl.textContent = '' 
+                }, 1000);
             }
         }
     }
@@ -94,6 +100,7 @@ export function start(container, gameId) {
     function runGame() {
         score = 0;
         timeLeft = GAME_DURATION;
+        isGameOver = false; // Réinitialiser le drapeau
 
         gameWrapper.innerHTML = `
             <div class="game-stats">

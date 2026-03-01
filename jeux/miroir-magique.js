@@ -1,7 +1,7 @@
 import { getHighScore, saveHighScore } from '../js/storage.js';
-import { updateProgressionWidget } from '../js/progression.js';
+import { completeGame } from '../js/progression.js';
 
-export function start(container, gameId, mode) {
+export function start(container, gameId, mode, modeIndex) {
     const GRID_SIZE = 14;
     let sourceCells = [];
     let expectedSolutionCoords = [];
@@ -135,6 +135,7 @@ export function start(container, gameId, mode) {
         const areSetsEqual = (a, b) => a.size === b.size && [...a].every(value => b.has(value));
     
         if (areSetsEqual(userSet, requiredSet)) {
+            completeGame(gameId, modeIndex, 1);
             const currentScore = getHighScore(gameId, mode) || 0;
             saveHighScore(gameId, mode, currentScore + 1);
             showWinScreen(currentScore + 1);
@@ -163,7 +164,6 @@ export function start(container, gameId, mode) {
             </div>
         `;
         gameWrapper.querySelector('#next-puzzle-button').addEventListener('click', runGame);
-        updateProgressionWidget();
     }
 
     runGame();

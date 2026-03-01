@@ -1,7 +1,7 @@
 import { getHighScore, saveHighScore } from '../js/storage.js';
-import { updateProgressionWidget } from '../js/progression.js';
+import { completeGame } from '../js/progression.js';
 
-export function start(container, gameId, mode) {
+export function start(container, gameId, mode, modeIndex) {
     let gameWrapper = container.querySelector(`#${gameId}-wrapper`);
     if (!gameWrapper) {
         gameWrapper = document.createElement('div');
@@ -15,15 +15,20 @@ export function start(container, gameId, mode) {
     let timerInterval = null;
     let currentAngle = 0;
     let isNextAngleAcute = true;
+    let isGameOver = false;
 
     const ANGLE_MIN_ACUTE = 10, ANGLE_MAX_ACUTE = 89;
     const ANGLE_MIN_OBTUSE = 91, ANGLE_MAX_OBTUSE = 170;
     const ERROR_MARGIN = 5;
 
     function endGame() {
+        if(isGameOver) return;
+        isGameOver = true;
         clearInterval(timerInterval);
         window.removeEventListener('resize', drawAngle);
         
+        completeGame(gameId, modeIndex, score);
+
         const oldHighScore = getHighScore(gameId, mode);
         const isNewRecord = score > oldHighScore;
         if (isNewRecord) {
@@ -44,7 +49,6 @@ export function start(container, gameId, mode) {
             </div>
         `;
         gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
-        updateProgressionWidget();
     }
 
     function updateTimer() {
@@ -131,13 +135,16 @@ export function start(container, gameId, mode) {
             feedbackEl.className = 'feedback incorrect';
         }
 
-        setTimeout(generateNewRound, 1200);
+        setTimeout(() => {
+            if(!isGameOver) generateNewRound();
+        }, 1200);
     }
 
     function runGame() {
         score = 0;
         timeLeft = GAME_DURATION;
         isNextAngleAcute = true;
+        isGameOver = false;
 
         gameWrapper.innerHTML = `
             <div class="game-stats">

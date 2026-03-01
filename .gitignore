@@ -2,3 +2,5 @@
 css/admin.css
 js/admin.js
 admin.html
+token-counter.py
+tokens_report.csv

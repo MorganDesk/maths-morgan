@@ -1,8 +1,8 @@
 
 import { getHighScore, saveHighScore } from '../js/storage.js';
-import { updateProgressionWidget } from '../js/progression.js';
+import { completeGame } from '../js/progression.js';
 
-export function start(container, gameId, mode) {
+export function start(container, gameId, mode, modeIndex) {
     const gameWrapper = document.createElement('div');
     gameWrapper.id = 'compte-bon-game';
     container.appendChild(gameWrapper);
@@ -243,6 +243,7 @@ export function start(container, gameId, mode) {
     
     function checkWin(result) {
         if (result === targetNumber) {
+            completeGame(gameId, modeIndex, 1);
             const currentScore = getHighScore(gameId, mode) || 0;
             saveHighScore(gameId, mode, currentScore + 1);
             showWinScreen(currentScore + 1);
@@ -258,7 +259,6 @@ export function start(container, gameId, mode) {
             </div>
         `;
         gameWrapper.querySelector('#next-puzzle-button').addEventListener('click', runGame);
-        updateProgressionWidget();
     }
     
     function shuffleArray(array) {

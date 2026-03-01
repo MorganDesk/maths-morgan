@@ -1,7 +1,7 @@
 import { getHighScore, saveHighScore } from '../js/storage.js';
-import { updateProgressionWidget } from '../js/progression.js';
+import { completeGame } from '../js/progression.js';
 
-export function start(container, gameId, mode) {
+export function start(container, gameId, mode, modeIndex) {
     const gameWrapper = document.createElement('div');
     gameWrapper.id = 'choc-des-relatifs-game';
 
@@ -9,6 +9,7 @@ export function start(container, gameId, mode) {
     let score = 0;
     let timeLeft = GAME_DURATION;
     let timerInterval = null;
+    let isGameOver = false;
 
     function formatNumber(num) {
         return num >= 0 ? `(+${num})` : `(${num})`;
@@ -91,14 +92,21 @@ export function start(container, gameId, mode) {
             feedbackEl.textContent = 'Correct !';
             feedbackEl.className = 'feedback correct';
             setTimeout(() => {
-                generateQuestion();
-                feedbackEl.textContent = '';
+                if(!isGameOver) {
+                    generateQuestion();
+                    feedbackEl.textContent = '';
+                }
             }, 300);
         }
     }
 
     function endGame() {
+        if(isGameOver) return;
+        isGameOver = true;
         clearInterval(timerInterval);
+        
+        completeGame(gameId, modeIndex, score); // Gère le gain de MP et l'animation
+
         const oldHighScore = getHighScore(gameId, mode);
         let isNewRecord = false;
 
@@ -107,7 +115,7 @@ export function start(container, gameId, mode) {
             isNewRecord = true;
         }
         const finalHighScore = isNewRecord ? score : oldHighScore;
-
+        
         let gameOverHTML = `
             <div class="game-over-screen">
                 <h2>Temps écoulé !</h2>
@@ -122,7 +130,6 @@ export function start(container, gameId, mode) {
         `;
         gameWrapper.innerHTML = gameOverHTML;
         gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
-        updateProgressionWidget();
     }
 
     function updateTimer() {
@@ -135,6 +142,7 @@ export function start(container, gameId, mode) {
     function runGame() {
         score = 0;
         timeLeft = GAME_DURATION;
+        isGameOver = false;
         const instructionText = getInstructionText(mode);
 
         gameWrapper.innerHTML = `

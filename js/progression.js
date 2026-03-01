@@ -1,144 +1,211 @@
-import { getAllScores } from './storage.js';
+import { getTotalMP, addMP, getGameStats, updateStatsOnGameComplete } from './storage.js';
+import { gamesData } from '../datas/games_data.js';
 
-const PALIERS_GRADES = [
-    { seuil: 0,   nom: "Novice", couleur: "#475569" },
-    { seuil: 20,  nom: "Apprenti", couleur: "#15803d" },
-    { seuil: 50,  nom: "Initié", couleur: "#0369a1" },
-    { seuil: 90,  nom: "Aventurier", couleur: "#1d4ed8" },
-    { seuil: 140, nom: "Expert", couleur: "#6d28d9" },
-    { seuil: 200, nom: "Maître", couleur: "#9d174d" },
-    { seuil: 270, nom: "Grand Maître", couleur: "#a16207" },
-    { seuil: 350, nom: "Érudit", couleur: "#9a3412" },
-    { seuil: 440, nom: "Légende", couleur: "#991b1b" },
-    { seuil: 540, nom: "Architecte de l'Infini", couleur: "#0f172a" }
+// --- Configuration des Rangs ---
+const RANKS = [
+    { name: 'Fer', minLevel: 0, className: 'rank-iron', icon: 'fa-shield-alt' },
+    { name: 'Bronze', minLevel: 30, className: 'rank-bronze', icon: 'fa-medal' },
+    { name: 'Argent', minLevel: 60, className: 'rank-silver', icon: 'fa-award' },
+    { name: 'Or', minLevel: 90, className: 'rank-gold', icon: 'fa-trophy' },
+    { name: 'Platine', minLevel: 120, className: 'rank-platinum', icon: 'fa-gem' },
+    { name: 'Émeraude', minLevel: 150, className: 'rank-emerald', icon: 'fa-gem' },
+    { name: 'Diamant', minLevel: 180, className: 'rank-diamond', icon: 'fa-gem' },
+    { name: 'Maître', minLevel: 210, className: 'rank-master', icon: 'fa-crown' },
+    { name: 'Grand Maître', minLevel: 240, className: 'rank-grandmaster', icon: 'fa-star' },
+    { name: 'Challenger', minLevel: 270, className: 'rank-challenger', icon: 'fa-rocket' }
 ];
 
-const SATURATION_MAX = 60;
-
-function calculateMP(score) {
-    if (score === 0) return 0;
-    // Utilise une courbe de saturation pour que chaque point de score rapporte de moins en moins de MP.
-    // Atteint environ 46 MP pour un score de 150, se rapprochant de 50 sans jamais l'atteindre.
-    return SATURATION_MAX * (score / (score + 15));
+/**
+ * Trouve le rang correspondant à un niveau donné.
+ * @param {number} level - Le niveau de l'utilisateur.
+ * @returns {object} Le rang actuel.
+ */
+function getRank(level) {
+    return RANKS.slice().reverse().find(rank => level >= rank.minLevel) || RANKS[0];
 }
 
-function calculateTotalMP() {
-    const allScores = getAllScores();
-    let totalMP = 0;
-    for (const key in allScores) {
-        totalMP += calculateMP(allScores[key]);
+/**
+ * Calcule le gain de MP pour une partie terminée.
+ */
+export function calculateGain(gameId, modeIndex, score) {
+    const game = gamesData.find(g => g.id === gameId);
+    if (!game) return 0;
+    const baseMP = game.baseMP || 0;
+    const coefficient = (game.coefficient && game.coefficient[modeIndex]) ? game.coefficient[modeIndex] : 1;
+    return baseMP + Math.floor((score || 0) * coefficient);
+}
+
+/**
+ * Calcule le total de MP requis pour atteindre un certain niveau.
+ */
+function requiredMpForLevel(level) {
+    return 5 * level * (level + 1);
+}
+
+/**
+ * Obtient les informations de niveau de l'utilisateur en fonction du total de MP.
+ */
+export function getLevelInfo(totalMP) {
+    let level = 0;
+    while (totalMP >= requiredMpForLevel(level + 1)) {
+        level++;
     }
-    return totalMP;
+    const mpForCurrentLevel = requiredMpForLevel(level);
+    const mpForNextLevel = requiredMpForLevel(level + 1);
+    const mpInCurrentLevel = totalMP - mpForCurrentLevel;
+    const mpToNextLevel = mpForNextLevel - mpForCurrentLevel;
+    const percentage = mpToNextLevel > 0 ? (mpInCurrentLevel / mpToNextLevel) * 100 : 100;
+    const rank = getRank(level);
+
+    return { level, mpInCurrentLevel, mpToNextLevel, percentage, rank };
 }
 
-function getCurrentGrade(totalMP) {
-    const finalGrade = PALIERS_GRADES[PALIERS_GRADES.length - 1];
+/**
+ * Crée et affiche une animation de gain de MP.
+ */
+function showMPGainAnimation(amount) {
+    const el = document.createElement('div');
+    el.textContent = `+${amount} MP`;
+    el.className = 'mp-gain-animation';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+}
 
-    // Gère les niveaux avant le prestige
-    if (totalMP < finalGrade.seuil) {
-        let currentGrade = PALIERS_GRADES[0];
-        for (let i = PALIERS_GRADES.length - 1; i >= 0; i--) {
-            if (totalMP >= PALIERS_GRADES[i].seuil) {
-                currentGrade = PALIERS_GRADES[i];
-                break;
-            }
+/**
+ * Crée et affiche une animation de passage de niveau.
+ */
+function showLevelUpAnimation(newLevel) {
+    const el = document.createElement('div');
+    el.textContent = `NIVEAU ${newLevel} !`;
+    el.className = 'level-up-animation';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+}
+
+/**
+ * Anime la barre d'XP et les textes d'information.
+ * @param {number} startMP - Le total de MP avant le gain.
+ * @param {number} gain - Le montant de MP gagné.
+ */
+async function animateProgression(startMP, gain) {
+    const endMP = startMP + gain;
+    const startInfo = getLevelInfo(startMP);
+    const endInfo = getLevelInfo(endMP);
+
+    const widget = document.getElementById('progression-widget');
+    const xpBar = widget.querySelector('.xp-bar');
+    const mpInfoEl = widget.querySelector('.mp-info span');
+    const levelBadge = widget.querySelector('.level-badge');
+    const rankIconEl = levelBadge.querySelector('.rank-icon');
+    const levelTextEl = levelBadge.querySelector('span');
+
+    const animationDuration = 800; // ms
+
+    let currentMP = startInfo.mpInCurrentLevel;
+    const finalMP = endInfo.mpInCurrentLevel;
+    const mpIncrement = (gain) / (animationDuration / 16);
+
+    const updateText = () => {
+        if (startInfo.level < endInfo.level) return;
+        currentMP += mpIncrement;
+        if (currentMP < finalMP) {
+            mpInfoEl.textContent = `${Math.floor(currentMP)} / ${startInfo.mpToNextLevel} MP`;
+            requestAnimationFrame(updateText);
+        } else {
+            mpInfoEl.textContent = `${endInfo.mpInCurrentLevel} / ${endInfo.mpToNextLevel} MP`;
         }
-        
-        const nextGradeIndex = PALIERS_GRADES.indexOf(currentGrade) + 1;
-        const nextGrade = PALIERS_GRADES[nextGradeIndex];
-
-        const mpInCurrentTier = totalMP - currentGrade.seuil;
-        const mpForNextTier = nextGrade.seuil - currentGrade.seuil;
-
-        return {
-            currentGrade: currentGrade,
-            nextGrade: nextGrade,
-            mpToNext: nextGrade.seuil - totalMP,
-            percentage: (mpInCurrentTier / mpForNextTier) * 100
-        };
-    }
-
-    // Gère les niveaux de prestige
-    const prestigeBaseMP = totalMP - finalGrade.seuil; // MP gagnés après avoir atteint le dernier grade
-    let prestigeLevel = 0;
-    let costForNextLevel = 50; // Coût pour le Prestige 1
-    let mpLeftForPrestigeCalc = prestigeBaseMP;
-
-    // Calcule le niveau de prestige actuel
-    while (mpLeftForPrestigeCalc >= costForNextLevel) {
-        mpLeftForPrestigeCalc -= costForNextLevel;
-        prestigeLevel++;
-        costForNextLevel *= 2; // Double le coût pour le niveau suivant
-    }
-
-    const currentGradeName = prestigeLevel > 0 
-        ? `${finalGrade.nom} (Prestige ${prestigeLevel})`
-        : finalGrade.nom;
-        
-    // Calcule la progression vers le prochain niveau de prestige
-    return {
-        currentGrade: {
-            nom: currentGradeName,
-            couleur: finalGrade.couleur
-        },
-        nextGrade: {
-            nom: `Prestige ${prestigeLevel + 1}`
-        },
-        mpToNext: costForNextLevel - mpLeftForPrestigeCalc,
-        percentage: (mpLeftForPrestigeCalc / costForNextLevel) * 100
     };
-}
-
-
-function createProgressionWidget(totalMP, gradeInfo) {
-    const widget = document.createElement('div');
-    widget.id = 'progression-widget';
-    widget.className = 'progression-widget';
-
-    // Adapte le message pour le prestige
-    const mpToNextText = gradeInfo.nextGrade 
-        ? `<p>${gradeInfo.mpToNext.toFixed(1)} MP restants avant ${gradeInfo.nextGrade.nom}</p>` 
-        : '<p>Vous avez atteint le plus haut grade !</p>';
-
-    widget.innerHTML = `
-        <div class="grade-info">
-            <h2 style="color: ${gradeInfo.currentGrade.couleur};">${gradeInfo.currentGrade.nom}</h2>
-            <span>${totalMP.toFixed(1)} MP</span>
-        </div>
-        <div class="xp-bar-container">
-            <div class="xp-bar" style="width: ${gradeInfo.percentage}%; background-color: ${gradeInfo.currentGrade.couleur};"></div>
-        </div>
-        <div class="mp-to-next">
-            ${mpToNextText}
-        </div>
-    `;
-    return widget;
-}
-
-export function updateProgressionWidget() {
-    const totalMP = calculateTotalMP();
-    const gradeInfo = getCurrentGrade(totalMP);
     
+    if (startInfo.level === endInfo.level) {
+        xpBar.style.transition = `width ${animationDuration}ms ease-out`;
+        xpBar.style.width = `${endInfo.percentage}%`;
+        requestAnimationFrame(updateText);
+    } else {
+        xpBar.style.transition = `width ${animationDuration / 2}ms linear`;
+        xpBar.style.width = '100%';
+
+        await new Promise(resolve => setTimeout(resolve, animationDuration / 2));
+
+        for (let i = startInfo.level + 1; i <= endInfo.level; i++) {
+            showLevelUpAnimation(i);
+            const levelInfoForLevel = getLevelInfo(requiredMpForLevel(i));
+            
+            levelTextEl.textContent = `NIVEAU ${i}`;
+            rankIconEl.className = `fas ${levelInfoForLevel.rank.icon} rank-icon`;
+            widget.className = `progression-widget ${levelInfoForLevel.rank.className}`;
+
+            xpBar.style.transition = 'none';
+            xpBar.style.width = '0%';
+            mpInfoEl.textContent = `0 / ${levelInfoForLevel.mpToNextLevel} MP`;
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        xpBar.style.transition = `width ${animationDuration / 2}ms linear`;
+        xpBar.style.width = `${endInfo.percentage}%`;
+        mpInfoEl.textContent = `${endInfo.mpInCurrentLevel} / ${endInfo.mpToNextLevel} MP`;
+    }
+     // Add a final delay to ensure all animations complete
+    await new Promise(resolve => setTimeout(resolve, animationDuration));
+}
+
+/**
+ * Traite la fin d'une partie, ajoute les MP et déclenche les animations.
+ */
+export async function completeGame(gameId, modeIndex, score) {
+    const gain = calculateGain(gameId, modeIndex, score);
+    if (gain <= 0) return false;
+
+    const startMP = getTotalMP();
+    addMP(gain);
+    updateStatsOnGameComplete(gain); // Update stats
+
+    showMPGainAnimation(gain);
+    await animateProgression(startMP, gain);
+    updateProgressionWidget(); // Refresh the widget after animation
+
+    const oldLevelInfo = getLevelInfo(startMP);
+    const newLevelInfo = getLevelInfo(startMP + gain);
+    return newLevelInfo.level > oldLevelInfo.level;
+}
+
+/**
+ * Crée ou met à jour le widget de progression (état statique).
+ */
+export function updateProgressionWidget() {
+    const totalMP = getTotalMP();
+    const levelInfo = getLevelInfo(totalMP);
+    const stats = getGameStats(); // Get stats
     const progressionContainer = document.getElementById('progression-container');
     if (!progressionContainer) return;
 
     let widget = document.getElementById('progression-widget');
     if (!widget) {
-        widget = createProgressionWidget(totalMP, gradeInfo);
-        progressionContainer.innerHTML = ''; // Clear container before adding
+        widget = document.createElement('div');
+        widget.id = 'progression-widget';
+        progressionContainer.innerHTML = '';
         progressionContainer.appendChild(widget);
-    } else {
-        widget.querySelector('.grade-info h2').textContent = gradeInfo.currentGrade.nom;
-        widget.querySelector('.grade-info h2').style.color = gradeInfo.currentGrade.couleur;
-        widget.querySelector('.grade-info span').textContent = `${totalMP.toFixed(1)} MP`;
-        widget.querySelector('.xp-bar').style.width = `${gradeInfo.percentage}%`;
-        widget.querySelector('.xp-bar').style.backgroundColor = gradeInfo.currentGrade.couleur;
-        const mpToNextText = gradeInfo.nextGrade 
-            ? `<p>${gradeInfo.mpToNext.toFixed(1)} MP restants avant ${gradeInfo.nextGrade.nom}</p>` 
-            : '<p>Vous avez atteint le plus haut grade !</p>';
-        widget.querySelector('.mp-to-next').innerHTML = mpToNextText;
     }
-    
-    // Mettre à jour la couleur de la bordure
-    widget.style.borderColor = gradeInfo.currentGrade.couleur;
+
+    widget.className = `progression-widget ${levelInfo.rank.className}`;
+    widget.innerHTML = `
+        <div class="progression-header">
+            <div class="level-badge">
+                <i class="fas ${levelInfo.rank.icon} rank-icon"></i>
+                <span>NIVEAU ${levelInfo.level}</span>
+            </div>
+            <div class="rank-name">Rang : ${levelInfo.rank.name}</div>
+        </div>
+        <div class="xp-bar-container">
+            <div class="xp-bar" style="width: ${levelInfo.percentage}%;"></div>
+        </div>
+        <div class="progression-body">
+            <div class="mp-info">
+                <span>${levelInfo.mpInCurrentLevel} / ${levelInfo.mpToNextLevel} MP</span>
+            </div>
+            <div class="stats-info">
+                <span><i class="fas fa-gamepad"></i> Parties : ${stats.gamesPlayed}</span>
+                <span><i class="fas fa-sun"></i> MP du jour : ${stats.mpToday}</span>
+            </div>
+        </div>
+    `;
 }

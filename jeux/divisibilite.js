@@ -1,7 +1,7 @@
 import { getHighScore, saveHighScore } from '../js/storage.js';
-import { updateProgressionWidget } from '../js/progression.js';
+import { completeGame } from '../js/progression.js';
 
-export function start(container, gameId, mode) {
+export function start(container, gameId, mode, modeIndex) {
     let gameWrapper = container.querySelector(`#${gameId}-wrapper`);
     if (!gameWrapper) {
         gameWrapper = document.createElement('div');
@@ -16,6 +16,7 @@ export function start(container, gameId, mode) {
     let timerInterval = null;
     let currentNumber = 0;
     let correctDivisors = [];
+    let isGameOver = false;
 
     // --- Helper Functions for Divisibility ---
     const isDivisibleBy = {
@@ -38,7 +39,10 @@ export function start(container, gameId, mode) {
 
     // --- Core Game Logic ---
     function endGame() {
+        if(isGameOver) return;
+        isGameOver = true;
         clearInterval(timerInterval);
+        completeGame(gameId, modeIndex, score);
         const oldHighScore = getHighScore(gameId, mode);
         const isNewRecord = score > oldHighScore;
         if (isNewRecord) {
@@ -59,7 +63,6 @@ export function start(container, gameId, mode) {
             </div>
         `;
         gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
-        updateProgressionWidget();
     }
 
     function updateTimer() {
@@ -121,7 +124,9 @@ export function start(container, gameId, mode) {
             gameWrapper.querySelectorAll('.tile').forEach(tile => tile.disabled = true);
             gameWrapper.querySelector('#check-button').disabled = true;
 
-            setTimeout(generateNewRound, 1200);
+            setTimeout(() => {
+                if(!isGameOver) generateNewRound();
+            }, 1200);
         } else {
             feedbackEl.textContent = 'Incorrect ! Essayez encore.';
             feedbackEl.className = 'feedback incorrect';
@@ -138,6 +143,7 @@ export function start(container, gameId, mode) {
     function runGame() {
         score = 0;
         timeLeft = GAME_DURATION;
+        isGameOver = false;
 
         gameWrapper.innerHTML = `
             <div class="game-stats">

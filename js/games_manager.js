@@ -1,5 +1,6 @@
 import { getHighScore, resetGameHighScores } from './storage.js';
 import { updateProgressionWidget } from './progression.js';
+import { gamesData } from '../datas/games_data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const gamesGrid = document.getElementById('games-grid');
@@ -10,10 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetButton = document.getElementById('reset-progression-button');
     const resetContainer = document.querySelector('.reset-container');
 
-    let allGames = [];
-    if (typeof gamesData !== 'undefined') {
-        allGames = gamesData;
-    }
+    const allGames = gamesData;
 
     // Fonction pour afficher la grille des jeux
     const showGamesGrid = () => {
@@ -84,10 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGameCards(filteredGames);
     };
 
-    const startGame = async (gameId, mode) => {
+    const startGame = async (gameId, mode, modeIndex) => {
         const game = allGames.find(g => g.id === gameId);
         if (!game || !game.entryPoint) {
-            console.error("Jeu non trouvé ou point d\'entrée manquant !");
+            console.error("Jeu non trouvé ou point d'entrée manquant !");
             return;
         }
 
@@ -114,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             mainHeader.textContent = mode ? `${game.title} - ${mode}` : game.title;
 
-            gameModule.start(gameContentContainer, game.id, mode);
+            gameModule.start(gameContentContainer, game.id, mode, modeIndex);
 
         } catch (error) {
             console.error("Erreur lors du chargement du module de jeu:", error);
@@ -168,8 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const modeSelector = card.querySelector('.mode-selector');
             const selectedMode = modeSelector ? modeSelector.value : (game.modes && game.modes.length > 0 ? game.modes[0] : null);
-            
-            startGame(gameId, selectedMode);
+            const modeIndex = game.modes ? game.modes.indexOf(selectedMode) : -1;
+
+            startGame(gameId, selectedMode, modeIndex);
         }
     });
 

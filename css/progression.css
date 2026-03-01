@@ -1,74 +1,177 @@
-.progression-widget {
-    background-color: #ffffff;
-    border: 2px solid; /* La couleur sera définie dynamiquement */
-    border-radius: 12px;
-    padding: 0.75rem 1rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    width: 100%; /* Occupe toute la largeur de son parent (.cours-container) */
-    box-sizing: border-box;
+/* --- Progression Widget Styles --- */
+#progression-container {
+    width: 100%;
+    margin-bottom: 2rem;
 }
 
-.grade-info {
+.progression-widget {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 4px solid transparent;
+    transition: border-color 0.5s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header: Level and Rank Name */
+.progression-header {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
-    gap: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
-.grade-info h2 {
-    margin: 0;
+.level-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     font-size: 1.3rem;
-    font-weight: 700;
-}
-
-.grade-info span {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: bold;
     color: #374151;
-    white-space: nowrap;
 }
 
+.rank-icon {
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+    width: 24px;
+    text-align: center;
+}
+
+.rank-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+/* XP Bar */
 .xp-bar-container {
-    width: 100%;
     background-color: #e5e7eb;
     border-radius: 9999px;
-    height: 10px;
+    height: 12px;
     overflow: hidden;
-    margin-bottom: 0.25rem;
+    width: 100%;
+    margin-bottom: 0.75rem;
 }
 
 .xp-bar {
+    background-color: #4f46e5;
     height: 100%;
     border-radius: 9999px;
-    transition: width 0.5s ease-in-out;
+    transition: width 0.5s ease-out;
 }
 
-.mp-to-next p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: #6b7280;
-    text-align: right;
+/* Body: MP and Stats */
+.progression-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #4b5563;
 }
 
-/* Responsive Design pour mobile */
-@media (max-width: 640px) {
-    .grade-info {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+.mp-info {
+    font-weight: 600;
+}
 
-    .grade-info h2 {
-        font-size: 1.2rem;
-    }
+.stats-info {
+    display: flex;
+    gap: 1rem;
+}
 
-    .grade-info span {
-        font-size: 1rem;
-    }
+.stats-info span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
 
-    .mp-to-next p {
-        text-align: left;
-        margin-top: 0.25rem;
-    }
+/* --- Rank Colors --- */
+.rank-iron { border-color: #5A4D41; }
+.rank-iron .rank-icon, .rank-iron .rank-name { color: #5A4D41; }
+
+.rank-bronze { border-color: #CD7F32; }
+.rank-bronze .rank-icon, .rank-bronze .rank-name { color: #CD7F32; }
+
+.rank-silver { border-color: #C0C0C0; }
+.rank-silver .rank-icon, .rank-silver .rank-name { color: #C0C0C0; }
+
+.rank-gold { border-color: #FFD700; }
+.rank-gold .rank-icon, .rank-gold .rank-name { color: #FFD700; }
+
+.rank-platinum { border-color: #E5E4E2; }
+.rank-platinum .rank-icon, .rank-platinum .rank-name { color: #E5E4E2; }
+
+.rank-emerald { border-color: #50C878; }
+.rank-emerald .rank-icon, .rank-emerald .rank-name { color: #50C878; }
+
+.rank-diamond { border-color: #B9F2FF; }
+.rank-diamond .rank-icon, .rank-diamond .rank-name { color: #B9F2FF; }
+
+.rank-master { border-color: #9A4EAE; }
+.rank-master .rank-icon, .rank-master .rank-name { color: #9A4EAE; }
+
+.rank-grandmaster { border-color: #E5C100; }
+.rank-grandmaster .rank-icon, .rank-grandmaster .rank-name { color: #E5C100; }
+
+.rank-challenger { border-color: #F44336; }
+.rank-challenger .rank-icon, .rank-challenger .rank-name { color: #F44336; }
+
+
+/* --- Animations --- */
+.mp-gain-animation, .level-up-animation {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1002;
+    text-align: center;
+    pointer-events: none;
+}
+
+.mp-gain-animation {
+    top: 20%;
+    background-color: rgba(255, 215, 0, 0.95);
+    color: #333;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    animation: fade-up 3s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+.level-up-animation {
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    font-weight: 900;
+    color: #4f46e5;
+    text-shadow: 0 0 15px rgba(79, 70, 229, 0.7), 0 0 5px rgba(255,255,255,0.8);
+    animation: zoom-in-out 2.5s ease-in-out forwards;
+}
+
+/* Appears in the game-over screen */
+.level-up-message {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    animation: fadeInScale 0.5s ease-out;
+    margin-bottom: 1rem;
+}
+
+@keyframes fade-up {
+    0% { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -100px); }
+}
+
+@keyframes zoom-in-out {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
 }
