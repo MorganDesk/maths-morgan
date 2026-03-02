@@ -2,7 +2,8 @@ const FAVORITES_KEY = 'coursFavorites';
 const MASTERY_KEY = 'coursMastery';
 const HIGH_SCORES_KEY = 'gameHighScores';
 const TOTAL_MP_KEY = 'total_mp';
-const STATS_KEY = 'gameStats'; // New key for stats
+const STATS_KEY = 'gameStats';
+const ACTIVE_QUESTS_KEY = 'activeQuests'; // Key for active quests
 
 // --- Utility to get today's date as a string ---
 function getTodayDateString() {
@@ -94,37 +95,60 @@ export function addMP(amount) {
     return totalMP;
 }
 
-// --- New Stats Functions ---
+// --- Stats Functions ---
 
 /**
  * Retrieves all game stats from localStorage.
- * Resets daily stats if the date has changed.
+ * Resets daily stats (mpToday, gamesPlayedToday) if the date has changed.
  * @returns {object} The stats object.
  */
 export function getGameStats() {
     const statsJSON = localStorage.getItem(STATS_KEY);
-    let stats = statsJSON ? JSON.parse(statsJSON) : { gamesPlayed: 0, mpToday: 0, lastPlayedDate: '' };
+    let stats = statsJSON ? JSON.parse(statsJSON) : {
+        gamesPlayed: 0,
+        mpToday: 0,
+        lastPlayedDate: '',
+        gamesPlayedToday: [] // For PLAY_X_GAMES quest type
+    };
 
-    // Reset daily stats if it's a new day
     const today = getTodayDateString();
     if (stats.lastPlayedDate !== today) {
         stats.mpToday = 0;
+        stats.gamesPlayedToday = []; // Reset daily games list
         stats.lastPlayedDate = today;
+    }
+    
+    // Ensure gamesPlayedToday exists for users with older data structure
+    if (!Array.isArray(stats.gamesPlayedToday)) {
+        stats.gamesPlayedToday = [];
     }
 
     return stats;
 }
 
 /**
- * Updates the game stats after a game is completed.
- * @param {number} mpGained - The amount of MP gained in the last game.
+ * Logs a unique game played today for quest tracking.
+ * @param {string} gameId - The ID of the game that was played.
+ */
+export function logPlayedGame(gameId) {
+    if (!gameId) return;
+    const stats = getGameStats();
+
+    if (!stats.gamesPlayedToday.includes(gameId)) {
+        stats.gamesPlayedToday.push(gameId);
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+    }
+}
+
+/**
+ * Updates the general game stats after a game is completed.
  */
 export function updateStatsOnGameComplete(mpGained) {
     const stats = getGameStats();
-    
-    stats.gamesPlayed = (stats.gamesPlayed || 0) + 1;
+
+    stats.gamesPlayed = (stats.gamesPlayed || 0) + 1; // Lifetime total games
     stats.mpToday = (stats.mpToday || 0) + mpGained;
-    stats.lastPlayedDate = getTodayDateString(); // Ensure date is always current
+    stats.lastPlayedDate = getTodayDateString();
 
     localStorage.setItem(STATS_KEY, JSON.stringify(stats));
 }
@@ -134,4 +158,24 @@ export function updateStatsOnGameComplete(mpGained) {
  */
 export function resetGameStats() {
     localStorage.removeItem(STATS_KEY);
+}
+
+
+// --- Quest Functions ---
+
+/**
+ * Retrieves active quests from localStorage.
+ * @returns {Array|null} The array of active quests or null.
+ */
+export function getActiveQuests() {
+    const quests = localStorage.getItem(ACTIVE_QUESTS_KEY);
+    return quests ? JSON.parse(quests) : null;
+}
+
+/**
+ * Saves active quests to localStorage.
+ * @param {Array} quests - The array of active quests to save.
+ */
+export function saveActiveQuests(quests) {
+    localStorage.setItem(ACTIVE_QUESTS_KEY, JSON.stringify(quests));
 }

@@ -1,8 +1,25 @@
+/* --- Layout Containers --- */
+.widgets-container, .games-list-container {
+    max-width: 1200px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+.widgets-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem; /* Reduced space between progression and quests widgets */
+}
+
 /* --- Search --- */
+.search-wrapper {
+    margin-bottom: 1.5rem; /* Space between search and grid */
+}
+
 .search-container {
     position: relative;
     width: 100%;
-    margin-bottom: 1.5rem; /* Ajoute un espace sous la barre de recherche */
 }
 
 #search-input {
@@ -22,21 +39,11 @@
     color: #9ca3af;
 }
 
-/* --- Grid Layout --- */
+/* --- Grid Layout (now only for #games-grid) --- */
 .cours-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
-    max-width: 1200px;
-    margin: 1.5rem auto; /* Marge unifiée pour le haut/bas */
-    padding: 0 1rem; /* Ajout d'un padding horizontal pour les petits écrans */
-    box-sizing: border-box; /* Assure la consistance du padding */
-}
-
-/* Ajustement pour les conteneurs qui ne sont pas des grilles */
-.cours-container:has(.search-container),
-.cours-container:has(.progression-widget) {
-    display: block;
 }
 
 @media (max-width: 900px) {
@@ -242,7 +249,7 @@
 #compte-bon-game, 
 #miroir-magique-game,
 #angle-master-wrapper,
-#criteres-divisibilite-wrapper {
+#code-brise-wrapper {
     background-color: #ffffff;
     border-radius: 12px;
     border: 3px solid #4f46e5;

@@ -1,7 +1,8 @@
-import { getHighScore, saveHighScore } from '../js/storage.js';
-import { completeGame } from '../js/progression.js';
+let feedbackTimeout = null;
 
-export function start(container, gameId, mode, modeIndex) {
+export function start(container, options) {
+    const { gameId, modeName, modeIndex, settings, endGameCallback } = options;
+
     const GRID_SIZE = 14;
     let sourceCells = [];
     let expectedSolutionCoords = [];
@@ -11,39 +12,29 @@ export function start(container, gameId, mode, modeIndex) {
     gameWrapper.id = 'miroir-magique-game';
     container.appendChild(gameWrapper);
 
+    function cleanupInternals() {
+        if (feedbackTimeout) clearTimeout(feedbackTimeout);
+        feedbackTimeout = null;
+    }
+
     function runGame() {
+        cleanupInternals();
         generateProblem();
         drawBoard();
     }
 
-    /**
-     * Détermine le type de symétrie à utiliser en fonction du mode de jeu.
-     * @param {string} mode - Le mode de jeu sélectionné ('Axiale', 'Centrale', 'Mélange').
-     * @returns {object} Un objet décrivant la symétrie.
-     */
-    function determineSymmetry(mode) {
+    function determineSymmetry() {
         const axialAxes = ['vertical', 'horizontal', 'diagonal-main', 'diagonal-anti'];
-        let effectiveMode = mode;
-
-        if (mode === 'Mélange') {
-            effectiveMode = Math.random() < 0.5 ? 'Axiale' : 'Centrale';
-        }
-
-        if (effectiveMode === 'Centrale') {
-            return { type: 'central' };
-        } else { // 'Axiale'
-            const axis = axialAxes[Math.floor(Math.random() * axialAxes.length)];
-            return { type: 'axial', axis: axis };
-        }
+        let effectiveMode = modeName;
+        if (modeName === 'Mélange') effectiveMode = Math.random() < 0.5 ? 'Axiale' : 'Centrale';
+        if (effectiveMode === 'Centrale') return { type: 'central' };
+        else return { type: 'axial', axis: axialAxes[Math.floor(Math.random() * axialAxes.length)] };
     }
 
     function generateProblem() {
         sourceCells = [];
         expectedSolutionCoords = [];
-        
-        // On détermine la symétrie avant de générer la figure.
-        symmetry = determineSymmetry(mode);
-        
+        symmetry = determineSymmetry();
         const numCells = 6 + Math.floor(Math.random() * 4);
         const G = GRID_SIZE - 1;
         const isValid = (x, y) => x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE;
@@ -65,11 +56,9 @@ export function start(container, gameId, mode, modeIndex) {
 
             if (isValid(newCell.x, newCell.y) && !sourceCells.some(c => c.x === newCell.x && c.y === newCell.y)) {
                 sourceCells.push(newCell);
-                
                 let symmetricPoint;
-                if (symmetry.type === 'central') {
-                    symmetricPoint = { x: G - newCell.x, y: G - newCell.y };
-                } else {
+                if (symmetry.type === 'central') symmetricPoint = { x: G - newCell.x, y: G - newCell.y };
+                else {
                     switch (symmetry.axis) {
                         case 'vertical':   symmetricPoint = { x: G - newCell.x, y: newCell.y }; break;
                         case 'horizontal': symmetricPoint = { x: newCell.x, y: G - newCell.y }; break;
@@ -89,10 +78,7 @@ export function start(container, gameId, mode, modeIndex) {
                 gridHtml += `<div class="cell" data-x="${x}" data-y="${y}"></div>`;
             }
         }
-
-        // Le texte est maintenant basé sur le type de symétrie réellement choisi.
         const symmetryText = symmetry.type === 'central' ? 'centrale' : 'axiale';
-
         gameWrapper.innerHTML = `
             <div class="game-area">
                 <p class="game-instruction">Reproduisez la figure par symétrie ${symmetryText}.</p>
@@ -108,13 +94,13 @@ export function start(container, gameId, mode, modeIndex) {
         const gridContainer = gameWrapper.querySelector('#grid-container');
         sourceCells.forEach(c => gridContainer.querySelector(`[data-x='${c.x}'][data-y='${c.y}']`).classList.add('source'));
         drawSymmetryElement(gridContainer);
-
         gridContainer.addEventListener('click', onCellClick);
         gameWrapper.querySelector('#check-button').addEventListener('click', checkSolution);
         gameWrapper.querySelector('#new-puzzle-button').addEventListener('click', runGame);
     }
     
     function drawSymmetryElement(container) {
+        if (!container) return;
         const el = document.createElement('div');
         if (symmetry.type === 'central') el.className = 'center-point';
         else el.className = `axis ${symmetry.axis}`;
@@ -131,14 +117,11 @@ export function start(container, gameId, mode, modeIndex) {
         const userSet = new Set(Array.from(gameWrapper.querySelectorAll('.user-cell')).map(c => `${c.dataset.x},${c.dataset.y}`));
         const sourceSet = new Set(sourceCells.map(c => `${c.x},${c.y}`));
         const requiredSet = new Set(expectedSolutionCoords.map(c => `${c.x},${c.y}`).filter(coordStr => !sourceSet.has(coordStr)));
-    
         const areSetsEqual = (a, b) => a.size === b.size && [...a].every(value => b.has(value));
     
         if (areSetsEqual(userSet, requiredSet)) {
-            completeGame(gameId, modeIndex, 1);
-            const currentScore = getHighScore(gameId, mode) || 0;
-            saveHighScore(gameId, mode, currentScore + 1);
-            showWinScreen(currentScore + 1);
+            endGameCallback(gameId, modeName, modeIndex, 1);
+            showWinScreen();
         } else {
             showFeedback('Ce n\'est pas tout à fait ça. Essayez encore !', false);
         }
@@ -146,25 +129,27 @@ export function start(container, gameId, mode, modeIndex) {
 
     function showFeedback(message, isSuccess) {
         const feedbackEl = gameWrapper.querySelector('.feedback-message');
+        if (!feedbackEl) return;
         feedbackEl.textContent = message;
         feedbackEl.style.color = isSuccess ? 'green' : 'red';
-        setTimeout(() => feedbackEl.textContent = '', 3000);
+        if (feedbackTimeout) clearTimeout(feedbackTimeout);
+        feedbackTimeout = setTimeout(() => { if (feedbackEl) feedbackEl.textContent = '' }, 2000);
     }
 
-    function showWinScreen(newScore) {
+    function showWinScreen() {
         gameWrapper.innerHTML = `
             <div class="game-over-screen">
                 <h2>Bravo ! C'est la bonne symétrie !</h2>
-                <div class="new-record-message">
-                    <i class="fas fa-trophy"></i> Vous avez résolu ${newScore} puzzle(s) en mode ${mode} <i class="fas fa-trophy"></i>
-                </div>
-                <div class="game-over-actions">
-                    <button id="next-puzzle-button">Prochain puzzle</button>
-                </div>
+                <div class="game-over-actions"><button id="next-puzzle-button">Prochain puzzle</button></div>
             </div>
         `;
         gameWrapper.querySelector('#next-puzzle-button').addEventListener('click', runGame);
     }
 
     runGame();
+}
+
+export function cleanup() {
+    if (feedbackTimeout) clearTimeout(feedbackTimeout);
+    feedbackTimeout = null;
 }

@@ -1,62 +1,76 @@
 export const gamesData = [
     {
-        id: 'defi-des-tables',
-        title: 'Défi des tables',
+        id: 'multipli-warrior',
+        title: 'Multipli-Warrior',
         matiere: 'Calcul mental',
-        description: 'Plus rapide qu\'une calculatrice ? Pulvérise ton record de multiplications avant que le temps ne s\'écoule !',
+        description: 'Multiplie à la vitesse de l\'éclair ! Donne un maximum de bonnes réponses avant la fin du chrono.',
         tags: ['calcul', 'multiplication', 'vitesse'],
         entryPoint: 'jeux/defi-des-tables.js',
         baseMP: 5,
         coefficient: [1]
     },
     {
-        id: 'choc-des-relatifs',
-        title: 'Choc des Relatifs',
+        id: 'duel-des-signes',
+        title: 'Duel des Signes',
         matiere: 'Calcul mental',
-        description: 'Signe moins ou signe plus ? Ne laisse pas les nombres négatifs te faire perdre pied dans ce duel acharné.',
+        description: 'Maîtrise les nombres négatifs. Calcule le résultat en respectant la règle des signes avant la fin du chrono.',
         tags: ['addition', 'soustraction', 'multiplication', 'vitesse', 'relatifs'],
-        modes: ['Addition (+)', 'Soustraction (-)', 'Mélange (+/-)', 'Multiplication (x)', 'Mélange total (+/-/x)'],
         entryPoint: 'jeux/choc-des-relatifs.js',
         baseMP: 5,
-        coefficient: [1, 1.2, 1.5, 1.2, 2]
+        coefficient: [1, 1.2, 1.5, 1.2, 2],
+        modes: [
+            { name: 'Addition (+)', settings: { operators: ['+'] } },
+            { name: 'Soustraction (-)', settings: { operators: ['-'] } },
+            { name: 'Mélange (+/-)', settings: { operators: ['+', '-'] } },
+            { name: 'Multiplication (x)', settings: { operators: ['*'] } },
+            { name: 'Mélange total (+/-/x)', settings: { operators: ['+', '-', '*'] } }
+        ]
     },
     {
         id: 'compte-bon',
         title: 'Le Compte est Bon',
         matiere: 'Logique',
-        description: 'Trouvez le nombre cible en utilisant les 6 plaques et les 4 opérations. Un casse-tête classique !',
+        description: 'Atteins le nombre cible ! Combine 6 plaques avec les 4 opérations sans utiliser deux fois le même nombre.',
         tags: ['logique', 'calcul', 'stratégie'],
-        modes: ['Facile', 'Normal', 'Extrême'],
         entryPoint: 'jeux/compte-bon.js',
         baseMP: 5,
-        coefficient: [1, 2, 5]
+        coefficient: [1, 2, 5],
+        modes: [
+            { name: 'Facile' },
+            { name: 'Normal' },
+            { name: 'Extrême' }
+        ]
     },
     {
         id: 'miroir-magique',
         title: 'Miroir Magique',
         matiere: 'Géométrie',
-        description: 'Reproduis la figure en utilisant la symétrie axiale ou centrale. Un test de précision et de vision géométrique !',
+        description: 'Dompte la symétrie ! Colorie les cases pour reproduire la figure par reflet axial ou central.',
         tags: ['géométrie', 'symétrie', 'logique'],
-        modes: ['Axiale', 'Centrale', 'Mélange'],
         entryPoint: 'jeux/miroir-magique.js',
         baseMP: 5,
-        coefficient: [1, 1, 1.2]
+        coefficient: [1, 1, 1.2],
+        modes: [
+            { name: 'Axiale' },
+            { name: 'Centrale' },
+            { name: 'Mélange' }
+        ]
     },
     {
         id: 'angle-master',
         title: 'Angle Master',
         matiere: 'Géométrie',
-        description: 'Estime la mesure de l\'angle affiché à l\'œil nu. Prouve que tu as le compas dans l\'œil !',
+        description: 'Devine la mesure de l\'angle ! Estime les degrés à l\'œil nu le plus précisément possible.',
         tags: ['géométrie', 'estimation', 'angles', 'degrés', 'vitesse'],
         entryPoint: 'jeux/angle-master.js',
         baseMP: 5,
         coefficient: [2.5]
     },
     {
-        id: 'criteres-divisibilite',
-        title: 'Critères de Divisibilité',
+        id: 'code-brise',
+        title: 'Code Brisé',
         matiere: 'Calcul mental',
-        description: 'Ce nombre est-il divisible par 2, 3, 5, 9, 10 ? Coche les bonnes cases et montre ta maîtrise des critères de divisibilité.',
+        description: 'Scanne le nombre ! Coche instantanément tous ses diviseurs (2, 3, 5, 9 ou 10) pour gagner.',
         tags: ['calcul', 'divisibilité', 'logique', 'vitesse'],
         entryPoint: 'jeux/divisibilite.js',
         baseMP: 5,

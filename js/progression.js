@@ -1,5 +1,6 @@
-import { getTotalMP, addMP, getGameStats, updateStatsOnGameComplete } from './storage.js';
+import { getTotalMP, addMP, getGameStats, updateStatsOnGameComplete, logPlayedGame } from './storage.js';
 import { gamesData } from '../datas/games_data.js';
+import { updateQuestProgression } from './quests.js'; // Import quest functionality
 
 // --- Configuration des Rangs ---
 const RANKS = [
@@ -15,18 +16,10 @@ const RANKS = [
     { name: 'Challenger', minLevel: 270, className: 'rank-challenger', icon: 'fa-rocket' }
 ];
 
-/**
- * Trouve le rang correspondant à un niveau donné.
- * @param {number} level - Le niveau de l'utilisateur.
- * @returns {object} Le rang actuel.
- */
 function getRank(level) {
     return RANKS.slice().reverse().find(rank => level >= rank.minLevel) || RANKS[0];
 }
 
-/**
- * Calcule le gain de MP pour une partie terminée.
- */
 export function calculateGain(gameId, modeIndex, score) {
     const game = gamesData.find(g => g.id === gameId);
     if (!game) return 0;
@@ -35,16 +28,10 @@ export function calculateGain(gameId, modeIndex, score) {
     return baseMP + Math.floor((score || 0) * coefficient);
 }
 
-/**
- * Calcule le total de MP requis pour atteindre un certain niveau.
- */
 function requiredMpForLevel(level) {
     return 5 * level * (level + 1);
 }
 
-/**
- * Obtient les informations de niveau de l'utilisateur en fonction du total de MP.
- */
 export function getLevelInfo(totalMP) {
     let level = 0;
     while (totalMP >= requiredMpForLevel(level + 1)) {
@@ -60,9 +47,6 @@ export function getLevelInfo(totalMP) {
     return { level, mpInCurrentLevel, mpToNextLevel, percentage, rank };
 }
 
-/**
- * Crée et affiche une animation de gain de MP.
- */
 function showMPGainAnimation(amount) {
     const el = document.createElement('div');
     el.textContent = `+${amount} MP`;
@@ -71,9 +55,6 @@ function showMPGainAnimation(amount) {
     setTimeout(() => el.remove(), 3000);
 }
 
-/**
- * Crée et affiche une animation de passage de niveau.
- */
 function showLevelUpAnimation(newLevel) {
     const el = document.createElement('div');
     el.textContent = `NIVEAU ${newLevel} !`;
@@ -82,11 +63,6 @@ function showLevelUpAnimation(newLevel) {
     setTimeout(() => el.remove(), 2500);
 }
 
-/**
- * Anime la barre d'XP et les textes d'information.
- * @param {number} startMP - Le total de MP avant le gain.
- * @param {number} gain - Le montant de MP gagné.
- */
 async function animateProgression(startMP, gain) {
     const endMP = startMP + gain;
     const startInfo = getLevelInfo(startMP);
@@ -99,7 +75,7 @@ async function animateProgression(startMP, gain) {
     const rankIconEl = levelBadge.querySelector('.rank-icon');
     const levelTextEl = levelBadge.querySelector('span');
 
-    const animationDuration = 800; // ms
+    const animationDuration = 800; 
 
     let currentMP = startInfo.mpInCurrentLevel;
     const finalMP = endInfo.mpInCurrentLevel;
@@ -144,37 +120,35 @@ async function animateProgression(startMP, gain) {
         xpBar.style.width = `${endInfo.percentage}%`;
         mpInfoEl.textContent = `${endInfo.mpInCurrentLevel} / ${endInfo.mpToNextLevel} MP`;
     }
-     // Add a final delay to ensure all animations complete
     await new Promise(resolve => setTimeout(resolve, animationDuration));
 }
 
-/**
- * Traite la fin d'une partie, ajoute les MP et déclenche les animations.
- */
 export async function completeGame(gameId, modeIndex, score) {
+    logPlayedGame(gameId); // FIX: Log the game played for the day
+
     const gain = calculateGain(gameId, modeIndex, score);
     if (gain <= 0) return false;
 
     const startMP = getTotalMP();
     addMP(gain);
-    updateStatsOnGameComplete(gain); // Update stats
+    updateStatsOnGameComplete(gain);
+
+    // Mettre à jour la progression des quêtes
+    updateQuestProgression(gameId, modeIndex, score, gain);
 
     showMPGainAnimation(gain);
     await animateProgression(startMP, gain);
-    updateProgressionWidget(); // Refresh the widget after animation
+    updateProgressionWidget(); 
 
     const oldLevelInfo = getLevelInfo(startMP);
     const newLevelInfo = getLevelInfo(startMP + gain);
     return newLevelInfo.level > oldLevelInfo.level;
 }
 
-/**
- * Crée ou met à jour le widget de progression (état statique).
- */
 export function updateProgressionWidget() {
     const totalMP = getTotalMP();
     const levelInfo = getLevelInfo(totalMP);
-    const stats = getGameStats(); // Get stats
+    const stats = getGameStats();
     const progressionContainer = document.getElementById('progression-container');
     if (!progressionContainer) return;
 

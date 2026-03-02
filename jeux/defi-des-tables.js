@@ -1,7 +1,8 @@
-import { getHighScore, saveHighScore } from '../js/storage.js';
-import { completeGame } from '../js/progression.js';
+let timerInterval = null; // Déplacé ici pour être accessible par cleanup
 
-export function start(container, gameId, mode, modeIndex) {
+export function start(container, options) {
+    const { gameId, modeName, modeIndex, settings, endGameCallback } = options;
+
     let gameWrapper = container.querySelector('#defi-des-tables-game');
     if (!gameWrapper) {
         gameWrapper = document.createElement('div');
@@ -9,41 +10,34 @@ export function start(container, gameId, mode, modeIndex) {
         container.appendChild(gameWrapper);
     }
 
-    const GAME_DURATION = 60;
+    const GAME_DURATION = settings.duration || 60;
     let score = 0;
     let timeLeft = GAME_DURATION;
-    let timerInterval = null;
     let isGameOver = false;
 
-    function endGame() {
-        if (isGameOver) return; // Empêcher les exécutions multiples
-        isGameOver = true;
-        clearInterval(timerInterval);
-        
-        completeGame(gameId, modeIndex, score); // Gère le gain de MP et l'animation
-        
-        const oldHighScore = getHighScore(gameId, 'default');
-        let isNewRecord = false;
-        if (score > oldHighScore) {
-            saveHighScore(gameId, 'default', score);
-            isNewRecord = true;
-        }
-        const finalHighScore = isNewRecord ? score : oldHighScore;
+    function showGameOverScreen() {
+        endGameCallback(gameId, modeName, modeIndex, score);
 
         gameWrapper.innerHTML = `
             <div class="game-over-screen">
                 <h2>Temps écoulé !</h2>
-                ${isNewRecord ? `<div class="new-record-message"><i class="fas fa-trophy"></i> Nouveau Record !</div>` : ''}
                 <div class="final-score">${score}</div>
                 <p class="final-score-label">réponses en ${GAME_DURATION} secondes.</p>
                 <div class="game-over-actions">
-                     <div class="highscore-info"><i class="fas fa-trophy"></i> Record : ${finalHighScore}</div>
                      <button id="restart-button">Rejouer</button>
                 </div>
             </div>
         `;
 
         gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
+    }
+    
+    function endGame() {
+        if (isGameOver) return;
+        isGameOver = true;
+        clearInterval(timerInterval);
+        timerInterval = null;
+        showGameOverScreen();
     }
 
     function updateTimer() {
@@ -62,13 +56,16 @@ export function start(container, gameId, mode, modeIndex) {
         const questionContainer = gameWrapper.querySelector('#question-container');
         const answerInput = gameWrapper.querySelector('#answer-input');
         
-        questionContainer.textContent = `${num1} × ${num2}`;
-        answerInput.dataset.answer = String(num1 * num2);
-        answerInput.value = '';
-        answerInput.focus();
+        if (questionContainer && answerInput) {
+            questionContainer.textContent = `${num1} × ${num2}`;
+            answerInput.dataset.answer = String(num1 * num2);
+            answerInput.value = '';
+            answerInput.focus();
+        }
     }
 
     function handleInput() {
+        if (isGameOver) return;
         const answerInput = gameWrapper.querySelector('#answer-input');
         const feedbackEl = gameWrapper.querySelector('#feedback');
         const correctAnswer = answerInput.dataset.answer;
@@ -100,7 +97,7 @@ export function start(container, gameId, mode, modeIndex) {
     function runGame() {
         score = 0;
         timeLeft = GAME_DURATION;
-        isGameOver = false; // Réinitialiser le drapeau
+        isGameOver = false;
 
         gameWrapper.innerHTML = `
             <div class="game-stats">
@@ -119,10 +116,19 @@ export function start(container, gameId, mode, modeIndex) {
         answerInput.addEventListener('input', handleInput);
 
         generateQuestion();
-        clearInterval(timerInterval);
+        
+        if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(updateTimer, 1000);
+        
         if(answerInput) answerInput.focus();
     }
 
     runGame();
+}
+
+export function cleanup() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
 }

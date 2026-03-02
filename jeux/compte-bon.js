@@ -1,8 +1,7 @@
 
-import { getHighScore, saveHighScore } from '../js/storage.js';
-import { completeGame } from '../js/progression.js';
+export function start(container, options) {
+    const { gameId, modeName, modeIndex, settings, endGameCallback } = options;
 
-export function start(container, gameId, mode, modeIndex) {
     const gameWrapper = document.createElement('div');
     gameWrapper.id = 'compte-bon-game';
     container.appendChild(gameWrapper);
@@ -13,9 +12,6 @@ export function start(container, gameId, mode, modeIndex) {
     let selectedOperator = null;
     let historyStack = [];
 
-    /**
-     * Centralized, canonical logic for calculating all possible valid results from two numbers.
-     */
     function getPossibleResults(num1, num2) {
         const [a, b] = num1 > num2 ? [num1, num2] : [num2, num1];
         const results = [];
@@ -26,19 +22,14 @@ export function start(container, gameId, mode, modeIndex) {
         return results.filter(r => Number.isInteger(r) && r > 0);
     }
 
-    /**
-     * Generates all reachable numbers, step by step, using a breadth-first approach.
-     */
     function generateAllReachableByOps(tiles, maxOps) {
-        const queue = [{ nums: [...tiles], ops: 0 }];
+         const queue = [{ nums: [...tiles], ops: 0 }];
         const visited = new Set([tiles.sort((a, b) => a - b).join(',')]);
-        
         const reachableByOps = Array.from({ length: maxOps + 1 }, () => new Set());
         const allReachableNumbers = new Set(tiles);
 
         while (queue.length > 0) {
             const { nums, ops } = queue.shift();
-
             if (ops >= maxOps) continue;
 
             for (let i = 0; i < nums.length; i++) {
@@ -65,9 +56,6 @@ export function start(container, gameId, mode, modeIndex) {
         return reachableByOps;
     }
 
-    /**
-     * Generates a problem using the new constructive method.
-     */
     function generateProblem() {
         let problemIsValid = false;
         let attempts = 0;
@@ -76,20 +64,19 @@ export function start(container, gameId, mode, modeIndex) {
             attempts++;
             if (attempts > 1000) {
                 console.error("Could not generate a valid problem. Using fallback.");
-                 if (mode === 'Extrême') {
+                 if (modeName === 'Extrême') {
                     initialTiles = [2, 4, 5, 8, 10, 25];
                     targetNumber = 891;
-                } else if (mode === 'Normal') {
+                } else if (modeName === 'Normal') {
                     initialTiles = [1, 2, 3, 4, 10, 25];
                     targetNumber = 101;
                 } else { // Facile
                     initialTiles = [1, 2, 3, 4, 5, 10];
-                    targetNumber = 53; // 10 * 5 + 3
+                    targetNumber = 53;
                 }
                 return;
             }
 
-            // 1. Get initial tiles
             const largePlates = [10, 25, 50, 75, 100];
             const smallPlates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9];
             let candidateTiles = [];
@@ -99,32 +86,29 @@ export function start(container, gameId, mode, modeIndex) {
             shuffleArray(smallPlates);
             for (let i = 0; i < (6 - numLarge); i++) candidateTiles.push(smallPlates[i]);
 
-            // 2. Decide on the target number of operations and target range
             let targetOps;
             let minTarget;
 
-            switch (mode) {
+            switch (modeName) {
                 case 'Extrême':
-                    targetOps = 4 + Math.floor(Math.random() * 2); // 4 or 5 ops
+                    targetOps = 4 + Math.floor(Math.random() * 2);
                     minTarget = 101;
                     break;
                 case 'Normal':
-                    targetOps = 3 + Math.floor(Math.random() * 2); // 3 or 4 ops
+                    targetOps = 3 + Math.floor(Math.random() * 2);
                     minTarget = 101;
                     break;
                 case 'Facile':
                 default:
-                    targetOps = 2 + Math.floor(Math.random() * 2); // 2 or 3 ops
+                    targetOps = 2 + Math.floor(Math.random() * 2);
                     minTarget = 50;
                     break;
             }
 
-            // 3. Generate all reachable numbers for that depth
             const allReachable = generateAllReachableByOps(candidateTiles, targetOps);
             const candidateTargets = Array.from(allReachable[targetOps])
                                             .filter(n => n >= minTarget && n <= 999);
 
-            // 4. If we found suitable targets, pick one.
             if (candidateTargets.length > 0) {
                 targetNumber = candidateTargets[Math.floor(Math.random() * candidateTargets.length)];
                 initialTiles = candidateTiles;
@@ -134,7 +118,7 @@ export function start(container, gameId, mode, modeIndex) {
     }
 
     function drawBoard() {
-        historyStack = []; // Clear history on new board
+        historyStack = [];
         gameWrapper.innerHTML = `
             <div class="game-area">
                  <p class="game-instruction">Trouvez le nombre cible :</p>
@@ -182,7 +166,6 @@ export function start(container, gameId, mode, modeIndex) {
     }
 
     function handleCalculation(tile1, opTile, tile2) {
-        // Save current state before calculation
         const currentTiles = Array.from(gameWrapper.querySelectorAll('#tiles-container .number-tile')).map(t => parseInt(t.dataset.value));
         historyStack.push(currentTiles);
         gameWrapper.querySelector('#undo-button').disabled = false;
@@ -196,7 +179,7 @@ export function start(container, gameId, mode, modeIndex) {
         else if (op === '×') result = a * b;
         else if (op === '÷') { if (b === 0 || a % b !== 0) error = true; else result = a / b; }
         if (error) { 
-            historyStack.pop(); // Remove the state if the calculation was invalid
+            historyStack.pop();
             if(historyStack.length === 0) {
                  gameWrapper.querySelector('#undo-button').disabled = true;
                  gameWrapper.querySelector('#reset-board').disabled = true;
@@ -214,16 +197,13 @@ export function start(container, gameId, mode, modeIndex) {
 
     function undoLastMove() {
         if (historyStack.length === 0) return;
-
         const lastState = historyStack.pop();
         const tilesContainer = gameWrapper.querySelector('#tiles-container');
         tilesContainer.innerHTML = '';
         lastState.forEach(val => tilesContainer.appendChild(createTile(val, 'number')));
-
         const isInitialState = historyStack.length === 0;
         gameWrapper.querySelector('#undo-button').disabled = isInitialState;
         gameWrapper.querySelector('#reset-board').disabled = isInitialState;
-
         resetSelection();
     }
     
@@ -243,19 +223,19 @@ export function start(container, gameId, mode, modeIndex) {
     
     function checkWin(result) {
         if (result === targetNumber) {
-            completeGame(gameId, modeIndex, 1);
-            const currentScore = getHighScore(gameId, mode) || 0;
-            saveHighScore(gameId, mode, currentScore + 1);
-            showWinScreen(currentScore + 1);
+            endGameCallback(gameId, modeName, modeIndex, 1);
+            showWinScreen();
         }
     }
 
-    function showWinScreen(score) {
+    function showWinScreen() {
         gameWrapper.innerHTML = `
             <div class="game-over-screen">
                 <h2>Bravo ! Le compte est bon !</h2>
-                <div class="new-record-message"><i class="fas fa-trophy"></i> Vous avez résolu ${score} puzzle(s) en mode ${mode} <i class="fas fa-trophy"></i></div>
-                <div class="game-over-actions"><button id="next-puzzle-button">Prochain puzzle</button></div>
+                <p>Vous avez trouvé la solution.</p>
+                <div class="game-over-actions">
+                    <button id="next-puzzle-button">Prochain puzzle</button>
+                </div>
             </div>
         `;
         gameWrapper.querySelector('#next-puzzle-button').addEventListener('click', runGame);
@@ -274,4 +254,9 @@ export function start(container, gameId, mode, modeIndex) {
     }
 
     runGame();
+}
+
+export function cleanup() {
+    // Ce jeu est entièrement événementiel et contenu dans son wrapper.
+    // Le nettoyage du conteneur par games_manager.js est suffisant.
 }

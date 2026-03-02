@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/jeux.css">
     <link rel="stylesheet" href="css/progression.css">
+    <link rel="stylesheet" href="css/quests.css">
 </head>
 <body>
     <header>
@@ -18,19 +19,26 @@
         </nav>
     </header>
     <main>
-        <div id="progression-container" class="cours-container">
-            <!-- Le widget de progression sera injecté ici -->
-        </div>
-
-        <div class="cours-container">
-            <div class="search-container">
-                 <i class="fas fa-search"></i>
-                <input type="text" id="search-input" placeholder="Rechercher un jeu par titre ou tag...">
+        <div class="widgets-container">
+            <div id="progression-container">
+                <!-- Le widget de progression sera injecté ici -->
+            </div>
+            <div id="quests-container">
+                <!-- Le widget des quêtes sera injecté ici -->
             </div>
         </div>
-        
-        <div id="games-grid" class="cours-container">
-            <!-- Les cartes de jeux seront injectées ici -->
+
+        <div class="games-list-container">
+            <div class="search-wrapper">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Rechercher un jeu par titre ou tag...">
+                </div>
+            </div>
+            
+            <div id="games-grid" class="cours-container">
+                <!-- Les cartes de jeux seront injectées ici -->
+            </div>
         </div>
 
         <div id="game-container" class="hidden">

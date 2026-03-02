@@ -1,57 +1,60 @@
-import { getHighScore, saveHighScore } from '../js/storage.js';
-import { completeGame } from '../js/progression.js';
+let timerInterval = null;
+let feedbackTimeout = null;
 
-export function start(container, gameId, mode, modeIndex) {
+export function start(container, options) {
+    const { gameId, modeName, modeIndex, settings, endGameCallback } = options;
+
     const gameWrapper = document.createElement('div');
     gameWrapper.id = 'choc-des-relatifs-game';
 
-    const GAME_DURATION = 60;
+    const GAME_DURATION = settings.duration || 60;
     let score = 0;
     let timeLeft = GAME_DURATION;
-    let timerInterval = null;
     let isGameOver = false;
+
+    function cleanupInternals() {
+        if (timerInterval) clearInterval(timerInterval);
+        if (feedbackTimeout) clearTimeout(feedbackTimeout);
+        timerInterval = null;
+        feedbackTimeout = null;
+    }
 
     function formatNumber(num) {
         return num >= 0 ? `(+${num})` : `(${num})`;
     }
 
-    function getOperator(currentMode) {
-        const operators = [];
-        if (currentMode.includes('+')) operators.push('+');
-        if (currentMode.includes('-')) operators.push('-');
-        if (currentMode.includes('x')) operators.push('*');
-
-        if (operators.length === 0) return '+'; // Fallback
+    function getOperator() {
+        const operators = settings.operators || ['+'];
         return operators[Math.floor(Math.random() * operators.length)];
     }
 
-    function getInstructionText(mode) {
+    function getInstructionText() {
         let operationName;
-        switch(mode) {
-            case 'Additions (+)':
-                operationName = "d'additions";
-                break;
-            case 'Soustractions (-)':
-                operationName = "de soustractions";
-                break;
-            case 'Additions et soustractions (+-)':
-                operationName = "d'additions et de soustractions";
-                break;
-            case 'Multiplications (x)':
-                operationName = "de multiplications";
-                break;
-            default:
-                operationName = "d'opérations sur les nombres relatifs"; // Fallback
+        const ops = settings.operators.join('');
+        if (ops.includes('+') && ops.includes('-') && ops.includes('*')) {
+            operationName = "d'opérations";
+        } else if (ops.includes('+') && ops.includes('-')) {
+            operationName = "d'additions et de soustractions";
+        } else if (ops.includes('+')) {
+            operationName = "d'additions";
+        } else if (ops.includes('-')) {
+            operationName = "de soustractions";
+        } else if (ops.includes('*')) {
+            operationName = "de multiplications";
+        } else {
+            operationName = "d'opérations sur les nombres relatifs";
         }
         return `Répondez correctement au plus grand nombre ${operationName} en ${GAME_DURATION} secondes !`;
     }
 
     function generateQuestion() {
-        const num1 = Math.floor(Math.random() * 21) - 10;
-        const num2 = Math.floor(Math.random() * 21) - 10;
         const questionContainer = gameWrapper.querySelector('#question-container');
         const answerInput = gameWrapper.querySelector('#answer-input');
-        const operator = getOperator(mode);
+        if (!questionContainer || !answerInput) return;
+        
+        const num1 = Math.floor(Math.random() * 21) - 10;
+        const num2 = Math.floor(Math.random() * 21) - 10;
+        const operator = getOperator();
         
         let correctAnswer;
         switch (operator) {
@@ -60,38 +63,34 @@ export function start(container, gameId, mode, modeIndex) {
             case '*': correctAnswer = num1 * num2; break;
         }
 
-        questionContainer.textContent = `${formatNumber(num1)} ${operator} ${formatNumber(num2)}`;
+        questionContainer.textContent = `${formatNumber(num1)} ${operator === '*' ? '×' : operator} ${formatNumber(num2)}`;
         answerInput.dataset.answer = correctAnswer;
         answerInput.value = '';
         answerInput.focus();
     }
     
     function handleInput() {
+        if (isGameOver) return;
         const answerInput = gameWrapper.querySelector('#answer-input');
         const feedbackEl = gameWrapper.querySelector('#feedback');
         const correctAnswer = parseInt(answerInput.dataset.answer, 10);
         
-        // Handle negative sign input
-        if (answerInput.value === '-') {
-            return; // Wait for more digits
-        }
+        if (answerInput.value === '-' || answerInput.value === '' ) return;
 
         const userAnswer = parseInt(answerInput.value, 10);
 
-        // Check if the input could still be part of the correct answer
-        const isPotentiallyCorrect = String(correctAnswer).startsWith(answerInput.value);
-
-        if (String(userAnswer).length >= String(correctAnswer).length && !isPotentiallyCorrect) {
+        if (String(userAnswer).length >= String(correctAnswer).length && userAnswer !== correctAnswer) {
+             if (String(correctAnswer).startsWith(answerInput.value)) return;
             feedbackEl.textContent = 'Incorrect !';
             feedbackEl.className = 'feedback incorrect';
             answerInput.value = '';
-            setTimeout(() => { feedbackEl.textContent = '' }, 1000);
+            feedbackTimeout = setTimeout(() => { if(feedbackEl) feedbackEl.textContent = '' }, 1000);
         } else if (userAnswer === correctAnswer) {
             score++;
             gameWrapper.querySelector('#score').textContent = score;
             feedbackEl.textContent = 'Correct !';
             feedbackEl.className = 'feedback correct';
-            setTimeout(() => {
+            feedbackTimeout = setTimeout(() => {
                 if(!isGameOver) {
                     generateQuestion();
                     feedbackEl.textContent = '';
@@ -100,36 +99,24 @@ export function start(container, gameId, mode, modeIndex) {
         }
     }
 
+    function showGameOverScreen() {
+        endGameCallback(gameId, modeName, modeIndex, score);
+        gameWrapper.innerHTML = `
+            <div class="game-over-screen">
+                <h2>Temps écoulé !</h2>
+                <div class="final-score">${score}</div>
+                <p class="final-score-label">réponses en ${GAME_DURATION}s.</p>
+                <div class="game-over-actions"><button id="restart-button">Rejouer</button></div>
+            </div>
+        `;
+        gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
+    }
+
     function endGame() {
         if(isGameOver) return;
         isGameOver = true;
-        clearInterval(timerInterval);
-        
-        completeGame(gameId, modeIndex, score); // Gère le gain de MP et l'animation
-
-        const oldHighScore = getHighScore(gameId, mode);
-        let isNewRecord = false;
-
-        if (score > oldHighScore) {
-            saveHighScore(gameId, mode, score);
-            isNewRecord = true;
-        }
-        const finalHighScore = isNewRecord ? score : oldHighScore;
-        
-        let gameOverHTML = `
-            <div class="game-over-screen">
-                <h2>Temps écoulé !</h2>
-                ${isNewRecord ? '<div class="new-record-message"><i class="fas fa-trophy"></i> Nouveau Record !</div>' : ''}
-                <div class="final-score">${score}</div>
-                <p class="final-score-label">réponses en ${GAME_DURATION}s pour le mode ${mode}</p>
-                <div class="game-over-actions">
-                     <div class="highscore-info"><i class="fas fa-trophy"></i> Record : ${finalHighScore}</div>
-                     <button id="restart-button">Rejouer</button>
-                </div>
-            </div>
-        `;
-        gameWrapper.innerHTML = gameOverHTML;
-        gameWrapper.querySelector('#restart-button').addEventListener('click', runGame);
+        cleanupInternals();
+        showGameOverScreen();
     }
 
     function updateTimer() {
@@ -140,17 +127,17 @@ export function start(container, gameId, mode, modeIndex) {
     }
 
     function runGame() {
+        cleanupInternals();
         score = 0;
         timeLeft = GAME_DURATION;
         isGameOver = false;
-        const instructionText = getInstructionText(mode);
 
         gameWrapper.innerHTML = `
             <div class="game-stats">
                 <span>Score: <span id="score">0</span></span>
                 <span>Temps: <span id="time-left">${timeLeft}</span>s</span>
             </div>
-            <p class="game-instruction">${instructionText}</p>
+            <p class="game-instruction">${getInstructionText()}</p>
             <div class="game-area">
                 <div id="question-container" class="game-question"></div>
                 <input type="text" pattern="[0-9-]*" inputmode="numeric" id="answer-input" autofocus autocomplete="off" />
@@ -159,12 +146,17 @@ export function start(container, gameId, mode, modeIndex) {
         `;
         gameWrapper.querySelector('#answer-input').addEventListener('input', handleInput);
         generateQuestion();
-        clearInterval(timerInterval);
         timerInterval = setInterval(updateTimer, 1000);
-        const answerInput = gameWrapper.querySelector('#answer-input');
-        if (answerInput) answerInput.focus();
+        gameWrapper.querySelector('#answer-input')?.focus();
     }
 
     container.appendChild(gameWrapper);
     runGame();
+}
+
+export function cleanup() {
+    if (timerInterval) clearInterval(timerInterval);
+    if (feedbackTimeout) clearTimeout(feedbackTimeout);
+    timerInterval = null;
+    feedbackTimeout = null;
 }

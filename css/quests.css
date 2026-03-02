@@ -1,0 +1,140 @@
+/* --- Quests Widget Styles --- */
+#quests-container {
+    width: 100%;
+    /* The parent .widgets-container now handles all vertical spacing */
+    margin: 0;
+}
+
+.quest-widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.quest-widget-header:hover {
+    background-color: #e5e7eb;
+}
+
+.quest-widget-header h2 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: #374151;
+    font-weight: 600;
+}
+
+.quest-widget-header i {
+    font-size: 1.2rem;
+    color: #6b7280;
+    transition: transform 0.3s ease-in-out;
+}
+
+.quest-widget-header i.collapsed {
+    transform: rotate(-90deg);
+}
+
+.quests-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    max-height: 500px; /* Adjust based on content */
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out, margin-top 0.4s ease-in-out;
+}
+
+.quests-list.collapsed {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+}
+
+.quest-card {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border-left: 5px solid #6366f1;
+    display: flex;
+    flex-direction: column;
+}
+
+.quest-card.completed {
+    border-left-color: #10b981;
+    background-color: #f8f9fa;
+    opacity: 0.8;
+}
+
+.quest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.quest-title {
+    font-size: 1.1rem;
+    color: #1f2937;
+}
+
+.quest-reward {
+    font-size: 1rem;
+    color: #f59e0b;
+}
+
+.quest-description {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0.5rem 0;
+    flex-grow: 1; /* Pushes progress bar to the bottom */
+}
+
+.quest-progress-bar-container {
+    height: 8px;
+    width: 100%;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    margin-top: 0.75rem;
+    overflow: hidden;
+}
+
+.quest-progress-bar {
+    height: 100%;
+    background-color: #6366f1;
+    border-radius: 9999px;
+    transition: width 0.4s ease-in-out;
+}
+
+.quest-card.completed .quest-progress-bar {
+    background-color: #10b981;
+}
+
+.quest-progress-text {
+    font-size: 0.8rem;
+    color: #4b5563;
+    text-align: right;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* --- Responsive Adjustments --- */
+
+@media (max-width: 1024px) {
+    .quests-list {
+        /* On medium screens, aim for 2 columns before wrapping to 1 */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .quests-list {
+        /* On small screens, always 1 column */
+        grid-template-columns: 1fr;
+    }
+}
