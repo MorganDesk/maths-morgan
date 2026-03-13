@@ -167,7 +167,7 @@ var data3e = [
     },
     {
         "annee": "2025-2026",
-        "date": "2026-03-25",
+        "date": "2026-02-25",
         "niveau": "3e",
         "matiere": "Fonctions",
         "titre": "Fonctions affines et linéaires",
@@ -199,7 +199,7 @@ var data3e = [
     },
     {
         "annee": "2025-2026",
-        "date": "2026-04-30",
+        "date": "2026-02-30",
         "niveau": "3e",
         "matiere": "Gestion de données",
         "titre": "Statistiques",
