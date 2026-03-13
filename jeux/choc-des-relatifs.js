@@ -137,10 +137,9 @@ export function start(container, options) {
                 <span>Score: <span id="score">0</span></span>
                 <span>Temps: <span id="time-left">${timeLeft}</span>s</span>
             </div>
-            <p class="game-instruction">${getInstructionText()}</p>
             <div class="game-area">
                 <div id="question-container" class="game-question"></div>
-                <input type="text" pattern="[0-9-]*" inputmode="numeric" id="answer-input" autofocus autocomplete="off" />
+                <input type="text" pattern="[0-9-]*" inputmode="text" id="answer-input" autofocus autocomplete="off" />
                 <div id="feedback" class="feedback"></div>
             </div>
         `;

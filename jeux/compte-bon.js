@@ -121,7 +121,6 @@ export function start(container, options) {
         historyStack = [];
         gameWrapper.innerHTML = `
             <div class="game-area">
-                 <p class="game-instruction">Trouvez le nombre cible :</p>
                 <div class="game-question">${targetNumber}</div>
             </div>
             <div id="tiles-container" class="tiles-container"></div>

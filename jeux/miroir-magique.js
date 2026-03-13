@@ -81,7 +81,6 @@ export function start(container, options) {
         const symmetryText = symmetry.type === 'central' ? 'centrale' : 'axiale';
         gameWrapper.innerHTML = `
             <div class="game-area">
-                <p class="game-instruction">Reproduisez la figure par symétrie ${symmetryText}.</p>
                 <div id="grid-container" style="--grid-size: ${GRID_SIZE}">${gridHtml}</div>
                 <div class="feedback-message"></div>
             </div>

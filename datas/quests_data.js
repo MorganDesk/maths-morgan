@@ -188,6 +188,96 @@ export const QUEST_MODELS = [
         reward: 30
     },
 
+    // --- Bâtisseur de nombres ---
+    {
+        id: 'repeat_batisseur_facile',
+        type: 'SPECIFIC_GAME',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: 0,
+        title: 'Ouvrier des nombres',
+        description: 'Terminer 3 parties de "Bâtisseur de Nombres" (Facile)',
+        goal: 3,
+        reward: 30
+    },
+
+    {
+        id: 'repeat_batisseur_normal',
+        type: 'SPECIFIC_GAME',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: 1,
+        title: 'Batisseur de nombres',
+        description: 'Terminer 3 parties de "Bâtisseur de Nombres" (Normal)',
+        goal: 3,
+        reward: 40
+    },
+
+    {
+        id: 'repeat_batisseur_extreme',
+        type: 'SPECIFIC_GAME',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: 2,
+        title: 'Architecte des nombres',
+        description: 'Terminer 3 partie de "Bâtisseur de Nombres" (Extrême)',
+        goal: 3,
+        reward: 50
+    },
+
+    // --- Maître des Nombres ---
+    {
+        id: 'repeat_maitre_chiffre_entiers',
+        type: 'SPECIFIC_GAME',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '0',
+        title: 'Unité retrouvée',
+        description: 'Terminer 3 parties de "Maître des Nombres" (Chiffre (Entiers))',
+        goal: 3,
+        reward: 30
+    },
+
+    {
+        id: 'repeat_maitre_nombre_entiers',
+        type: 'SPECIFIC_GAME',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '1',
+        title: 'Dizaines gagnantes',
+        description: 'Terminer 3 parties de "Maître des Nombres" (Nombre (Entiers))',
+        goal: 3,
+        reward: 30
+    },
+
+    {
+        id: 'repeat_maitre_chiffre_decimaux',
+        type: 'SPECIFIC_GAME',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '2',
+        title: 'TOP 0.1\%',
+        description: 'Terminer 3 parties de "Maître des Nombres" (Chiffre (Décimaux))',
+        goal: 3,
+        reward: 50
+    },
+
+    {
+        id: 'repeat_maitre_nombre_decimaux',
+        type: 'SPECIFIC_GAME',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '3',
+        title: 'En plein dans le mille',
+        description: 'Terminer 3 parties de "Maître des Nombres" (Nombre (Décimaux))',
+        goal: 3,
+        reward: 50
+    },
+
+    {
+        id: 'repeat_maitre_nombre_melange',
+        type: 'SPECIFIC_GAME',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '4',
+        title: 'Unité d\'élite',
+        description: 'Terminer 2 parties de "Maître des Nombres" (Mélange)',
+        goal: 2,
+        reward: 70
+    },
+
     // --- QUÊTES DE PERFORMANCE (Dépassement de soi) ---
     // --- Multipli-Warrior ---
     {
@@ -358,6 +448,181 @@ export const QUEST_MODELS = [
         description: 'Réaliser un score de 10+ en "Code Brisé"',
         goal: 10,
         reward: 65
-    }
+    },
+
+    // --- Bâtisseur de Nombres ---
+    // Mode Facile
+    {
+        id: 'score_batisseur_facile_7',
+        type: 'SCORE_REACHED',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: '0',
+        title: 'Bâtisseur débutant',
+        description: 'Réaliser un score de 7+ en "Bâtisseur de Nombres" (Facile)',
+        goal: 7,
+        reward: 30
+    },
+    {
+        id: 'score_batisseur_facile_15',
+        type: 'SCORE_REACHED',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: '0',
+        title: 'Bâtisseur Amateur',
+        description: 'Réaliser un score de 15+ en "Bâtisseur de Nombres" (Facile)',
+        goal: 15,
+        reward: 50
+    },
+
+    // Mode Normal
+    {
+        id: 'score_batisseur_normal_6',
+        type: 'SCORE_REACHED',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: '1',
+        title: 'Bâtisseur Confirmé',
+        description: 'Réaliser un score de 6+ en "Bâtisseur de Nombres" (Normal)',
+        goal: 6,
+        reward: 30
+    },
+    {
+        id: 'score_batisseur_normal_10',
+        type: 'SCORE_REACHED',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: '1',
+        title: 'Bâtisseur Expert',
+        description: 'Réaliser un score de 10+ en "Bâtisseur de Nombres" (Normal)',
+        goal: 10,
+        reward: 50
+    },
+
+    // Mode Extrême
+    {
+        id: 'score_batisseur_extreme_5',
+        type: 'SCORE_REACHED',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: '2',
+        title: 'Bâtisseur Master',
+        description: 'Réaliser un score de 5+ en "Bâtisseur de Nombres" (Extrême)',
+        goal: 5,
+        reward: 40
+    },
+    {
+        id: 'score_batisseur_extreme_10',
+        type: 'SCORE_REACHED',
+        gameId: 'batisseur-de-nombres',
+        modeIndex: '2',
+        title: 'Bâtisseur Extrême',
+        description: 'Réaliser un score de 10+ en "Bâtisseur de Nombres" (Extrême)',
+        goal: 10,
+        reward: 70
+    },
     
+    // --- Maître des Nombres ---
+    // Mode Chiffre (Entiers)
+    {
+        id: 'score_maitre_chiffre_entiers_10',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '0',
+        title: 'Débutant en chiffres',
+        description: 'Réaliser un score de 10+ en "Maître des Nombres" (Chiffre (Entiers))',
+        goal: 10,
+        reward: 30
+    },
+    {
+        id: 'score_maitre_chiffre_entiers_15',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '0',
+        title: 'Initié en chiffres',
+        description: 'Réaliser un score de 15 en "Maître des Nombres" (Chiffre (Entiers))',
+        goal: 15,
+        reward: 50
+    },
+
+    // Mode Chiffre (Décimaux)
+    {
+        id: 'score_maitre_chiffre_decimaux_10',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '2',
+        title: 'Confirmé en chiffres',
+        description: 'Réaliser un score de 10+ en "Maître des Nombres" (Chiffre (Décimaix))',
+        goal: 10,
+        reward: 30
+    },
+    {
+        id: 'score_maitre_chiffre_entiers_15',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '2',
+        title: 'Expert en chiffres',
+        description: 'Réaliser un score de 15 en "Maître des Nombres" (Chiffre (Décimaux))',
+        goal: 15,
+        reward: 50
+    },
+
+    // Mode Nombre (Entiers)
+    {
+        id: 'score_maitre_nombre_entiers_7',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '1',
+        title: 'Débutant en nombres',
+        description: 'Réaliser un score de 7+ en "Maître des Nombres" (Nombre (Entiers))',
+        goal: 7,
+        reward: 40
+    },
+    {
+        id: 'score_maitre_nombre_entiers_12',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '1',
+        title: 'Initié en nombres',
+        description: 'Réaliser un score de 12+ en "Maître des Nombres" (Nombre (Entiers))',
+        goal: 12,
+        reward: 60
+    },
+    // Mode Nombre (Décimaux)
+    {
+        id: 'score_maitre_nombre_decimaux_7',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '3',
+        title: 'Confirmé en nombres',
+        description: 'Réaliser un score de 7+ en "Maître des Nombres" (Nombre (Décimaux))',
+        goal: 7,
+        reward: 50
+    },
+    {
+        id: 'score_maitre_nombre_decimaux_12',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '3',
+        title: 'Expert en nombres',
+        description: 'Réaliser un score de 12+ en "Maître des Nombres" (Nombre (Décimaux))',
+        goal: 12,
+        reward: 70
+    },
+    // Mode Mélange
+    {
+        id: 'score_maitre_nombre_melange_8',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '4',
+        title: 'Mix \'n Match Amateur',
+        description: 'Réaliser un score de 8+ en "Maître des Nombres" (Mélange)',
+        goal: 8,
+        reward: 40
+    },
+    {
+        id: 'score_maitre_nombre_melange_12',
+        type: 'SCORE_REACHED',
+        gameId: 'maitre-des-nombres',
+        modeIndex: '4',
+        title: 'Mix \'n Match Expert',
+        description: 'Réaliser un score de 12+ en "Maître des Nombres" (Mélange)',
+        goal: 12,
+        reward: 70
+    }
 ];

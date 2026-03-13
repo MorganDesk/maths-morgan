@@ -131,7 +131,6 @@ export function start(container, options) {
                     <span>Score: <span id="score">0</span></span>
                     <span>Temps: <span id="time-left">${GAME_DURATION}</span>s</span>
                 </div>
-                <p class="game-instruction">Quels sont tous les diviseurs de ce nombre parmi la liste ?</p>
                 <div class="game-area">
                     <div class="game-question" id="number-display"></div>
                     <div class="tiles-container">

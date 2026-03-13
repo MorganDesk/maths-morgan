@@ -29,7 +29,7 @@ export const gamesData = [
     {
         id: 'compte-bon',
         title: 'Le Compte est Bon',
-        matiere: 'Logique',
+        matiere: 'Calcul mental',
         description: 'Atteins le nombre cible ! Combine 6 plaques avec les 4 opérations sans utiliser deux fois le même nombre.',
         tags: ['logique', 'calcul', 'stratégie'],
         entryPoint: 'jeux/compte-bon.js',
@@ -69,11 +69,43 @@ export const gamesData = [
     {
         id: 'code-brise',
         title: 'Code Brisé',
-        matiere: 'Calcul mental',
+        matiere: 'Arithmétique',
         description: 'Scanne le nombre ! Coche instantanément tous ses diviseurs (2, 3, 5, 9 ou 10) pour gagner.',
         tags: ['calcul', 'divisibilité', 'logique', 'vitesse'],
         entryPoint: 'jeux/divisibilite.js',
         baseMP: 5,
         coefficient: [2.5]
+    },
+    {
+        id: 'batisseur-de-nombres',
+        title: 'Bâtisseur de Nombres',
+        matiere: 'Arithmétique',
+        description: 'Décomposez le nombre cible en un produit de facteurs premiers en cliquant sur les bonnes tuiles avant la fin du temps imparti.',
+        tags: ['calcul', 'arithmétique', 'nombres premiers', 'logique'],
+        entryPoint: 'jeux/batisseur-de-nombres.js',
+        baseMP: 5,
+        coefficient: [1, 2, 4],
+        modes: [
+            { name: 'Facile' },
+            { name: 'Normal' },
+            { name: 'Extrême' }
+        ]
+    },
+    {
+        id: 'maitre-des-nombres',
+        title: 'Maître des Nombres',
+        matiere: 'Numération',
+        description: 'Scanne le nombre ! Trouve les chiffres ou nombres correspondant à la question posée le plus rapidement !',
+        tags: ['numération', 'vitesse', 'lecture', 'chiffre des', 'nombre de'],
+        entryPoint: 'jeux/maitre-des-nombres.js',
+        baseMP: 5,
+        coefficient: [1, 1, 1.5, 1.5, 2.5],
+        modes: [
+            { name: 'Chiffre (Entiers)' },
+            { name: 'Nombre (Entiers)' },
+            { name: 'Chiffre (Décimaux)' },
+            { name: 'Nombre (Décimaux)' },
+            { name: 'Mélange' }
+        ]
     }
 ];

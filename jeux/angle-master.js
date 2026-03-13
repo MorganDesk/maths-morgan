@@ -152,7 +152,6 @@ export function start(container, options) {
                 <span>Temps: <span id="time-left">${GAME_DURATION}</span>s</span>
             </div>
             <div class="game-area">
-                <p class="game-instruction">Estimez la valeur de cet angle :</p>
                 <div class="game-question"><canvas id="angle-canvas"></canvas></div>
                 <input type="number" pattern="[0-9]*" inputmode="numeric" id="answer-input" placeholder="Degrés" autocomplete="off" autofocus>
                 <div id="feedback" class="feedback"></div>

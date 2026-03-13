@@ -244,12 +244,8 @@
 
 
 /* Game-specific styles */
-#defi-des-tables-game,
-#choc-des-relatifs-game,
-#compte-bon-game, 
-#miroir-magique-game,
-#angle-master-wrapper,
-#code-brise-wrapper {
+
+#game-container {
     background-color: #ffffff;
     border-radius: 12px;
     border: 3px solid #4f46e5;

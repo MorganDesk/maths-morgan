@@ -104,7 +104,6 @@ export function start(container, options) {
                 <span>Score: <span id="score">0</span></span>
                 <span>Temps: <span id="time-left">${GAME_DURATION}</span>s</span>
             </div>
-            <p class="game-instruction">Répondez correctement au plus grand nombre de multiplications en ${GAME_DURATION} secondes !</p>
             <div class="game-area">
                 <div id="question-container" class="game-question"></div>
                 <input type="number" pattern="[0-9]*" inputmode="numeric" id="answer-input" autofocus autocomplete="off" />
