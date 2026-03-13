@@ -248,7 +248,7 @@ var data3e = [
         "fichiers": [
             {
                 "nom": "Leçon",
-                "url": "cours/25-26/3e/10 Calcul littéral 2/Séquence 9 _ Transformations.pdf"
+                "url": "cours/25-26/3e/10 Calcul littéral 2/Séquence 10 _ Calcul littéral (partie 2).pdf"
             }
         ]
     },
