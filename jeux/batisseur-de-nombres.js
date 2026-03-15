@@ -85,7 +85,7 @@ export function start(container, options) {
     
     // Génère le nombre cible et met à jour l'UI pour une nouvelle manche
     function newRound() {
-        if (isGameOver) return; // Correction du bug
+        if (isGameOver) return;
         const primes = primeRanges[modeIndex];
         const count = primeCounts[modeIndex];
         let number = 1;

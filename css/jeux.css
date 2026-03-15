@@ -142,7 +142,7 @@
 
 .mode-selection {
     position: relative;
-    flex-grow: 1; /* Permet au sélecteur de prendre l'espace disponible */
+    flex-grow: 1; /* Permet au sélecteur de prendre l\'espace disponible */
 }
 
 .mode-selector {
@@ -276,9 +276,9 @@
     padding: 1rem 1.5rem; /* Espace intérieur généreux */
     border-radius: 12px; /* Bords arrondis cohérents avec le reste du design */
     margin: 0 auto 1.5rem auto; /* Centre le bloc et ajoute une marge en bas */
-    max-width: 95%; /* Empêche le bloc d'être trop large sur de grands écrans */
-    border-left: 5px solid #6366f1; /* Bordure latérale de couleur accent pour attirer l'œil */
-    text-align: center; /* Conserve l'alignement centré */
+    max-width: 95%; /* Empêche le bloc d\'être trop large sur de grands écrans */
+    border-left: 5px solid #6366f1; /* Bordure latérale de couleur accent pour attirer l\'œil */
+    text-align: center; /* Conserve l\'alignement centré */
     box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Ombre très subtile pour un effet de profondeur */
 }
 
