@@ -71,7 +71,8 @@ var playlists_data = [
         "matiere": "Nombres et calcul",
         "items": [
             "3e-2025-2026-calcul-litteral",
-            "5e-2025-2026-inegalite-triangulaire"
+            "5e-2025-2026-inegalite-triangulaire",
+			"playlist-calcul-litteral"
         ]
      }
 ];
