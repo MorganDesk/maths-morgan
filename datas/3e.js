@@ -299,15 +299,15 @@ var data3e = [
         "fichiers": [
             {
                 "nom": "Leçon",
-                "url": "documents/3e/Séquence 8 _ Arithmétique.pdf"
+                "url": "cours/25-26/3e/08 Arithmétique/Séquence 8 _ Arithmétique.pdf"
             },
             {
                 "nom": "Exercices",
-                "url": "documents/3e/Séquence 8 _ Arithmétique - Exercices.pdf"
+                "url": "cours/25-26/3e/08 Arithmétique/Séquence 8 _ Arithmétique - Exercices.pdf"
             },
             {
                 "nom": "Correction",
-                "url": "documents/3e/Séquence 8 _ Arithmétique - Correction.pdf"
+                "url": "cours/25-26/3e/08 Arithmétique/Séquence 8 _ Arithmétique - Correction.pdf"
             }
         ]
     }
