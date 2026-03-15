@@ -61,7 +61,6 @@ export function start(container, options) {
         if (timeLeft <= 0) endGame();
     }
 
-
     function generateNewQuestion() {
         if (isGameOver) return;
         const questionEl = gameWrapper.querySelector('#question-text');
@@ -102,36 +101,26 @@ export function start(container, options) {
 
         if (isTrapQuestion) {
             const isInteger = number % 1 === 0;
-            if (isInteger && useDecimals) {
+            if (isInteger) {
                 availableRanks = [...decimalRanks];
-            } else if (!isInteger) {
-                const highestRankIndex = Math.floor(Math.log10(Math.abs(number)));
-                if(highestRankIndex < ranks.length -1) {
+            } else {
+                const highestRankIndex = Math.floor(Math.log10(Math.abs(Math.floor(number))));
+                if(highestRankIndex < ranks.length - 2) {
                     availableRanks = ranks.slice(highestRankIndex + 2);
                 }
             }
         }
 
         if (availableRanks.length === 0) {
-            const highestRankIndex = Math.floor(Math.log10(Math.abs(number)));
+            const highestRankIndex = Math.floor(Math.log10(Math.abs(Math.floor(number))));
             availableRanks = ranks.slice(0, highestRankIndex + 1);
-            if(highestRankIndex < ranks.length -1) availableRanks.push(ranks[highestRankIndex + 1]);
             if (number % 1 !== 0) {
-                 availableRanks.push(...decimalRanks);
+                 const decimalPartStr = number.toString().split('.')[1] || '';
+                 availableRanks.push(...decimalRanks.slice(0, decimalPartStr.length));
             }
         }
 
         const selectedRank = availableRanks[Math.floor(Math.random() * availableRanks.length)];
-
-        let exponent;
-        let rankPosition = ranks.indexOf(selectedRank);
-        if (rankPosition !== -1) {
-            exponent = rankPosition;
-        } else {
-            rankPosition = decimalRanks.indexOf(selectedRank);
-            exponent = -(rankPosition + 1);
-        }
-        const rankValue = Math.pow(10, exponent);
 
         let questionType;
         switch(modeIndex) {
@@ -141,44 +130,58 @@ export function start(container, options) {
         }
         
         questionEl.textContent = `Quel est le ${questionType.toLowerCase()} des ${selectedRank} ?`;
+        
+        const rankPositionInInts = ranks.indexOf(selectedRank);
+        const rankPositionInDecs = decimalRanks.indexOf(selectedRank);
 
         if (questionType === 'Chiffre') {
-            currentAnswer = Math.floor((number / rankValue) % 10).toString();
-        } else {
+            const numberStr = number.toString();
+            const [integerPart, decimalPartStr] = numberStr.split('.');
+
+            if (rankPositionInInts !== -1) { // Partie entière
+                const targetIndex = integerPart.length - 1 - rankPositionInInts;
+                currentAnswer = integerPart[targetIndex] || '0';
+            } else { // Partie décimale
+                currentAnswer = (decimalPartStr && decimalPartStr[rankPositionInDecs]) ? decimalPartStr[rankPositionInDecs] : '0';
+            }
+        } else { // "Nombre de"
+            let exponent;
+            if (rankPositionInInts !== -1) {
+                exponent = rankPositionInInts;
+            } else {
+                exponent = -(rankPositionInDecs + 1);
+            }
+            const rankValue = Math.pow(10, exponent);
             currentAnswer = Math.floor(number / rankValue).toString();
         }
+        if (!currentAnswer) currentAnswer = '0';
     }
 
     function checkAnswer(userAnswer) {
         const feedbackEl = gameWrapper.querySelector('#feedback');
         const answerEl = gameWrapper.querySelector('#answer-input');
 
-        answerEl.disabled = true; // Désactive l'input pendant la validation
+        answerEl.disabled = true;
 
         if (userAnswer === currentAnswer) {
             score++;
             gameWrapper.querySelector('#score').textContent = score;
             feedbackEl.textContent = 'Correct !';
             feedbackEl.className = 'feedback correct';
-            setTimeout(generateNewQuestion, 500); // Passe à la question suivante
+            setTimeout(generateNewQuestion, 500);
         } else {
-            feedbackEl.textContent = 'Incorrect !';
+            feedbackEl.textContent = `Incorrect ! La réponse était ${currentAnswer}`;
             feedbackEl.className = 'feedback incorrect';
             setTimeout(() => {
                 if (isGameOver) return;
-                feedbackEl.textContent = '';
-                feedbackEl.className = 'feedback';
-                answerEl.value = ''; // Vide l'input
-                answerEl.disabled = false; // Réactive l'input
-                answerEl.focus(); // Remet le focus
-            }, 500);
+                generateNewQuestion();
+            }, 1500);
         }
     }
 
     function handleInput(event) {
-        const input = event.target;
-        if (input.value.length >= currentAnswer.length) {
-            checkAnswer(input.value);
+        if(event.key === "Enter") {
+             checkAnswer(event.target.value);
         }
     }
 
@@ -202,7 +205,7 @@ export function start(container, options) {
                 </div>
             </div>`;
         
-        gameWrapper.querySelector('#answer-input').addEventListener('input', handleInput);
+        gameWrapper.querySelector('#answer-input').addEventListener('keydown', handleInput);
 
         generateNewQuestion();
         timerInterval = setInterval(updateTimer, 1000);
