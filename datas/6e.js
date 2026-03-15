@@ -580,5 +580,200 @@ var data6e = [
                 "url": "cours/25-26/6e/M/M3 - leçon - je sais calculer un pourcentage.pdf"
             }
         ]
+    },
+    {
+        "id": "6e-2025-2026-m4-convertir-des-durees",
+        "annee": "2025-2026",
+        "date": "2026-03-18",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M4 - Convertir des durées",
+        "desc": "Je sais convertir des durées.",
+        "tags": [],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M4 - leçon - Je sais convertir des durées.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m5-calculer-avec-des-durees",
+        "annee": "2025-2026",
+        "date": "2026-03-19",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M5 - Calculer avec des durées",
+        "desc": "Je sais calculer avec des durées.",
+        "tags": [
+            "durée",
+            "secondes",
+            "minures",
+            "heures",
+            "jours",
+            "mois",
+            "années",
+            "calculer",
+            "additionner",
+            "soustraire",
+            "soustraction"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M5 - leçon - Je sais calculer avec des durées.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m6-calculer-le-perimetre-dun-polygone",
+        "annee": "2025-2026",
+        "date": "2026-03-20",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M6 - Calculer le périmètre d'un polygone",
+        "desc": "Je sais calculer le périmètre d'un polygone.",
+        "tags": [
+            "périmètre",
+            "polygone",
+            "longueur",
+            "centimètre",
+            "cm"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M6 - leçon - Je sais calculer le périmètre d’un polygone.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m7-convertir-des-unites",
+        "annee": "2025-2026",
+        "date": "2026-03-21",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M7 - Convertir des unités",
+        "desc": "Je sais convertir des unités de longueur, masse et contenance.",
+        "tags": [
+            "convertir",
+            "conversion",
+            "longueur",
+            "masse",
+            "contenance",
+            "litre",
+            "gramme",
+            "mètre"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M7 - leçon - Je sais convertir des unités de longueur (de masse et de contenance).pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m8-longueur-dun-cercle",
+        "annee": "2025-2026",
+        "date": "2026-03-22",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesure",
+        "titre": "M8 - Longueur d'un cercle",
+        "desc": "Je sais calculer la longueur d'un cercle.",
+        "tags": [
+            "longueur",
+            "périmètre",
+            "cercle"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M8 - leçon -  longueur du cercle.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m9-aire-dune-figure",
+        "annee": "2025-2026",
+        "date": "2026-03-23",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M9 - Aire d'une figure",
+        "desc": "Je sais calculer l'aire d'une figure géométrique.",
+        "tags": [
+            "aire",
+            "figure",
+            "polygone",
+            "cercle",
+            "disque"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M9 - leçon - Je connais la notion d_aire.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m10-convertir-des-unites-daires",
+        "annee": "2025-2026",
+        "date": "2026-03-24",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M10 - Convertir des unités d'aires",
+        "desc": "Je sais convertir des unités d'aire.",
+        "tags": [
+            "aire",
+            "conversion",
+            "carré"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M10 - leçon  - Je sais convertir des unités d_aires.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m11-aire-dun-carre-rectangle-et-triangle",
+        "annee": "2025-2026",
+        "date": "2026-03-25",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M11 - Aire d'un carré, rectangle et triangle",
+        "desc": "Je sais calculer l'aire d'un carré, d'un rectangle et d'un triangle.",
+        "tags": [
+            "aire",
+            "carré",
+            "triangle",
+            "rectangle"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M11 - leçon - aire carré rectangle triangle.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m12-notion-de-volume",
+        "annee": "2025-2026",
+        "date": "2026-03-26",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M12 - Notion de volume",
+        "desc": "Je connais la notion de volume et l'unité \"centimètre cube\".",
+        "tags": [
+            "volume",
+            "unité",
+            "contenance",
+            "cube"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M12 - leçon - Je connais la notion de volume et l’unité cm3.pdf"
+            }
+        ]
     }
 ];
