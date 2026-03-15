@@ -775,5 +775,436 @@ var data6e = [
                 "url": "cours/25-26/6e/M/M12 - leçon - Je connais la notion de volume et l’unité cm3.pdf"
             }
         ]
+    },
+    {
+        "id": "6e-2025-2026-g1-notations-de-geometrie",
+        "annee": "2025-2026",
+        "date": "2026-03-28",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G1 - Notations de géométrie",
+        "desc": "Je connais le vocabulaire et les notations de géométrie.",
+        "tags": [
+            "géométrie",
+            "segment",
+            "droite",
+            "demi",
+            "demi-droite"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G1 - leçon - Je connais le vocabulaire et les notations de géométrie  .pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g2-cercle",
+        "annee": "2025-2026",
+        "date": "2026-03-29",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G2 - Cercle",
+        "desc": "Je connais le vocabulaire du cercle. Je sais tracer un cercle.",
+        "tags": [
+            "cercle"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G2 - leçon - Je connais le vocabulaire du cercle et je sais tracer un cercle  .pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g3-position-relative-de-deux-droites",
+        "annee": "2025-2026",
+        "date": "2026-03-30",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G3 - Position relative de deux droites",
+        "desc": "Je sais décrire la position relative de deux droites.",
+        "tags": [
+            "droites",
+            "parallèles",
+            "perpendiculaires",
+            "sécantes"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G3 - leçon - Je connais la position de deux droites  .pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g4-droites-perpendiculaires-et-paralleles",
+        "annee": "2025-2026",
+        "date": "2026-04-01",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G4 - Droites perpendiculaires et parallèles",
+        "desc": "Je sais tracer des droites perpendiculaires et parallèles.",
+        "tags": [
+            "droites",
+            "parallèles",
+            "perpendiculaires"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G4- leçon - Je sais construire des droites parallèles et perpendiculaires.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g5-proprietes-des-droites",
+        "annee": "2025-2026",
+        "date": "2026-04-03",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G5 - Propriétés des droites",
+        "desc": "Je connais les propriétés des droites et sais les utiliser.",
+        "tags": [
+            "droites",
+            "parallèles",
+            "perpendiculaires",
+            "propriétés"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G5 - leçon - Je connais les propriétés des droites et je sais les utiliser..pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g6-notion-dangles",
+        "annee": "2025-2026",
+        "date": "2026-04-04",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G6 - Notion d'angles",
+        "desc": "Je connais la notion d'angles et le vocabulaire associé.",
+        "tags": [
+            "angles",
+            "aigu",
+            "obtus",
+            "droit",
+            "rapporteur"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G6 - leçons- Je connais la notion et le vocabulaire des angles..pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g7g8-mesurer-et-tracer-un-angle",
+        "annee": "2025-2026",
+        "date": "2026-04-05",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G7/G8 - Mesurer et tracer un angle",
+        "desc": "Je sais mesurer et tracer un angle.",
+        "tags": [
+            "angle",
+            "rapporteur",
+            "tracer"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G7 G8 - leçons- Je sais mesurer et tracer un angle.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g9-proprietes-des-angles",
+        "annee": "2025-2026",
+        "date": "2026-04-07",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G9 - Propriétés des angles",
+        "desc": "Je connais et sais utiliser les propriétés des angles.",
+        "tags": [
+            "angles",
+            "rapporteur",
+            "adjacents",
+            "complémentaires",
+            "supplémentaires",
+            "opposés",
+            "sommet"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G9 - leçon - Je connais et sais utiliser les propriétés des angles.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g10-bissectrice-dun-angle",
+        "annee": "2025-2026",
+        "date": "2026-04-09",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G10 - Bissectrice d'un angle",
+        "desc": "Je sais tracer la bissectrice d'un angle.",
+        "tags": [
+            "angle",
+            "rapporteur",
+            "compas",
+            "bissectrice"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G10 - leçon - Je connais et sais construire la bissectrice d’un angle.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g11-mediatrice-dun-segment",
+        "annee": "2025-2026",
+        "date": "2026-04-10",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G11 - Médiatrice d'un segment",
+        "desc": "Je connais et sais tracer la médiatrice d'un segment.",
+        "tags": [
+            "médiatrice",
+            "segment",
+            "compas",
+            "équerre"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G11 - leçon - Je connais et sais construire la médiatrice d’un segment .pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g12-effets-de-la-symetrie-axiale",
+        "annee": "2025-2026",
+        "date": "2026-04-11",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G12 - Effets de la symétrie axiale",
+        "desc": "Le connais l'effet d'une symétrie axiale sur une figure.",
+        "tags": [
+            "symétrie",
+            "axiale",
+            "transformation"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G12 - leçon - Je connais l’effet d’une symétrie axiale sur une figure..pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g13-symetrie-axiale-sur-quadrillage",
+        "annee": "2025-2026",
+        "date": "2026-04-13",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G13 - Symétrie axiale sur quadrillage",
+        "desc": "Je sais utiliser les propriétés de la symétrie axiale sur quadrillage.",
+        "tags": [
+            "symétrie",
+            "axiale",
+            "transformation",
+            "quadrillage"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G13 - leçon  - Je sais utiliser les propriétés de la symétrie axiale sur quadrillage.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g14-symetrie-axiale-sur-feuille-blanche",
+        "annee": "2025-2026",
+        "date": "2026-04-14",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G14 - Symétrie axiale sur feuille blanche",
+        "desc": "Je sais utiliser les propriétés de la symétrie axiale sur feuille blanche.",
+        "tags": [
+            "symétrie",
+            "axiale",
+            "compas",
+            "équerre",
+            "feuille",
+            "blanche"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G14 - leçon  - Je sais utiliser les propriétés de la symétrie axiale sur feuille blanche.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g15-nommer-une-figure-simple",
+        "annee": "2025-2026",
+        "date": "2026-04-15",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G15 - Nommer une figure simple",
+        "desc": "Je sais nommer une figure simple et connais son vocabulaire.",
+        "tags": [
+            "quadrilatère",
+            "carré",
+            "rectangle",
+            "triangle",
+            "cercle"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G15- leçons - Je sais nommer une figure simple et connais son vocabulaire.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g16-triangles-particuliers",
+        "annee": "2025-2026",
+        "date": "2026-04-16",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G16 - Triangles particuliers",
+        "desc": "Je connais la définition des triangles particuliers.",
+        "tags": [
+            "triangles",
+            "isocèle",
+            "rectangle",
+            "équilatéral",
+            "particulier",
+            "droit"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G16- leçons - Je connais la définition des triangles particuliers.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g17-construire-un-triangle",
+        "annee": "2025-2026",
+        "date": "2026-04-17",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G17 - Construire un triangle",
+        "desc": "Je sais construire un triangle.",
+        "tags": [
+            "triangle",
+            "construction",
+            "construire",
+            "compas",
+            "règle"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G17 - leçons - Je sais construire un triangle.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g18-regle-des-180",
+        "annee": "2025-2026",
+        "date": "2026-04-18",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G18 - Règle des 180°",
+        "desc": "Je sais utiliser la règle des 180° dans un triangle.",
+        "tags": [
+            "somme",
+            "angles",
+            "triangle",
+            "180",
+            "degrés"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G18 - leçons - Je connais et sais utiliser la règle des 180° dans un triangle.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g19-cercle-circonscrit",
+        "annee": "2025-2026",
+        "date": "2026-04-19",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G19 - Cercle circonscrit",
+        "desc": "Je sais construire le cercle circonscrit d'un triangle.",
+        "tags": [
+            "cercle",
+            "circonscrit",
+            "triangle",
+            "compas",
+            "médiatrices"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G19 - leçons - Je sais construire le cercle circonscrit d’un triangle.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g20-reconnaitre-et-decrire-des-solides",
+        "annee": "2025-2026",
+        "date": "2026-04-20",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G20 - Reconnaître et décrire des solides",
+        "desc": "Je sais reconnaître et décrire des solides.",
+        "tags": [
+            "cube",
+            "pavé",
+            "parallélépipède",
+            "arêtes",
+            "sommets",
+            "faces"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G20 - leçon - reconaitre, décrire des solides.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-g21-representer-des-solides",
+        "annee": "2025-2026",
+        "date": "2026-04-21",
+        "niveau": "6e",
+        "matiere": "Géométrie",
+        "titre": "G21 - Représenter des solides",
+        "desc": "Je sais représenter des solides.",
+        "tags": [
+            "solide",
+            "cube",
+            "pavé",
+            "parallélépipède",
+            "perspective",
+            "cavalière"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/G/G21 - leçon - représenter des solides.pdf"
+            }
+        ]
     }
 ];
