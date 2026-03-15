@@ -517,5 +517,68 @@ var data6e = [
             "quantité",
             "pourcentage"
         ]
+    },
+    {
+        "id": "6e-2025-2026-m1-reconnaitre-une-situation-de-proportionnalite",
+        "annee": "2025-2026",
+        "date": "2026-03-15",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M1 - Reconnaître une situation de proportionnalité",
+        "desc": "Je sais reconnaître une situation de proportionnalité",
+        "tags": [
+            "proportionnalité",
+            "quotient",
+            "quatrième",
+            "tableau"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M1 - leçon - Je sais reconnaitre une situation de proportionnalité.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m2-calculer-dans-une-situation-de-proportionnalite",
+        "annee": "2025-2026",
+        "date": "2026-03-16",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M2 - Calculer dans une situation de proportionnalité",
+        "desc": "Je sais calculer dans des situations de proportionnalité",
+        "tags": [
+            "proportionnalité",
+            "quatrième",
+            "tableau",
+            "coefficient"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M2 - leçon - je sais calculer dans des situations de proportionnalité.pdf"
+            }
+        ]
+    },
+    {
+        "id": "6e-2025-2026-m3-calculer-un-pourcentage",
+        "annee": "2025-2026",
+        "date": "2026-03-17",
+        "niveau": "6e",
+        "matiere": "Grandeurs et mesures",
+        "titre": "M3 - Calculer un pourcentage",
+        "desc": "Je sais calculer un pourcentage.",
+        "tags": [
+            "proportionnalité",
+            "pourcentage",
+            "quotient",
+            "ratio"
+        ],
+        "fichiers": [
+            {
+                "nom": "Leçon",
+                "url": "cours/25-26/6e/M/M3 - leçon - je sais calculer un pourcentage.pdf"
+            }
+        ]
     }
 ];
