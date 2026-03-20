@@ -51,11 +51,11 @@ export function start(container, options) {
         const questionContainer = gameWrapper.querySelector('#question-container');
         const answerInput = gameWrapper.querySelector('#answer-input');
         if (!questionContainer || !answerInput) return;
-        
+
         const num1 = Math.floor(Math.random() * 21) - 10;
         const num2 = Math.floor(Math.random() * 21) - 10;
         const operator = getOperator();
-        
+
         let correctAnswer;
         switch (operator) {
             case '+': correctAnswer = num1 + num2; break;
@@ -68,30 +68,30 @@ export function start(container, options) {
         answerInput.value = '';
         answerInput.focus();
     }
-    
+
     function handleInput() {
         if (isGameOver) return;
         const answerInput = gameWrapper.querySelector('#answer-input');
         const feedbackEl = gameWrapper.querySelector('#feedback');
         const correctAnswer = parseInt(answerInput.dataset.answer, 10);
-        
-        if (answerInput.value === '-' || answerInput.value === '' ) return;
+
+        if (answerInput.value === '-' || answerInput.value === '') return;
 
         const userAnswer = parseInt(answerInput.value, 10);
 
         if (String(userAnswer).length >= String(correctAnswer).length && userAnswer !== correctAnswer) {
-             if (String(correctAnswer).startsWith(answerInput.value)) return;
+            if (String(correctAnswer).startsWith(answerInput.value)) return;
             feedbackEl.textContent = 'Incorrect !';
             feedbackEl.className = 'feedback incorrect';
             answerInput.value = '';
-            feedbackTimeout = setTimeout(() => { if(feedbackEl) feedbackEl.textContent = '' }, 1000);
+            feedbackTimeout = setTimeout(() => { if (feedbackEl) feedbackEl.textContent = '' }, 1000);
         } else if (userAnswer === correctAnswer) {
             score++;
             gameWrapper.querySelector('#score').textContent = score;
             feedbackEl.textContent = 'Correct !';
             feedbackEl.className = 'feedback correct';
             feedbackTimeout = setTimeout(() => {
-                if(!isGameOver) {
+                if (!isGameOver) {
                     generateQuestion();
                     feedbackEl.textContent = '';
                 }
@@ -113,7 +113,7 @@ export function start(container, options) {
     }
 
     function endGame() {
-        if(isGameOver) return;
+        if (isGameOver) return;
         isGameOver = true;
         cleanupInternals();
         showGameOverScreen();
@@ -122,7 +122,7 @@ export function start(container, options) {
     function updateTimer() {
         timeLeft--;
         const timerElement = gameWrapper.querySelector('#time-left');
-        if(timerElement) timerElement.textContent = timeLeft;
+        if (timerElement) timerElement.textContent = timeLeft;
         if (timeLeft <= 0) endGame();
     }
 

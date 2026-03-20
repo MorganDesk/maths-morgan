@@ -3,7 +3,7 @@ export const QUEST_MODELS = [
     {
         id: 'diversity_3',
         type: 'PLAY_X_GAMES',
-        title: 'Explorateur en herbe',
+        title: 'L\'Aventurier Naissant',
         description: 'Jouer à 3 jeux différents',
         goal: 3,
         reward: 30
@@ -11,7 +11,7 @@ export const QUEST_MODELS = [
     {
         id: 'diversity_5',
         type: 'PLAY_X_GAMES',
-        title: 'Touche-à-tout',
+        title: 'Le Vagabond des Terres',
         description: 'Jouer à 5 jeux différents',
         goal: 5,
         reward: 50
@@ -20,7 +20,7 @@ export const QUEST_MODELS = [
     {
         id: 'earn_50_mp',
         type: 'EARN_X_MP',
-        title: 'Premiers pas',
+        title: 'La Chasse au Butin',
         description: 'Gagner 50 MP au total',
         goal: 50,
         reward: 20
@@ -28,18 +28,18 @@ export const QUEST_MODELS = [
     {
         id: 'earn_100_mp',
         type: 'EARN_X_MP',
-        title: 'Foulée de Géant',
+        title: 'Le Trésor du Dragon',
         description: 'Gagner 100 MP au total',
         goal: 100,
-        reward: 40
+        reward: 50
     },
     {
         id: 'earn_150_mp',
         type: 'EARN_X_MP',
-        title: 'Course vers l\'infini',
+        title: 'Roi du Royaume',
         description: 'Gagner 150 MP au total',
         goal: 150,
-        reward: 70
+        reward: 80
     },
     // --- QUÊTES DE RÉPÉTITION (Entraînement ciblé) ---
     // --- Le Compte est Bon ---
@@ -48,7 +48,7 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'compte-bon',
         modeIndex: 0, 
-        title: 'Premier tirage',
+        title: 'Apprenti Alchimiste',
         description: 'Terminer 3 parties de "Le Compte est Bon" (Facile)',
         goal: 3,
         reward: 30
@@ -58,7 +58,7 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'compte-bon',
         modeIndex: 1, 
-        title: 'Stratège des nombres',
+        title: 'Mage Transmutateur',
         description: 'Terminer 2 parties de "Le Compte est Bon" (Normal)',
         goal: 2,
         reward: 40
@@ -68,10 +68,10 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'compte-bon',
         modeIndex: 2, 
-        title: 'Le Compte est Parfait',
+        title: 'Sorcier Suprême',
         description: 'Terminer 1 partie de "Le Compte est Bon" (Extrême)',
         goal: 1,
-        reward: 50
+        reward: 60
     },
     // --- Miroir Magique ---
     {
@@ -79,30 +79,30 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'miroir-magique',
         modeIndex: 0,
-        title: 'Reflet Cristallin',
+        title: 'L\'Illusionniste',
         description: 'Compléter 3 figures de "Miroir Magique" (Axiale)',
         goal: 3,
-        reward: 25
+        reward: 30
     },
     {
         id: 'repeat_miroir_central',
         type: 'SPECIFIC_GAME',
         gameId: 'miroir-magique',
         modeIndex: 1,
-        title: 'Pivot de Précision',
+        title: 'L\'Œil du Cyclope',
         description: 'Compléter 3 figures de "Miroir Magique" (Centrale)',
         goal: 3,
-        reward: 35
+        reward: 40
     },
     {
         id: 'repeat_miroir_melange',
         type: 'SPECIFIC_GAME',
         gameId: 'miroir-magique',
         modeIndex: 2,
-        title: 'Kaléidoscope Maîtrisé',
-        description: 'Compléter 3 figures de "Miroir Magique" (Mélange)',
-        goal: 3,
-        reward: 35
+        title: 'Le Maître des Runes',
+        description: 'Compléter 2 figures de "Miroir Magique" (Mélange)',
+        goal: 2,
+        reward: 40
     },
     // --- Duel des Signes ---
     {
@@ -110,8 +110,8 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'duel-des-signes',
         modeIndex: 0,
-        title: 'Le Signe Amical',
-        description: 'Terminer 3 parties du "Duel des Signes" (Addition (+))"',
+        title: 'Magie Blanche',
+        description: 'Terminer 3 parties du "Duel des Signes" (Addition (+))',
         goal: 3,
         reward: 30
     },
@@ -120,8 +120,8 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'duel-des-signes',
         modeIndex: 1,
-        title: 'Duel Négatif',
-        description: 'Terminer 3 parties du "Duel des Signes" (Soustraction (-))"',
+        title: 'Magie Noire',
+        description: 'Terminer 3 parties du "Duel des Signes" (Soustraction (-))',
         goal: 3,
         reward: 30
     },
@@ -130,37 +130,37 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'duel-des-signes',
         modeIndex: 2,
-        title: 'Valse des Signes',
-        description: 'Terminer 2 parties du "Duel des Signes" (Mélange (+/-))"',
+        title: 'Le Mage Gris',
+        description: 'Terminer 2 parties du "Duel des Signes" (Mélange (+/-))',
         goal: 2,
-        reward: 30
+        reward: 40
     },
     {
         id: 'repeat_relatifs_mult',
         type: 'SPECIFIC_GAME',
         gameId: 'duel-des-signes',
         modeIndex: 3,
-        title: 'Puissance Relative',
-        description: 'Terminer 2 parties du "Duel des Signes" (Multiplication (x))"',
+        title: 'L\'Incantation de Multiplication',
+        description: 'Terminer 2 parties du "Duel des Signes" (Multiplication (x))',
         goal: 2,
-        reward: 30
+        reward: 40
     },
     {
         id: 'repeat_relatifs_addsubmult',
         type: 'SPECIFIC_GAME',
         gameId: 'duel-des-signes',
         modeIndex: 4,
-        title: 'Maître du Chaos',
-        description: 'Terminer 1 partie du "Duel des Signes" (Mélange total (+/-/x))"',
+        title: 'Seigneur du Chaos',
+        description: 'Terminer 1 partie du "Duel des Signes" (Mélange total (+/-/x))',
         goal: 1,
-        reward: 30
+        reward: 50
     },
     // --- Multipli-Warrior ---
     {
         id: 'repeat_tables',
         type: 'SPECIFIC_GAME',
         gameId: 'multipli-warrior',
-        title:  'Calculatrice Ambulante',
+        title:  'Guerrier à l\'Épée Courte',
         description: 'Terminer 3 parties de "Multipli-Warrior"',
         goal: 3,
         reward: 30
@@ -171,7 +171,7 @@ export const QUEST_MODELS = [
         id: 'repeat_angle_master',
         type: 'SPECIFIC_GAME',
         gameId: 'angle-master',
-        title: 'Sens Aiguisé',
+        title: 'L\'Archer Elfique',
         description: 'Terminer 2 parties de "Angle Master"',
         goal: 2,
         reward: 30
@@ -182,7 +182,7 @@ export const QUEST_MODELS = [
         id: 'repeat_divisibilite',
         type: 'SPECIFIC_GAME',
         gameId: 'code-brise',
-        title: 'Hacker',
+        title: 'Le Voleur de la Nuit',
         description: 'Terminer 2 parties de "Code Brisé"',
         goal: 2,
         reward: 30
@@ -194,7 +194,7 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'batisseur-de-nombres',
         modeIndex: 0,
-        title: 'Ouvrier des nombres',
+        title: 'L\'Apprenti Forgeron',
         description: 'Terminer 3 parties de "Bâtisseur de Nombres" (Facile)',
         goal: 3,
         reward: 30
@@ -205,9 +205,9 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'batisseur-de-nombres',
         modeIndex: 1,
-        title: 'Batisseur de nombres',
-        description: 'Terminer 3 parties de "Bâtisseur de Nombres" (Normal)',
-        goal: 3,
+        title: 'Forgeron de Fer',
+        description: 'Terminer 2 parties de "Bâtisseur de Nombres" (Normal)',
+        goal: 2,
         reward: 40
     },
 
@@ -216,10 +216,10 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'batisseur-de-nombres',
         modeIndex: 2,
-        title: 'Architecte des nombres',
-        description: 'Terminer 3 partie de "Bâtisseur de Nombres" (Extrême)',
-        goal: 3,
-        reward: 50
+        title: 'Maître Forgeron Nain',
+        description: 'Terminer 1 partie de "Bâtisseur de Nombres" (Extrême)',
+        goal: 1,
+        reward: 60
     },
 
     // --- Maître des Nombres ---
@@ -228,7 +228,7 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'maitre-des-nombres',
         modeIndex: 0,
-        title: 'Unité retrouvée',
+        title: 'L\'Éclaireur Gobelin',
         description: 'Terminer 3 parties de "Maître des Nombres" (Chiffre (Entiers))',
         goal: 3,
         reward: 30
@@ -239,7 +239,7 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'maitre-des-nombres',
         modeIndex: 1,
-        title: 'Dizaines gagnantes',
+        title: 'L\'Éclaireur Orc',
         description: 'Terminer 3 parties de "Maître des Nombres" (Nombre (Entiers))',
         goal: 3,
         reward: 30
@@ -250,10 +250,10 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'maitre-des-nombres',
         modeIndex: 2,
-        title: 'TOP 0.1\%',
-        description: 'Terminer 3 parties de "Maître des Nombres" (Chiffre (Décimaux))',
-        goal: 3,
-        reward: 50
+        title: 'L\'Éclaireur Elfe',
+        description: 'Terminer 2 parties de "Maître des Nombres" (Chiffre (Décimaux))',
+        goal: 2,
+        reward: 40
     },
 
     {
@@ -261,10 +261,10 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'maitre-des-nombres',
         modeIndex: 3,
-        title: 'En plein dans le mille',
-        description: 'Terminer 3 parties de "Maître des Nombres" (Nombre (Décimaux))',
-        goal: 3,
-        reward: 50
+        title: 'L\'Assassin Silencieux',
+        description: 'Terminer 2 parties de "Maître des Nombres" (Nombre (Décimaux))',
+        goal: 2,
+        reward: 40
     },
 
     {
@@ -272,10 +272,10 @@ export const QUEST_MODELS = [
         type: 'SPECIFIC_GAME',
         gameId: 'maitre-des-nombres',
         modeIndex: 4,
-        title: 'Unité d\'élite',
+        title: 'Le Pisteur de Légende',
         description: 'Terminer 2 parties de "Maître des Nombres" (Mélange)',
         goal: 2,
-        reward: 70
+        reward: 60
     },
 
     // --- QUÊTES DE PERFORMANCE (Dépassement de soi) ---
@@ -284,16 +284,16 @@ export const QUEST_MODELS = [
         id: 'score_tables_15',
         type: 'SCORE_REACHED',
         gameId: 'multipli-warrior',
-        title: 'Recrue des Tables',
+        title: 'Héros de la Mêlée',
         description: 'Atteindre un score de 15+ à "Multipli-Warrior"',
         goal: 15,
-        reward: 25
+        reward: 30
     },
     {
         id: 'score_tables_30',
         type: 'SCORE_REACHED',
         gameId: 'multipli-warrior',
-        title: 'As des Tables',
+        title: 'Dieu de la Guerre',
         description: 'Réaliser un score de 30+ à "Multipli-Warrior"',
         goal: 30,
         reward: 60
@@ -306,7 +306,7 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 0,
-        title: 'Petit Positif',
+        title: 'Chevalier de Lumière',
         description: 'Réaliser un score de 10+ en "Duel des Signes" (Addition (+))',
         goal: 10,
         reward: 20
@@ -316,10 +316,10 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 0,
-        title: 'Expert Positif',
+        title: 'Paladin Céleste',
         description: 'Réaliser un score de 20+ en "Duel des Signes" (Addition (+))',
         goal: 20,
-        reward: 45
+        reward: 40
     },
 
     // Mode Soustraction
@@ -328,17 +328,17 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 1,
-        title: 'Apprenti Négatif',
+        title: 'Chasseur d\'Ombres',
         description: 'Réaliser un score de 10+ en "Duel des Signes" (Soustraction (-))',
         goal: 10,
-        reward: 25
+        reward: 30
     },
     {
         id: 'score_relatifs_sub_20',
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 1,
-        title: 'Maître du Négatif',
+        title: 'Seigneur des Ténèbres',
         description: 'Réaliser un score de 20+ en "Duel des Signes" (Soustraction (-))',
         goal: 20,
         reward: 50
@@ -350,20 +350,20 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 2,
-        title: 'Équilibriste',
+        title: 'L\'Équilibriste des Mondes',
         description: 'Réaliser un score de 10+ en "Duel des Signes" (Mélange (+/-))',
         goal: 10,
-        reward: 30
+        reward: 40
     },
     {
         id: 'score_relatifs_addsub_20',
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 2,
-        title: 'Virtuose du +/-',
+        title: 'Gardien de la Balance',
         description: 'Réaliser un score de 20+ en "Duel des Signes" (Mélange (+/-))',
         goal: 20,
-        reward: 55
+        reward: 60
     },
 
     // Mode Multiplication
@@ -372,20 +372,20 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 3,
-        title: 'Calculateur Relatif',
+        title: 'Sorcier de Poussière',
         description: 'Réaliser un score de 12+ en "Duel des Signes" (Multiplication (x))',
         goal: 12,
-        reward: 30
+        reward: 40
     },
     {
         id: 'score_relatifs_mult_25',
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 3,
-        title: 'Pro de la Multiplication',
+        title: 'Archimage de la Foudre',
         description: 'Réaliser un score de 25+ en "Duel des Signes" (Multiplication (x))',
         goal: 25,
-        reward: 50
+        reward: 60
     },
 
     // Mode Mélange Total
@@ -394,20 +394,20 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 4,
-        title: 'Survivant du Chaos',
+        title: 'Le Dompteur de Démons',
         description: 'Réaliser un score de 10+ en "Duel des Signes" (Mélange Total (+/-/x))',
         goal: 10,
-        reward: 40
+        reward: 50
     },
     {
         id: 'score_relatifs_total_20',
         type: 'SCORE_REACHED',
         gameId: 'duel-des-signes',
         modeIndex: 4, 
-        title: 'Infaillible',
+        title: 'Fléau des Monstres',
         description: 'Réaliser un score de 20+ en "Duel des Signes" (Mélange Total (+/-/x))',
         goal: 20,
-        reward: 75
+        reward: 80
     },
 
     // --- Angle Master ---
@@ -415,16 +415,16 @@ export const QUEST_MODELS = [
         id: 'score_angle_master_5',
         type: 'SCORE_REACHED',
         gameId: 'angle-master',
-        title: 'Coup d\'œil',
+        title: 'Œil de Faucon',
         description: 'Réaliser un score de 5+ en "Angle Master"',
         goal: 5,
-        reward: 25
+        reward: 30
     },
     {
         id: 'score_angle_master_12',
         type: 'SCORE_REACHED',
         gameId: 'angle-master',
-        title: 'L\'Oeil du Compas',
+        title: 'Le Maître Chasseur',
         description: 'Réaliser un score de 12+ en "Angle Master"',
         goal: 12,
         reward: 60
@@ -435,7 +435,7 @@ export const QUEST_MODELS = [
         id: 'score_code_brise_6',
         type: 'SCORE_REACHED',
         gameId: 'code-brise',
-        title: 'Petit Scanneur',
+        title: 'Crocheteur de Serrures',
         description: 'Réaliser un score de 6+ en "Code Brisé"',
         goal: 6,
         reward: 30
@@ -444,10 +444,10 @@ export const QUEST_MODELS = [
         id: 'score_code_brise_10',
         type: 'SCORE_REACHED',
         gameId: 'code-brise',
-        title: 'Briseur de Verrous',
+        title: 'Le Briseur de Sceaux',
         description: 'Réaliser un score de 10+ en "Code Brisé"',
         goal: 10,
-        reward: 65
+        reward: 60
     },
 
     // --- Bâtisseur de Nombres ---
@@ -457,7 +457,7 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'batisseur-de-nombres',
         modeIndex: 0,
-        title: 'Bâtisseur débutant',
+        title: 'Créateur d\'Épée',
         description: 'Réaliser un score de 7+ en "Bâtisseur de Nombres" (Facile)',
         goal: 7,
         reward: 30
@@ -467,7 +467,7 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'batisseur-de-nombres',
         modeIndex: 0,
-        title: 'Bâtisseur Amateur',
+        title: 'Artisan de Boucliers',
         description: 'Réaliser un score de 15+ en "Bâtisseur de Nombres" (Facile)',
         goal: 15,
         reward: 50
@@ -479,20 +479,20 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'batisseur-de-nombres',
         modeIndex: 1,
-        title: 'Bâtisseur Confirmé',
+        title: 'Forgeron Runique',
         description: 'Réaliser un score de 6+ en "Bâtisseur de Nombres" (Normal)',
         goal: 6,
-        reward: 30
+        reward: 40
     },
     {
         id: 'score_batisseur_normal_10',
         type: 'SCORE_REACHED',
         gameId: 'batisseur-de-nombres',
         modeIndex: 1,
-        title: 'Bâtisseur Expert',
+        title: 'Créateur d\'Artefacts',
         description: 'Réaliser un score de 10+ en "Bâtisseur de Nombres" (Normal)',
         goal: 10,
-        reward: 50
+        reward: 60
     },
 
     // Mode Extrême
@@ -501,20 +501,20 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'batisseur-de-nombres',
         modeIndex: 2,
-        title: 'Bâtisseur Master',
+        title: 'Forgeron Légendaire',
         description: 'Réaliser un score de 5+ en "Bâtisseur de Nombres" (Extrême)',
         goal: 5,
-        reward: 40
+        reward: 50
     },
     {
         id: 'score_batisseur_extreme_10',
         type: 'SCORE_REACHED',
         gameId: 'batisseur-de-nombres',
         modeIndex: 2,
-        title: 'Bâtisseur Extrême',
+        title: 'Le Façonneur de Mondes',
         description: 'Réaliser un score de 10+ en "Bâtisseur de Nombres" (Extrême)',
         goal: 10,
-        reward: 70
+        reward: 80
     },
     
     // --- Maître des Nombres ---
@@ -524,7 +524,7 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 0,
-        title: 'Débutant en chiffres',
+        title: 'Le Veilleur de Nuit',
         description: 'Réaliser un score de 10+ en "Maître des Nombres" (Chiffre (Entiers))',
         goal: 10,
         reward: 30
@@ -534,7 +534,7 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 0,
-        title: 'Initié en chiffres',
+        title: 'Garde de la Cité',
         description: 'Réaliser un score de 15 en "Maître des Nombres" (Chiffre (Entiers))',
         goal: 15,
         reward: 50
@@ -546,20 +546,20 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 2,
-        title: 'Confirmé en chiffres',
-        description: 'Réaliser un score de 10+ en "Maître des Nombres" (Chiffre (Décimaix))',
+        title: 'L\'Oeil Écarlate',
+        description: 'Réaliser un score de 10+ en "Maître des Nombres" (Chiffre (Décimaux))',
         goal: 10,
-        reward: 30
+        reward: 40
     },
     {
         id: 'score_maitre_chiffre_entiers_15',
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 2,
-        title: 'Expert en chiffres',
+        title: 'Sentinelle de Cristal',
         description: 'Réaliser un score de 15 en "Maître des Nombres" (Chiffre (Décimaux))',
         goal: 15,
-        reward: 50
+        reward: 60
     },
 
     // Mode Nombre (Entiers)
@@ -568,7 +568,7 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 1,
-        title: 'Débutant en nombres',
+        title: 'Fantassin Lourd',
         description: 'Réaliser un score de 7+ en "Maître des Nombres" (Nombre (Entiers))',
         goal: 7,
         reward: 40
@@ -578,7 +578,7 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 1,
-        title: 'Initié en nombres',
+        title: 'Capitaine de la Garde',
         description: 'Réaliser un score de 12+ en "Maître des Nombres" (Nombre (Entiers))',
         goal: 12,
         reward: 60
@@ -589,7 +589,7 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 3,
-        title: 'Confirmé en nombres',
+        title: 'Maître de la Guilde',
         description: 'Réaliser un score de 7+ en "Maître des Nombres" (Nombre (Décimaux))',
         goal: 7,
         reward: 50
@@ -599,10 +599,10 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 3,
-        title: 'Expert en nombres',
+        title: 'Seigneur Commandeur',
         description: 'Réaliser un score de 12+ en "Maître des Nombres" (Nombre (Décimaux))',
         goal: 12,
-        reward: 70
+        reward: 80
     },
     // Mode Mélange
     {
@@ -610,19 +610,19 @@ export const QUEST_MODELS = [
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 4,
-        title: 'Mix \'n Match Amateur',
+        title: 'Marcheur de l\'Ombre',
         description: 'Réaliser un score de 8+ en "Maître des Nombres" (Mélange)',
         goal: 8,
-        reward: 40
+        reward: 50
     },
     {
         id: 'score_maitre_nombre_melange_12',
         type: 'SCORE_REACHED',
         gameId: 'maitre-des-nombres',
         modeIndex: 4,
-        title: 'Mix \'n Match Expert',
+        title: 'L\'Œil Omniscient',
         description: 'Réaliser un score de 12+ en "Maître des Nombres" (Mélange)',
         goal: 12,
-        reward: 70
+        reward: 80
     }
 ];

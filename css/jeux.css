@@ -1,5 +1,6 @@
 /* --- Layout Containers --- */
-.widgets-container, .games-list-container {
+.widgets-container,
+.games-list-container {
     max-width: 1200px;
     margin: 1.5rem auto;
     padding: 0 1rem;
@@ -9,12 +10,14 @@
 .widgets-container {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem; /* Reduced space between progression and quests widgets */
+    gap: 0.1rem;
+    /* Reduced space between progression and quests widgets */
 }
 
 /* --- Search --- */
 .search-wrapper {
-    margin-bottom: 1.5rem; /* Space between search and grid */
+    margin-bottom: 1.5rem;
+    /* Space between search and grid */
 }
 
 .search-container {
@@ -62,7 +65,7 @@
 .card {
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
@@ -71,7 +74,7 @@
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
@@ -118,7 +121,8 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Pushes footer down */
+    justify-content: space-between;
+    /* Pushes footer down */
 }
 
 .card-content h3 {
@@ -137,12 +141,14 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-top: auto; /* Pushes itself to the bottom */
+    margin-top: auto;
+    /* Pushes itself to the bottom */
 }
 
 .mode-selection {
     position: relative;
-    flex-grow: 1; /* Permet au sélecteur de prendre l\'espace disponible */
+    flex-grow: 1;
+    /* Permet au sélecteur de prendre l\'espace disponible */
 }
 
 .mode-selector {
@@ -188,15 +194,18 @@
     font-weight: 600;
     transition: background-color 0.2s;
     white-space: nowrap;
-    flex-shrink: 0; /* Empêche le bouton de rétrécir */
-    margin-left: auto; /* Pousse le bouton à droite */
+    flex-shrink: 0;
+    /* Empêche le bouton de rétrécir */
+    margin-left: auto;
+    /* Pousse le bouton à droite */
 }
 
 .play-button:hover {
     background-color: #4338ca;
 }
 
-.no-results, .back-to-games {
+.no-results,
+.back-to-games {
     padding: 2rem;
 }
 
@@ -205,14 +214,14 @@
 }
 
 .back-to-games {
-    display: inline-flex; 
-    align-items: center; 
-    gap: 0.5rem; 
-    background-color: transparent; 
-    border: none; 
-    cursor: pointer; 
-    color: #4f46e5; 
-    font-weight: 600; 
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #4f46e5;
+    font-weight: 600;
     font-family: inherit;
     margin-bottom: 1rem;
 }
@@ -224,7 +233,8 @@
 }
 
 .danger-button {
-    background-color: #dc2626; /* Rouge */
+    background-color: #dc2626;
+    /* Rouge */
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -239,7 +249,8 @@
 }
 
 .danger-button:hover {
-    background-color: #b91c1c; /* Rouge plus foncé */
+    background-color: #b91c1c;
+    /* Rouge plus foncé */
 }
 
 
@@ -255,7 +266,9 @@
     text-align: center;
 }
 
-.game-stats, .game-area, .game-over-screen {
+.game-stats,
+.game-area,
+.game-over-screen {
     text-align: center;
 }
 
@@ -269,17 +282,28 @@
 }
 
 .game-instruction {
-    font-size: 1.1rem; /* Taille de police lisible */
-    line-height: 1.6; /* Interligne pour une meilleure lecture */
-    color: #1e293b; /* Couleur de texte sombre et contrastée */
-    background-color: #eef2ff; /* Fond bleu très clair, en accord avec le thème */
-    padding: 1rem 1.5rem; /* Espace intérieur généreux */
-    border-radius: 12px; /* Bords arrondis cohérents avec le reste du design */
-    margin: 0 auto 1.5rem auto; /* Centre le bloc et ajoute une marge en bas */
-    max-width: 95%; /* Empêche le bloc d\'être trop large sur de grands écrans */
-    border-left: 5px solid #6366f1; /* Bordure latérale de couleur accent pour attirer l\'œil */
-    text-align: center; /* Conserve l\'alignement centré */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Ombre très subtile pour un effet de profondeur */
+    font-size: 1.1rem;
+    /* Taille de police lisible */
+    line-height: 1.6;
+    /* Interligne pour une meilleure lecture */
+    color: #1e293b;
+    /* Couleur de texte sombre et contrastée */
+    background-color: #eef2ff;
+    /* Fond bleu très clair, en accord avec le thème */
+    padding: 1rem 1.5rem;
+    /* Espace intérieur généreux */
+    border-radius: 12px;
+    /* Bords arrondis cohérents avec le reste du design */
+    margin: 0 auto 1.5rem auto;
+    /* Centre le bloc et ajoute une marge en bas */
+    max-width: 95%;
+    /* Empêche le bloc d\'être trop large sur de grands écrans */
+    border-left: 5px solid #6366f1;
+    /* Bordure latérale de couleur accent pour attirer l\'œil */
+    text-align: center;
+    /* Conserve l\'alignement centré */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    /* Ombre très subtile pour un effet de profondeur */
 }
 
 .game-question {
@@ -290,7 +314,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 120px; /* Hauteur minimale pour la question */
+    min-height: 120px;
+    /* Hauteur minimale pour la question */
 }
 
 #angle-canvas {
@@ -312,8 +337,14 @@
     height: 20px;
     font-style: italic;
 }
-.feedback.correct { color: #16a34a; }
-.feedback.incorrect { color: #dc2626; }
+
+.feedback.correct {
+    color: #16a34a;
+}
+
+.feedback.incorrect {
+    color: #dc2626;
+}
 
 /* --- UNIFIED TILE STYLES --- */
 .tiles-container {
@@ -344,41 +375,58 @@
 
 /* Number Tile Styles */
 .number-tile {
-    color: #4f46e5; /* Default: Blue text */
-    border-color: #a5b4fc; /* Light blue border */
-    box-shadow: 0 4px #a5b4fc; /* Light blue shadow for 3D effect */
+    color: #4f46e5;
+    /* Default: Blue text */
+    border-color: #a5b4fc;
+    /* Light blue border */
+    box-shadow: 0 4px #a5b4fc;
+    /* Light blue shadow for 3D effect */
 }
 
 .number-tile.selected {
-    background-color: #4f46e5; /* Selected: Blue background */
-    color: #ffffff; /* Selected: White text */
-    border-color: #3a32b4; /* Darker blue border */
-    box-shadow: 0 2px #3a32b4; /* Shorter, darker shadow */
+    background-color: #4f46e5;
+    /* Selected: Blue background */
+    color: #ffffff;
+    /* Selected: White text */
+    border-color: #3a32b4;
+    /* Darker blue border */
+    box-shadow: 0 2px #3a32b4;
+    /* Shorter, darker shadow */
 }
 
 /* Operator Tile Styles */
 .operator-tile {
-    color: #6b7280; /* Default: Gray text */
-    border-color: #d1d5db; /* Light gray border */
-    box-shadow: 0 4px #d1d5db; /* Light gray shadow */
+    color: #6b7280;
+    /* Default: Gray text */
+    border-color: #d1d5db;
+    /* Light gray border */
+    box-shadow: 0 4px #d1d5db;
+    /* Light gray shadow */
 }
 
 .operator-tile.selected {
-    background-color: #6b7280; /* Selected: Gray background */
-    color: #ffffff; /* Selected: White text */
-    border-color: #4b5563; /* Darker gray border */
-    box-shadow: 0 2px #4b5563; /* Shorter, darker shadow */
+    background-color: #6b7280;
+    /* Selected: Gray background */
+    color: #ffffff;
+    /* Selected: White text */
+    border-color: #4b5563;
+    /* Darker gray border */
+    box-shadow: 0 2px #4b5563;
+    /* Shorter, darker shadow */
 }
 
 .game-actions {
     display: flex;
     justify-content: center;
-    gap: 1rem; /* Espace entre les boutons */
+    gap: 1rem;
+    /* Espace entre les boutons */
     margin-top: 1.5rem;
     flex-wrap: wrap;
 }
 
-.reset-button, .action-button, #next-puzzle-button {
+.reset-button,
+.action-button,
+#next-puzzle-button {
     background-color: #f44336;
     color: white;
     border: none;
@@ -390,7 +438,9 @@
     transition: background-color 0.2s;
 }
 
-.reset-button:hover, .action-button:hover, #next-puzzle-button:hover {
+.reset-button:hover,
+.action-button:hover,
+#next-puzzle-button:hover {
     background-color: #d32f2f;
 }
 
@@ -405,25 +455,31 @@
 #check-button {
     background-color: #4CAF50;
 }
+
 #check-button:hover {
     background-color: #45a049;
 }
 
 /* New action buttons (Blue) */
-#new-draw-button, #new-puzzle-button {
+#new-draw-button,
+#new-puzzle-button {
     background-color: #2196F3;
 }
-#new-draw-button:hover, #new-puzzle-button:hover {
+
+#new-draw-button:hover,
+#new-puzzle-button:hover {
     background-color: #1976D2;
 }
 
 
 #undo-button {
-    background-color: #ff9800; /* Orange */
+    background-color: #ff9800;
+    /* Orange */
 }
 
 #undo-button:hover {
-    background-color: #f57c00; /* Darker Orange */
+    background-color: #f57c00;
+    /* Darker Orange */
 }
 
 #undo-button:disabled {
@@ -450,8 +506,17 @@
     cursor: pointer;
 }
 
-.cell.source { background-color: #4f46e5; cursor: default; } /* Bleu royal */
-.cell.user-cell { background-color: #ffeb3b; } /* Jaune vif */
+.cell.source {
+    background-color: #4f46e5;
+    cursor: default;
+}
+
+/* Bleu royal */
+.cell.user-cell {
+    background-color: #ffeb3b;
+}
+
+/* Jaune vif */
 
 .center-point {
     position: absolute;
@@ -462,20 +527,49 @@
     background-color: red;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    pointer-events: none; /* Let clicks pass through */
+    pointer-events: none;
+    /* Let clicks pass through */
 }
 
 .axis {
     position: absolute;
     background-color: red;
     z-index: 10;
-    pointer-events: none; /* Let clicks pass through */
+    pointer-events: none;
+    /* Let clicks pass through */
 }
 
-.axis.horizontal { top: 50%; left: 0; width: 100%; height: 2px; transform: translateY(-1px); }
-.axis.vertical { left: 50%; top: 0; height: 100%; width: 2px; transform: translateX(-1px); }
-.axis.diagonal-main { top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom right, transparent 49.8%, red 49.8%, red 50.2%, transparent 50.2%); }
-.axis.diagonal-anti { top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom left, transparent 49.8%, red 49.8%, red 50.2%, transparent 50.2%); }
+.axis.horizontal {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transform: translateY(-1px);
+}
+
+.axis.vertical {
+    left: 50%;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    transform: translateX(-1px);
+}
+
+.axis.diagonal-main {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom right, transparent 49.8%, red 49.8%, red 50.2%, transparent 50.2%);
+}
+
+.axis.diagonal-anti {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom left, transparent 49.8%, red 49.8%, red 50.2%, transparent 50.2%);
+}
 
 .feedback-message {
     height: 20px;
@@ -510,7 +604,8 @@
     margin-top: 2rem;
 }
 
-.highscore-info, #restart-button {
+.highscore-info,
+#restart-button {
     border-radius: 8px;
     padding: 0.75rem 1.25rem;
     font-weight: 600;
@@ -524,7 +619,9 @@
     gap: 0.6rem;
 }
 
-.highscore-info .fa-trophy { color: #d9a000; }
+.highscore-info .fa-trophy {
+    color: #d9a000;
+}
 
 #restart-button {
     background-color: #4f46e5;
@@ -534,4 +631,6 @@
     transition: background-color 0.2s;
 }
 
-#restart-button:hover { background-color: #4338ca; }
+#restart-button:hover {
+    background-color: #4338ca;
+}
