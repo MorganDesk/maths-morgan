@@ -80,7 +80,7 @@ export function start(container, options) {
 
         let numberIsValid = false;
         while (!numberIsValid) {
-            currentNumber = Math.floor(Math.random() * (100000 - 100 + 1)) + 100;
+            currentNumber = Math.floor(Math.random() * (10000 - 100 + 1)) + 100;
             correctDivisors = DIVISORS.filter(divisor => isDivisibleBy[divisor](currentNumber));
             if (correctDivisors.length > 0) numberIsValid = true;
         }
