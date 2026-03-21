@@ -107,8 +107,7 @@ export const gamesData = [
             { name: 'Nombre (Décimaux)' },
             { name: 'Mélange' }
         ]
-<<<<<<< Updated upstream
-=======
+
     },
     {
         id: 'ascenseur-unites',
@@ -126,6 +125,5 @@ export const gamesData = [
             { name: 'Capacités (L)' },
             { name: 'Volumes (m³)' }
         ]
->>>>>>> Stashed changes
     }
 ];
