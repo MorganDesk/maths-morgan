@@ -153,7 +153,7 @@ export function start(container, options) {
             </div>
             <div class="game-area">
                 <div class="game-question"><canvas id="angle-canvas"></canvas></div>
-                <input type="number" pattern="[0-9]*" inputmode="numeric" id="answer-input" placeholder="Degrés" autocomplete="off" autofocus>
+                <input type="text" pattern="[0-9]*" inputmode="numeric" id="answer-input" placeholder="Degrés" autocomplete="off" autofocus>
                 <div id="feedback" class="feedback"></div>
             </div>
         `;

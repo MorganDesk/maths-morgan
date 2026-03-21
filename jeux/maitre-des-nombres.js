@@ -200,7 +200,7 @@ export function start(container, options) {
                 <div class="game-area">
                     <p id="number-display" class="game-question"></p>
                     <p id="question-text" class="game-instruction"></p>
-                    <input type="number" id="answer-input" class="answer-input" autofocus />
+                    <input type="text" pattern="[0-9]*" inputmode="numeric" id="answer-input" class="answer-input" autocomplete="off" autofocus />
                     <div id="feedback" class="feedback"></div>
                 </div>
             </div>`;
