@@ -277,9 +277,6 @@ export const QUEST_MODELS = [
         goal: 2,
         reward: 60
     },
-
-<<<<<<< Updated upstream
-=======
     // --- L'Ascenseur des Unités ---
     {
         id: 'repeat_ascenseur_longueurs',
@@ -332,7 +329,6 @@ export const QUEST_MODELS = [
         reward: 50
     },
 
->>>>>>> Stashed changes
     // --- QUÊTES DE PERFORMANCE (Dépassement de soi) ---
     // --- Multipli-Warrior ---
     {
@@ -679,8 +675,6 @@ export const QUEST_MODELS = [
         description: 'Réaliser un score de 12+ en "Maître des Nombres" (Mélange)',
         goal: 12,
         reward: 80
-<<<<<<< Updated upstream
-=======
     },
 
     // --- L'Ascenseur des Unités ---
@@ -783,6 +777,5 @@ export const QUEST_MODELS = [
         description: 'Réaliser un score de 10+ en "L\'Ascenseur des Unités" (Volumes)',
         goal: 10,
         reward: 80
->>>>>>> Stashed changes
     }
 ];
