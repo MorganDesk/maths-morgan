@@ -129,16 +129,34 @@ export function start(container, options) {
     }
 
     function buildTableHTML() {
-        const colsHTML = modeObj.units.map(u => {
-            if (u === '-') {
-                return '<div class="conv-cell"><div class="conv-header">-</div><div class="conv-subcols"><div class="conv-subcol"></div></div></div>';
-            }
-            let subColsCount = modeObj.base === 10 ? 1 : (modeObj.base === 100 ? 2 : 3);
-            let subColsHTML = Array(subColsCount).fill('<div class="conv-subcol"></div>').join('');
-            return '<div class="conv-cell"><div class="conv-header">' + u + '</div><div class="conv-subcols">' + subColsHTML + '</div></div>';
-        }).join('');
+        const subColsCount = modeObj.base === 10 ? 1 : (modeObj.base === 100 ? 2 : 3);
+        
+        let theadHTML = '<tr>';
+        modeObj.units.forEach(u => {
+            theadHTML += '<th colspan="' + subColsCount + '">' + u + '</th>';
+        });
+        theadHTML += '</tr>';
 
-        return '<div class="conv-table">' + colsHTML + '</div>';
+        let tbodyHTML = '<tr>';
+        modeObj.units.forEach((u, index) => {
+            for (let i = 0; i < subColsCount; i++) {
+                let isLastInsideUnit = (i === subColsCount - 1);
+                let isLastOverall = (index === modeObj.units.length - 1 && isLastInsideUnit);
+
+                let className = '';
+                if (!isLastInsideUnit) {
+                    className += 'subcol-dashed ';
+                }
+                if (isLastInsideUnit && !isLastOverall) {
+                    className += 'subcol-solid ';
+                }
+
+                tbodyHTML += '<td class="' + className.trim() + '"></td>';
+            }
+        });
+        tbodyHTML += '</tr>';
+
+        return '<table class="conversion-table"><thead>' + theadHTML + '</thead><tbody>' + tbodyHTML + '</tbody></table>';
     }
 
     function nextQuestion() {

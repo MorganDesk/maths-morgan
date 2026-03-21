@@ -634,3 +634,75 @@
 #restart-button:hover {
     background-color: #4338ca;
 }
+
+/* --- L'Ascenseur des Unités --- */
+.au-question {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.au-val { color: #1e293b; }
+.au-unit { color: #4f46e5; }
+.au-arrow { color: #94a3b8; }
+.au-input {
+    width: 150px;
+    font-size: 2rem;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+.au-unit.target { color: #e11d48; }
+
+.conversion-table-container {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.conversion-table {
+    border-collapse: collapse;
+    background: white;
+    width: 100%;
+    max-width: 800px;
+    font-size: 1.2rem;
+    color: #1e293b;
+}
+
+.conversion-table th, 
+.conversion-table td.subcol-solid {
+    border: 2px solid #94a3b8; 
+}
+
+.conversion-table th {
+    background: #e2e8f0;
+    padding: 0.75rem 0.2rem;
+    text-align: center;
+}
+
+.conversion-table td {
+    height: 3.5rem;
+    border-bottom: 2px solid #94a3b8;
+    border-top: 2px solid #94a3b8;
+}
+
+.conversion-table td.subcol-dashed {
+    border-right: 2px dashed #cbd5e1;
+    border-bottom: 2px solid #94a3b8;
+    border-top: 2px solid #94a3b8;
+}
+
+@media (max-width: 768px) {
+    .au-question { font-size: 1.5rem; }
+    .au-input { width: 100px; font-size: 1.5rem; }
+    .conversion-table { font-size: 0.9rem; }
+    .conversion-table td { height: 2.5rem; }
+}
