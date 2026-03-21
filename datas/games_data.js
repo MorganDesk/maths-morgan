@@ -107,5 +107,25 @@ export const gamesData = [
             { name: 'Nombre (Décimaux)' },
             { name: 'Mélange' }
         ]
+<<<<<<< Updated upstream
+=======
+    },
+    {
+        id: 'ascenseur-unites',
+        title: 'L\'Ascenseur des Unités',
+        description: 'Transforme les mètres en kilomètres et les litres en centilitres à toute vitesse !',
+        matiere: "Grandeurs et mesures",
+        tags: ['conversions', 'unités', 'grandeurs', 'mesures', 'vitesse'],
+        entryPoint: 'jeux/ascenseur-unites.js',
+        baseMP: 5,
+        coefficient: [1, 1.5, 1, 1, 2],
+        modes: [
+            { name: 'Longueurs' },
+            { name: 'Aires (m²)' },
+            { name: 'Masses (g)' },
+            { name: 'Capacités (L)' },
+            { name: 'Volumes (m³)' }
+        ]
+>>>>>>> Stashed changes
     }
 ];

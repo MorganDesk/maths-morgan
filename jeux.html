@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeux - Maths Morgan</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath d='M528 64H48C21.5 64 0 85.5 0 112v288c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM192 352h-48c-8.8 0-16-7.2-16-16s7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16zm64-64h-48c-8.8 0-16-7.2-16-16s7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16zm64-64h-48c-8.8 0-16-7.2-16-16s7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16zm128 128h-48c-8.8 0-16-7.2-16-16s7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16z'/%3E%3C/svg%3E">
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath d='M528 64H48C21.5 64 0 85.5 0 112v288c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM192 352h-48c-8.8 0-16-7.2-16-16s7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16zm64-64h-48c-8.8 0-16-7.2-16-16s7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16zm64-64h-48c-8.8 0-16-7.2-16-16s7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16zm128 128h-48c-8.8 0-16-7.2-16-16s7.2-16 16-16h48c8.8 0 16 7.2 16 16s-7.2 16-16 16z'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/jeux.css">
     <link rel="stylesheet" href="css/progression.css">
     <link rel="stylesheet" href="css/quests.css">
 </head>
+
 <body>
     <header>
         <h1><i class="fa-solid fa-gamepad"></i> Maths Morgan - Jeux</h1>
@@ -35,7 +38,7 @@
                     <input type="text" id="search-input" placeholder="Rechercher un jeu par titre ou tag...">
                 </div>
             </div>
-            
+
             <div id="games-grid" class="cours-container">
                 <!-- Les cartes de jeux seront injectées ici -->
             </div>
@@ -48,11 +51,13 @@
     </main>
 
     <div class="reset-container">
-        <button id="reset-progression-button" class="danger-button"><i class="fas fa-trash-alt"></i> Réinitialiser la progression</button>
+        <button id="reset-progression-button" class="danger-button"><i class="fas fa-trash-alt"></i> Réinitialiser la
+            progression</button>
     </div>
 
     <footer>
-        <p><i class="fa-solid fa-shield-halved"></i> Ce site fonctionne entièrement dans votre navigateur. Les records et la progression ne sont pas partagés entre différents apapreils ou navigateurs.</p>
+        <p><i class="fa-solid fa-shield-halved"></i> Ce site fonctionne entièrement dans votre navigateur. Les records
+            et la progression ne sont pas partagés entre différents apapreils ou navigateurs.</p>
     </footer>
 
     <!-- App logic -->
@@ -60,4 +65,5 @@
     <script type="module" src="js/games_manager.js"></script>
     <script type="module" src="js/menu.js"></script>
 </body>
+
 </html>
