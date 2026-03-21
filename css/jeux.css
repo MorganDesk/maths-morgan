@@ -648,7 +648,13 @@
 }
 .au-val { color: #1e293b; }
 .au-unit { color: #4f46e5; }
-.au-arrow { color: #94a3b8; }
+.au-equals { color: #94a3b8; margin: 0 0.5rem;}
+.au-start-group, .au-answer-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
 .au-input {
     width: 150px;
     font-size: 2rem;
@@ -675,6 +681,7 @@
     max-width: 800px;
     font-size: 1.2rem;
     color: #1e293b;
+    table-layout: fixed;
 }
 
 .conversion-table th, 
@@ -701,7 +708,7 @@
 }
 
 @media (max-width: 768px) {
-    .au-question { font-size: 1.5rem; }
+    .au-question { font-size: 1.5rem; flex-direction: column; gap: 0.5rem; }
     .au-input { width: 100px; font-size: 1.5rem; }
     .conversion-table { font-size: 0.9rem; }
     .conversion-table td { height: 2.5rem; }

@@ -141,13 +141,11 @@ export function start(container, options) {
         modeObj.units.forEach((u, index) => {
             for (let i = 0; i < subColsCount; i++) {
                 let isLastInsideUnit = (i === subColsCount - 1);
-                let isLastOverall = (index === modeObj.units.length - 1 && isLastInsideUnit);
 
                 let className = '';
                 if (!isLastInsideUnit) {
                     className += 'subcol-dashed ';
-                }
-                if (isLastInsideUnit && !isLastOverall) {
+                } else {
                     className += 'subcol-solid ';
                 }
 
@@ -224,10 +222,14 @@ export function start(container, options) {
                 </div>
                 <div class="game-area">
                     <div class="au-question">
-                        <span id="start-val" class="au-val"></span> <span id="start-unit" class="au-unit"></span>
-                        <span class="au-arrow"><i class="fas fa-arrow-right"></i></span>
-                        <input type="text" inputmode="decimal" id="answer-input" class="au-input" placeholder="..." autocomplete="off" autofocus />
-                        <span id="target-unit" class="au-unit target"></span>
+                        <div class="au-start-group">
+                            <span id="start-val" class="au-val"></span> <span id="start-unit" class="au-unit"></span>
+                            <span class="au-equals">=</span>
+                        </div>
+                        <div class="au-answer-group">
+                            <input type="text" inputmode="decimal" id="answer-input" class="au-input" placeholder="..." autocomplete="off" autofocus />
+                            <span id="target-unit" class="au-unit target"></span>
+                        </div>
                     </div>
                     <div id="feedback" class="feedback"></div>
                     
