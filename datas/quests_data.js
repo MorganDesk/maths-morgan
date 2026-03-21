@@ -278,6 +278,58 @@ export const QUEST_MODELS = [
         reward: 60
     },
 
+    // --- L'Ascenseur des Unités ---
+    {
+        id: 'repeat_ascenseur_longueurs',
+        type: 'SPECIFIC_GAME',
+        gameId: 'ascenseur-unites',
+        modeIndex: 0,
+        title: 'L\'Arpenteur Elfique',
+        description: 'Terminer 2 parties de "L\'Ascenseur des Unités" (Longueurs)',
+        goal: 2,
+        reward: 30
+    },
+    {
+        id: 'repeat_ascenseur_aires',
+        type: 'SPECIFIC_GAME',
+        gameId: 'ascenseur-unites',
+        modeIndex: 1,
+        title: 'Le Mappeur de Terres',
+        description: 'Terminer 2 parties de "L\'Ascenseur des Unités" (Aires)',
+        goal: 2,
+        reward: 40
+    },
+    {
+        id: 'repeat_ascenseur_masses',
+        type: 'SPECIFIC_GAME',
+        gameId: 'ascenseur-unites',
+        modeIndex: 2,
+        title: 'Le Marchand d\'Épices',
+        description: 'Terminer 2 parties de "L\'Ascenseur des Unités" (Masses)',
+        goal: 2,
+        reward: 30
+    },
+    {
+        id: 'repeat_ascenseur_capacites',
+        type: 'SPECIFIC_GAME',
+        gameId: 'ascenseur-unites',
+        modeIndex: 3,
+        title: 'L\'Alchimiste des Potions',
+        description: 'Terminer 2 parties de "L\'Ascenseur des Unités" (Capacités)',
+        goal: 2,
+        reward: 40
+    },
+    {
+        id: 'repeat_ascenseur_volumes',
+        type: 'SPECIFIC_GAME',
+        gameId: 'ascenseur-unites',
+        modeIndex: 4,
+        title: 'L\'Architecte Royal',
+        description: 'Terminer 2 parties de "L\'Ascenseur des Unités" (Volumes)',
+        goal: 2,
+        reward: 50
+    },
+
     // --- QUÊTES DE PERFORMANCE (Dépassement de soi) ---
     // --- Multipli-Warrior ---
     {
@@ -623,6 +675,108 @@ export const QUEST_MODELS = [
         title: 'L\'Œil Omniscient',
         description: 'Réaliser un score de 12+ en "Maître des Nombres" (Mélange)',
         goal: 12,
+        reward: 80
+    },
+    
+    // --- L'Ascenseur des Unités ---
+    {
+        id: 'score_ascenseur_longueurs_8',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 0,
+        title: 'Marcheur Agile',
+        description: 'Réaliser un score de 8+ en "L\'Ascenseur des Unités" (Longueurs)',
+        goal: 8,
+        reward: 30
+    },
+    {
+        id: 'score_ascenseur_longueurs_15',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 0,
+        title: 'Maître des Distances',
+        description: 'Réaliser un score de 15+ en "L\'Ascenseur des Unités" (Longueurs)',
+        goal: 15,
+        reward: 60
+    },
+    {
+        id: 'score_ascenseur_aires_5',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 1,
+        title: 'Seigneur du Fief',
+        description: 'Réaliser un score de 5+ en "L\'Ascenseur des Unités" (Aires)',
+        goal: 5,
+        reward: 40
+    },
+    {
+        id: 'score_ascenseur_aires_10',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 1,
+        title: 'L\'Empereur des Surfaces',
+        description: 'Réaliser un score de 10+ en "L\'Ascenseur des Unités" (Aires)',
+        goal: 10,
+        reward: 70
+    },
+    {
+        id: 'score_ascenseur_masses_8',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 2,
+        title: 'Poids Plume',
+        description: 'Réaliser un score de 8+ en "L\'Ascenseur des Unités" (Masses)',
+        goal: 8,
+        reward: 30
+    },
+    {
+        id: 'score_ascenseur_masses_15',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 2,
+        title: 'Masse Immuable',
+        description: 'Réaliser un score de 15+ en "L\'Ascenseur des Unités" (Masses)',
+        goal: 15,
+        reward: 60
+    },
+    {
+        id: 'score_ascenseur_capacites_8',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 3,
+        title: 'Buveur d\'Élixirs',
+        description: 'Réaliser un score de 8+ en "L\'Ascenseur des Unités" (Capacités)',
+        goal: 8,
+        reward: 40
+    },
+    {
+        id: 'score_ascenseur_capacites_15',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 3,
+        title: 'Océan de Sagesse',
+        description: 'Réaliser un score de 15+ en "L\'Ascenseur des Unités" (Capacités)',
+        goal: 15,
+        reward: 70
+    },
+    {
+        id: 'score_ascenseur_volumes_5',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 4,
+        title: 'Graveur Cristallin',
+        description: 'Réaliser un score de 5+ en "L\'Ascenseur des Unités" (Volumes)',
+        goal: 5,
+        reward: 50
+    },
+    {
+        id: 'score_ascenseur_volumes_10',
+        type: 'SCORE_REACHED',
+        gameId: 'ascenseur-unites',
+        modeIndex: 4,
+        title: 'Maître de la Dimension',
+        description: 'Réaliser un score de 10+ en "L\'Ascenseur des Unités" (Volumes)',
+        goal: 10,
         reward: 80
     }
 ];
