@@ -682,14 +682,12 @@
     font-size: 1.2rem;
     color: #1e293b;
     table-layout: fixed;
-}
-
-.conversion-table th, 
-.conversion-table td.subcol-solid {
-    border: 2px solid #94a3b8; 
+    border-left: 2px solid #94a3b8;
+    border-right: 2px solid #94a3b8;
 }
 
 .conversion-table th {
+    border: 2px solid #94a3b8; 
     background: #e2e8f0;
     padding: 0.75rem 0.2rem;
     text-align: center;
@@ -701,10 +699,12 @@
     border-top: 2px solid #94a3b8;
 }
 
+.conversion-table td.subcol-solid {
+    border-right: 2px solid #94a3b8; 
+}
+
 .conversion-table td.subcol-dashed {
     border-right: 2px dashed #cbd5e1;
-    border-bottom: 2px solid #94a3b8;
-    border-top: 2px solid #94a3b8;
 }
 
 @media (max-width: 768px) {
