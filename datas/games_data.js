@@ -117,7 +117,7 @@ export const gamesData = [
         tags: ['conversions', 'unités', 'grandeurs', 'mesures', 'vitesse'],
         entryPoint: 'jeux/ascenseur-unites.js',
         baseMP: 5,
-        coefficient: [1, 1.5, 1, 1, 2],
+        coefficient: [2, 3, 2, 2, 4],
         modes: [
             { name: 'Longueurs' },
             { name: 'Aires (m²)' },
