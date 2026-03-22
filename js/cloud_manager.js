@@ -1,5 +1,5 @@
 // --- Configuration ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTg04GvGkVEetjyIvk6sbFNQmB0FY5rJ4USDmiQlUND9fC8uJQKL0I50M2Wew8rQWi/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPCaEX5-yxWkcLYBLXG94tOFi1M2jBNoxTcAVnXjY6iI6k_XptXeRWX7LQ4dg7JI8u/exec";
 const SESSION_KEY = "cloud_session";
 
 // Exporte les infos de session pour le reste de l'app si besoin
@@ -224,11 +224,29 @@ function renderRegisterModal() {
         const btn = document.getElementById('reg-submit');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
+        // --- NOUVEAU : Aspiration du localStorage existant pour ne rien perdre ! ---
+        let existingLocalData = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            if (key !== SESSION_KEY) {
+                existingLocalData[key] = localStorage.getItem(key);
+            }
+        }
+        const dataJSON = JSON.stringify(existingLocalData);
+
         const hash = await hashPassword(pw);
         try {
             let res = await fetch(SCRIPT_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "register", login: l, hash: hash, nom: n, prenom: p, classe: c })
+                body: JSON.stringify({
+                    action: "register",
+                    login: l,
+                    hash: hash,
+                    nom: n,
+                    prenom: p,
+                    classe: c,
+                    dataJSON: dataJSON // <-- On envoie la progression actuelle !
+                })
             });
             let result = await res.json();
 
