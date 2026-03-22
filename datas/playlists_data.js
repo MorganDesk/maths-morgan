@@ -57,10 +57,11 @@ var playlists_data = [
         "id": "playlist-calcul-litteral",
         "titre": "Calcul littéral",
         "desc": "S'entraîner au développement, à la factorisation et aux équations.",
-        "niveau": "3e",
         "matiere": "Nombres et calcul",
+        "tags": [],
         "items": [
-            "3e-2025-2026-calcul-litteral"
+            "3e-2025-2026-calcul-litteral",
+            "3e-2025-2026-calcul-litteral-partie-2"
         ]
     }
 ];
