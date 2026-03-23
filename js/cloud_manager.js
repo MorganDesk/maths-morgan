@@ -133,7 +133,7 @@ function renderCloudUI() {
             let result = await syncToCloud();
             btn.innerHTML = result.success ? '<i class="fas fa-check"></i> OK' : '<i class="fas fa-times"></i> Erreur';
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sauver';
+                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sauvegarder';
                 btn.disabled = false;
             }, 3000);
             if (!result.success) alert(result.message);
