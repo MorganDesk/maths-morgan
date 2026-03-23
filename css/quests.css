@@ -42,8 +42,10 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
-    margin-top: 1rem;
-    max-height: 500px; /* Adjust based on content */
+    padding-top: 10px;
+    /* On laisse de la place pour le soulèvement au survol */
+    max-height: 500px;
+    /* Adjust based on content */
     overflow: hidden;
     transition: max-height 0.4s ease-in-out, margin-top 0.4s ease-in-out;
 }
@@ -58,17 +60,42 @@
     padding: 1rem;
     border-radius: 8px;
     background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 15px -5px rgba(99, 102, 241, 0.15), 0 4px 6px -2px rgba(99, 102, 241, 0.05);
+    /* Double ombre pour un effet plus naturel et moins angulaire */
     transition: all 0.3s ease;
+    border: 1px solid #6366f1;
+    /* Bordure fine tout autour */
     border-left: 5px solid #6366f1;
+    /* Bordure gauche plus épaisse */
     display: flex;
     flex-direction: column;
 }
 
 .quest-card.completed {
+    box-shadow: 0 10px 15px -5px rgba(16, 185, 129, 0.15), 0 4px 6px -2px rgba(16, 185, 129, 0.05);
+    /* Ombre Verte plus douce et moins carrée */
+    border-color: #10b981;
+    /* Bordure fine verte une fois terminé */
     border-left-color: #10b981;
     background-color: #f8f9fa;
     opacity: 0.8;
+}
+
+/* --- Effet de survol spécifique pour les quêtes --- */
+.quest-card:hover {
+    transform: translateY(-5px);
+    /* Petit soulèvement */
+    box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.2), 0 10px 10px -5px rgba(99, 102, 241, 0.1);
+    /* Glow intense et diffus au survol */
+    border-color: #6366f1;
+    /* On force le maintien de la bordure indigo */
+}
+
+.quest-card.completed:hover {
+    box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2), 0 10px 10px -5px rgba(16, 185, 129, 0.1);
+    /* Glow vert intense et diffus au survol */
+    border-color: #10b981;
+    /* On force le maintien de la bordure verte */
 }
 
 .quest-header {
@@ -92,7 +119,8 @@
     font-size: 0.9rem;
     color: #6b7280;
     margin: 0.5rem 0;
-    flex-grow: 1; /* Pushes progress bar to the bottom */
+    flex-grow: 1;
+    /* Pushes progress bar to the bottom */
 }
 
 .quest-progress-bar-container {

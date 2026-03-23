@@ -119,8 +119,6 @@ export function renderQuestsWidget() {
     const container = document.getElementById('quests-container');
     if (!container) return;
 
-    const isCollapsed = localStorage.getItem(QUESTS_COLLAPSED_KEY) === 'true';
-
     if (!activeQuests || activeQuests.length === 0) {
         container.innerHTML = '<p>Aucune quête pour aujourd\'hui.</p>';
         return;
@@ -144,29 +142,10 @@ export function renderQuestsWidget() {
     }).join('');
 
     container.innerHTML = `
-        <div class="quest-widget-header">
-            <h2>Quêtes du Jour</h2>
-            <i class="fas fa-chevron-down"></i>
-        </div>
         <div class="quests-list">
             ${questsListHTML}
         </div>
     `;
-
-    const header = container.querySelector('.quest-widget-header');
-    const list = container.querySelector('.quests-list');
-    const icon = header.querySelector('i');
-
-    if (isCollapsed) {
-        list.classList.add('collapsed');
-        icon.classList.add('collapsed');
-    }
-
-    header.addEventListener('click', () => {
-        const currentlyCollapsed = list.classList.toggle('collapsed');
-        icon.classList.toggle('collapsed');
-        localStorage.setItem(QUESTS_COLLAPSED_KEY, currentlyCollapsed);
-    });
 }
 
 export function checkDailyQuests() {

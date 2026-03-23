@@ -109,11 +109,16 @@ function renderCloudUI() {
 
         cloudBar.innerHTML = `
             <div class="cloud-connected">
-                <span class="cloud-user-info"><i class="fas fa-user-check"></i> ${displayName}${displayClass}</span>
-                <div class="cloud-actions">
-                    <button class="cloud-btn sync-btn" id="cloud-sync-btn" title="Envoyer ma progression vers le nuage"><i class="fas fa-cloud-upload-alt"></i> Sauvegarder</button>
-                    <button class="cloud-btn restore-btn" id="cloud-restore-btn" title="Récupérer ma progression du nuage" style="background:#f59e0b;"><i class="fas fa-cloud-download-alt"></i> Restaurer</button>
-                    <button class="cloud-btn logout-btn" id="cloud-logout-btn" title="Se déconnecter"><i class="fas fa-sign-out-alt"></i></button>
+                <div class="cloud-main">
+                    <span class="cloud-user-info"><i class="fas fa-user-check"></i> ${displayName}${displayClass}</span>
+                    <div class="cloud-actions">
+                        <button class="cloud-btn sync-btn" id="cloud-sync-btn" title="Envoyer ma progression actuelle vers mon compte en ligne"><i class="fas fa-cloud-upload-alt"></i> Sauvegarder</button>
+                        <button class="cloud-btn restore-btn" id="cloud-restore-btn" title="Récupérer ma dernière sauvegarde en ligne (écrase les données actuelles)" style="background:#f59e0b;"><i class="fas fa-cloud-download-alt"></i> Restaurer</button>
+                        <button class="cloud-btn logout-btn" id="cloud-logout-btn" title="Se déconnecter"><i class="fas fa-sign-out-alt"></i></button>
+                    </div>
+                </div>
+                <div class="cloud-help-text">
+                    <i class="fas fa-info-circle"></i> <strong>Sauvegarder</strong> envoie tes points/favoris sur Internet. <strong>Restaurer</strong> les récupère si tu changes d'appareil.
                 </div>
             </div>
         `;
