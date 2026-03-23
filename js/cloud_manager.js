@@ -50,6 +50,40 @@ export async function syncToCloud() {
     }
 }
 
+// Restauration depuis le cloud (sans déconnexion)
+export async function restoreFromCloud() {
+    const session = getCloudSession();
+    if (!session) return { success: false, message: "Non connecté." };
+
+    try {
+        let res = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "login", login: session.login, hash: session.hash })
+        });
+        let result = await res.json();
+
+        if (result.success && result.dataJSON) {
+            // Nettoyage de tout SAUF la session
+            const sessionData = localStorage.getItem(SESSION_KEY);
+            localStorage.clear();
+            localStorage.setItem(SESSION_KEY, sessionData);
+
+            // Importation des données
+            if (result.dataJSON !== "{}") {
+                const appData = JSON.parse(result.dataJSON);
+                for (let key in appData) {
+                    localStorage.setItem(key, appData[key]);
+                }
+            }
+            return { success: true };
+        } else {
+            return { success: false, message: result.message || "Erreur de récupération." };
+        }
+    } catch (err) {
+        return { success: false, message: "Erreur réseau." };
+    }
+}
+
 // Injection et gestion de l'UI Cloud
 function renderCloudUI() {
     let cloudBar = document.getElementById('cloud-bar');
@@ -77,8 +111,9 @@ function renderCloudUI() {
             <div class="cloud-connected">
                 <span class="cloud-user-info"><i class="fas fa-user-check"></i> ${displayName}${displayClass}</span>
                 <div class="cloud-actions">
-                    <button class="cloud-btn sync-btn" id="cloud-sync-btn"><i class="fas fa-cloud-upload-alt"></i> Sauvegarder</button>
-                    <button class="cloud-btn logout-btn" id="cloud-logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+                    <button class="cloud-btn sync-btn" id="cloud-sync-btn" title="Envoyer ma progression vers le nuage"><i class="fas fa-cloud-upload-alt"></i> Sauvegarder</button>
+                    <button class="cloud-btn restore-btn" id="cloud-restore-btn" title="Récupérer ma progression du nuage" style="background:#f59e0b;"><i class="fas fa-cloud-download-alt"></i> Restaurer</button>
+                    <button class="cloud-btn logout-btn" id="cloud-logout-btn" title="Se déconnecter"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
         `;
@@ -93,15 +128,35 @@ function renderCloudUI() {
 
         document.getElementById('cloud-sync-btn').addEventListener('click', async () => {
             const btn = document.getElementById('cloud-sync-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sauvegarde...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>...';
             btn.disabled = true;
             let result = await syncToCloud();
-            btn.innerHTML = result.success ? '<i class="fas fa-check"></i> Sauvegardé' : '<i class="fas fa-times"></i> Erreur';
+            btn.innerHTML = result.success ? '<i class="fas fa-check"></i> OK' : '<i class="fas fa-times"></i> Erreur';
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sauvegarder';
+                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sauver';
                 btn.disabled = false;
             }, 3000);
             if (!result.success) alert(result.message);
+        });
+
+        document.getElementById('cloud-restore-btn').addEventListener('click', async () => {
+            if (confirm("Attention : Restaurer votre progression va ÉCRASER ce que vous avez fait sur cet appareil pour le remplacer par ce qui est dans le nuage. Continuer ?")) {
+                const btn = document.getElementById('cloud-restore-btn');
+                const oldHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>...';
+                btn.disabled = true;
+
+                let result = await restoreFromCloud();
+
+                if (result.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> OK';
+                    setTimeout(() => window.location.reload(), 800);
+                } else {
+                    alert(result.message);
+                    btn.innerHTML = oldHTML;
+                    btn.disabled = false;
+                }
+            }
         });
 
     } else {
