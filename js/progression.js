@@ -178,8 +178,40 @@ export function updateProgressionWidget() {
             </div>
             <div class="stats-info">
                 <span><i class="fas fa-gamepad"></i> Parties : ${stats.gamesPlayed}</span>
-                <span><i class="fas fa-sun"></i> MP du jour : ${stats.mpToday}</span>
+                <span class="mp-today-badge" id="mp-details-trigger" title="Clique pour voir tes détails !">
+                    <i class="fas fa-sun"></i> Jour : +${stats.mpToday}
+                </span>
+            </div>
+        </div>
+        
+        <div class="progression-details" id="progression-details-panel">
+            <div class="detail-row">
+                <span class="detail-label">✨ Aujourd'hui</span>
+                <span class="detail-value">+${stats.mpToday} MP</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">📅 Cette semaine</span>
+                <span class="detail-value">+${stats.mpWeek || 0} MP</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">🏷️ Ce mois</span>
+                <span class="detail-value">+${stats.mpMonth || 0} MP</span>
+            </div>
+            <div class="leaderboard-btn-container">
+                <a href="champions.html" class="leaderboard-link">
+                    <i class="fas fa-trophy"></i> Voir le classement
+                </a>
             </div>
         </div>
     `;
+
+    // Add click listener for the details
+    const trigger = widget.querySelector('#mp-details-trigger');
+    const panel = widget.querySelector('#progression-details-panel');
+    if (trigger && panel) {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panel.classList.toggle('active');
+        });
+    }
 }

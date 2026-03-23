@@ -107,15 +107,49 @@ export function getGameStats() {
     let stats = statsJSON ? JSON.parse(statsJSON) : {
         gamesPlayed: 0,
         mpToday: 0,
+        mpWeek: 0,
+        mpMonth: 0,
         lastPlayedDate: '',
+        lastPlayedWeek: -1,
+        lastPlayedMonth: -1,
         gamesPlayedToday: [] // For PLAY_X_GAMES quest type
     };
 
+    const now = new Date();
     const today = getTodayDateString();
+    
+    // Calcul simpliste du numéro de semaine (ISO-8601 ish)
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const dayOfYear = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
+    const currentWeek = Math.ceil((dayOfYear + startOfYear.getDay() + 1) / 7);
+    const currentMonth = now.getMonth();
+
+    let needsUpdate = false;
+
+    // Reset journalier
     if (stats.lastPlayedDate !== today) {
         stats.mpToday = 0;
-        stats.gamesPlayedToday = []; // Reset daily games list
+        stats.gamesPlayedToday = [];
         stats.lastPlayedDate = today;
+        needsUpdate = true;
+    }
+
+    // Reset hebdomadaire
+    if (stats.lastPlayedWeek !== currentWeek) {
+        stats.mpWeek = 0;
+        stats.lastPlayedWeek = currentWeek;
+        needsUpdate = true;
+    }
+
+    // Reset mensuel
+    if (stats.lastPlayedMonth !== currentMonth) {
+        stats.mpMonth = 0;
+        stats.lastPlayedMonth = currentMonth;
+        needsUpdate = true;
+    }
+
+    if (needsUpdate) {
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
     }
     
     // Ensure gamesPlayedToday exists for users with older data structure
@@ -146,8 +180,10 @@ export function logPlayedGame(gameId) {
 export function updateStatsOnGameComplete(mpGained) {
     const stats = getGameStats();
 
-    stats.gamesPlayed = (stats.gamesPlayed || 0) + 1; // Lifetime total games
+    stats.gamesPlayed = (stats.gamesPlayed || 0) + 1;
     stats.mpToday = (stats.mpToday || 0) + mpGained;
+    stats.mpWeek = (stats.mpWeek || 0) + mpGained;
+    stats.mpMonth = (stats.mpMonth || 0) + mpGained;
     stats.lastPlayedDate = getTodayDateString();
 
     localStorage.setItem(STATS_KEY, JSON.stringify(stats));
