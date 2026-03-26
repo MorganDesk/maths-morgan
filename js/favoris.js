@@ -1,4 +1,5 @@
 import { getFavorites, addFavorite, removeFavorite } from './storage.js';
+import { autoSyncThrottled } from './cloud_manager.js';
 
 /**
  * Bascule l'état de favori pour un cours donné.
@@ -7,13 +8,20 @@ import { getFavorites, addFavorite, removeFavorite } from './storage.js';
  */
 export function toggleFavorite(courseId) {
     const favorites = getFavorites();
+    let isFavoriteNow;
+
     if (favorites.includes(courseId)) {
         removeFavorite(courseId);
-        return false;
+        isFavoriteNow = false;
     } else {
         addFavorite(courseId);
-        return true;
+        isFavoriteNow = true;
     }
+
+    // --- NOUVEAU : Sauvegarde Cloud Automatique Throttlée ---
+    autoSyncThrottled();
+
+    return isFavoriteNow;
 }
 
 /**

@@ -2,6 +2,7 @@ import { getHighScore, saveHighScore, resetGameHighScores } from './storage.js';
 import { updateProgressionWidget, completeGame } from './progression.js';
 import { checkDailyQuests } from './quests.js';
 import { gamesData } from '../datas/games_data.js';
+import { autoSync, autoRestore } from './cloud_manager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const gamesGrid = document.getElementById('games-grid');
@@ -18,10 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeGameModule = null; // Pour garder une référence au module du jeu actif
 
     const endGameManager = async (gameId, modeName, modeIndex, score) => {
+        window.isGameActive = false; // Relâche le verrou de synchro
         activeGameId = null;
-        activeGameModule = null; // Nettoyer la référence
+        activeGameModule = null;
         await completeGame(gameId, modeIndex, score);
         saveHighScore(gameId, modeName, score);
+        autoSync();
     };
 
     const showGamesGrid = () => {
@@ -33,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         questsContainer.classList.remove('hidden');
         resetContainer.classList.remove('hidden');
         gameContainer.classList.add('hidden');
-        gameContainer.innerHTML = ''; 
+        gameContainer.innerHTML = '';
         mainHeader.innerHTML = '<i class="fa-solid fa-gamepad"></i> Maths Morgan - Jeux';
         renderGameCards(allGames);
         updateProgressionWidget();
@@ -105,6 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const startGame = async (gameId, modeName) => {
+        // --- NOUVEAU : Pull Cloud avant de lancer le jeu (en arrière-plan pour ne pas ralentir le lancement) ---
+        autoRestore(false);
+        window.isGameActive = true;
+
         const game = allGames.find(g => g.id === gameId);
         if (!game || !game.entryPoint) {
             console.error("Jeu non trouvé ou point d'entrée manquant !");
@@ -118,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mode = game.modes.find(m => m.name === modeName) || game.modes[0];
             modeIndex = game.modes.indexOf(mode);
         } else {
-            mode = { name: 'default', settings: {} }; 
+            mode = { name: 'default', settings: {} };
             modeIndex = 0;
         }
 
@@ -127,12 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const gameModule = await import(`../${game.entryPoint}?v=${new Date().getTime()}`);
             activeGameModule = gameModule; // Stocker la référence au module
-            
+
             gamesGrid.classList.add('hidden');
             searchInput.parentElement.classList.add('hidden');
             progressionContainer.classList.add('hidden');
             questsContainer.classList.add('hidden');
-            resetContainer.classList.add('hidden'); 
+            resetContainer.classList.add('hidden');
             gameContainer.classList.remove('hidden');
             gameContainer.innerHTML = '';
 
@@ -152,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameId,
                 modeName: mode.name,
                 modeIndex,
-                settings: mode.settings || {}, 
+                settings: mode.settings || {},
                 endGameCallback: endGameManager
             });
 
@@ -180,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const highScoreBadge = card.querySelector('.highscore-badge');
             const scoreValue = highScoreBadge.querySelector('.score-value');
             const highScore = getHighScore(gameId, selectedModeName);
-            
+
             if (highScore > 0) {
                 scoreValue.textContent = highScore;
                 highScoreBadge.classList.remove('hidden');
@@ -196,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = playButton.closest('.card');
             const gameId = card.dataset.gameId;
             const gameData = allGames.find(g => g.id === gameId);
-            
+
             let selectedModeName = null;
             if (gameData.modes && gameData.modes.length > 0) {
                 const modeSelector = card.querySelector('.mode-selector');

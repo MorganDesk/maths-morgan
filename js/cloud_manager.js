@@ -1,6 +1,7 @@
 // --- Configuration ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPCaEX5-yxWkcLYBLXG94tOFi1M2jBNoxTcAVnXjY6iI6k_XptXeRWX7LQ4dg7JI8u/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0wVnHtP0NQWwUX9cMjzriBrRcfBba3reE5rvwuKsNJJB2j-xlBfQ3h5qg3XGo6McE/exec";
 const SESSION_KEY = "cloud_session";
+
 
 // Exporte les infos de session pour le reste de l'app si besoin
 export function getCloudSession() {
@@ -22,11 +23,13 @@ export async function syncToCloud() {
     const session = getCloudSession();
     if (!session) return { success: false, message: "Non connecté." };
 
-    // Aspirer tout le localStorage de l'application (Sauf la session elle-même)
+    // 🔒 SECURITÉ : Aspirer le localStorage SAUF la session et le TOKEN ADMIN
     let appData = {};
+    const EXCLUDED_KEYS = [SESSION_KEY, 'admin_token_site', 'maths_admin_token'];
+
     for (let i = 0; i < localStorage.length; i++) {
         let key = localStorage.key(i);
-        if (key !== SESSION_KEY) {
+        if (!EXCLUDED_KEYS.includes(key)) {
             appData[key] = localStorage.getItem(key);
         }
     }
@@ -48,6 +51,51 @@ export async function syncToCloud() {
     } catch (err) {
         return { success: false, message: "Erreur réseau de synchronisation." };
     }
+}
+
+/**
+ * 📦 SAUVEGARDE AUTOMATIQUE (Silence)
+ * Ajoute un délai aléatoire (Jitter) de 0-4s pour éviter les pics de charge
+ * sur Google Apps Script quand 500 élèves finissent un jeu en même temps.
+ */
+export async function autoSync() {
+    const session = getCloudSession();
+    if (!session) return; // Ne rien faire si non connecté
+
+    // On attend entre 0 et 4 secondes pour "lisser" les 30 slots simultanés
+    const jitter = Math.floor(Math.random() * 4000);
+    setTimeout(async () => {
+        try {
+            console.log("☁️ [Cloud] Synchro auto... (Jitter: " + jitter + "ms)");
+            await syncToCloud();
+        } catch (e) {
+            console.warn("☁️ [Cloud] Échec synchro auto silencieuse.");
+        }
+    }, jitter);
+}
+
+/**
+ * 🛡️ ENREGISTREMENT DIFFÉRÉ (Debounce)
+ * Sauvegarde automatiquement la progression 10 secondes APRÈS la dernière action.
+ * Idéal pour les favoris et maîtrises : si l'élève en change 5 à la suite,
+ * il n'y aura qu'une seule sauvegarde 10s après son dernier clic.
+ */
+let throttledTimeout = null;
+export function autoSyncThrottled() {
+    const session = getCloudSession();
+    if (!session) return;
+
+    // Si un enregistrement était déjà prévu, on l'annule pour recommencer le décompte
+    if (throttledTimeout) {
+        clearTimeout(throttledTimeout);
+    }
+
+    console.log("☁️ [Cloud] Enregistrement automatique planifié (10s après le dernier clic)...");
+
+    throttledTimeout = setTimeout(() => {
+        throttledTimeout = null;
+        autoSync();
+    }, 10000);
 }
 
 // Restauration depuis le cloud (sans déconnexion)
@@ -112,13 +160,12 @@ function renderCloudUI() {
                 <div class="cloud-main">
                     <span class="cloud-user-info"><i class="fas fa-user-check"></i> ${displayName}${displayClass}</span>
                     <div class="cloud-actions">
-                        <button class="cloud-btn sync-btn" id="cloud-sync-btn" title="Envoyer ma progression actuelle vers mon compte en ligne"><i class="fas fa-cloud-upload-alt"></i> Sauvegarder</button>
                         <button class="cloud-btn restore-btn" id="cloud-restore-btn" title="Récupérer ma dernière sauvegarde en ligne (écrase les données actuelles)" style="background:#f59e0b;"><i class="fas fa-cloud-download-alt"></i> Restaurer</button>
                         <button class="cloud-btn logout-btn" id="cloud-logout-btn" title="Se déconnecter"><i class="fas fa-sign-out-alt"></i></button>
                     </div>
                 </div>
                 <div class="cloud-help-text">
-                    <i class="fas fa-info-circle"></i> <strong>Sauvegarder</strong> envoie tes points/favoris sur Internet. <strong>Restaurer</strong> les récupère si tu changes d'appareil.
+                    <i class="fas fa-info-circle"></i><strong> Restaurer</strong> récupère ta progression si tu changes d'appareil. La <strong>progression</strong> est sauvegardée automatiquement.
                 </div>
             </div>
         `;
@@ -131,18 +178,7 @@ function renderCloudUI() {
             }
         });
 
-        document.getElementById('cloud-sync-btn').addEventListener('click', async () => {
-            const btn = document.getElementById('cloud-sync-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>...';
-            btn.disabled = true;
-            let result = await syncToCloud();
-            btn.innerHTML = result.success ? '<i class="fas fa-check"></i> OK' : '<i class="fas fa-times"></i> Erreur';
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sauvegarder';
-                btn.disabled = false;
-            }, 3000);
-            if (!result.success) alert(result.message);
-        });
+
 
         document.getElementById('cloud-restore-btn').addEventListener('click', async () => {
             if (confirm("Attention : Restaurer votre progression va ÉCRASER ce que vous avez fait sur cet appareil pour le remplacer par ce qui est dans le nuage. Continuer ?")) {
@@ -285,14 +321,24 @@ function renderRegisterModal() {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
         // --- NOUVEAU : Aspiration du localStorage existant pour ne rien perdre ! ---
-        let existingLocalData = {};
-        for (let i = 0; i < localStorage.length; i++) {
-            let key = localStorage.key(i);
-            if (key !== SESSION_KEY) {
-                existingLocalData[key] = localStorage.getItem(key);
+        // -- Préparation d'une sauvegarde PLATE et LÉGÈRE --
+        const data = {};
+        const keysToSave = [
+            'gameStats', 'gameHighScores', 'activeQuests',
+            'coursFavorites', 'coursMastery', 'total_mp',
+            'lastQuestDate'
+        ];
+
+        keysToSave.forEach(key => {
+            const value = localStorage.getItem(key);
+            if (value) {
+                try { data[key] = JSON.parse(value); }
+                catch (e) { data[key] = value; }
             }
-        }
-        const dataJSON = JSON.stringify(existingLocalData);
+        });
+
+        // SÉCURITÉ : On s'assure qu'AUCUN token admin n'est envoyé (parfois présent dans gameStats)
+        if (data.gameStats && data.gameStats.admin_token) delete data.gameStats.admin_token;
 
         const hash = await hashPassword(pw);
         try {
@@ -305,7 +351,7 @@ function renderRegisterModal() {
                     nom: n,
                     prenom: p,
                     classe: c,
-                    dataJSON: dataJSON // <-- On envoie la progression actuelle !
+                    dataJSON: JSON.stringify(data) // <-- On envoie la progression actuelle !
                 })
             });
             let result = await res.json();
@@ -320,9 +366,100 @@ function renderRegisterModal() {
     });
 }
 
-// Lancement automatique du rendu
+// Lancement automatique du rendu et de la synchro initiale
 if (document.readyState === 'loading') {
-    document.addEventListener("DOMContentLoaded", renderCloudUI);
+    document.addEventListener("DOMContentLoaded", () => {
+        renderCloudUI();
+        syncOnPageLoad();
+    });
 } else {
     renderCloudUI();
+    syncOnPageLoad();
 }
+
+/**
+ * 🔄 COMPARATEUR DE DONNÉES ROBUSTE
+ * Ignore l'ordre des clés pour ne recharger que si nécessaire (évite les boucles infinies).
+ */
+function isDataDifferent(localObj, remoteJSON) {
+    if (!remoteJSON) return false;
+    try {
+        const remoteObj = typeof remoteJSON === 'string' ? JSON.parse(remoteJSON) : remoteJSON;
+        // Tri des clés pour une comparaison stable
+        const localSorted = JSON.stringify(localObj, Object.keys(localObj).sort());
+        const remoteSorted = JSON.stringify(remoteObj, Object.keys(remoteObj).sort());
+        return localSorted !== remoteSorted;
+    } catch (e) {
+        return true;
+    }
+}
+
+/**
+ * 🚀 SYNCHRONISATION AU CHARGEMENT DE LA PAGE
+ * Récupère les données cloud et les écrit dans le localStorage SANS recharger la page.
+ * La page vient juste d'être chargée, les modules liront les données mises à jour naturellement.
+ */
+async function syncOnPageLoad() {
+    const session = getCloudSession();
+    if (!session) return;
+
+    console.log("☁️ [Cloud] Récupération des données au chargement...");
+    try {
+        const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "sync", login: session.login, hash: session.hash, dataJSON: null })
+        });
+        const result = await response.json();
+
+        if (result.success && result.dataJSON && result.dataJSON !== "{}") {
+            const EXCLUDED_KEYS = [SESSION_KEY, 'admin_token_site', 'maths_admin_token'];
+            let currentLocal = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if (!EXCLUDED_KEYS.includes(key)) {
+                    currentLocal[key] = localStorage.getItem(key);
+                }
+            }
+
+            if (isDataDifferent(currentLocal, result.dataJSON)) {
+                console.log("🔄 [Cloud] Données plus récentes trouvées. Application...");
+                const cloudData = JSON.parse(result.dataJSON);
+                for (const key in cloudData) {
+                    if (!EXCLUDED_KEYS.includes(key)) {
+                        localStorage.setItem(key, typeof cloudData[key] === 'object' ? JSON.stringify(cloudData[key]) : cloudData[key]);
+                    }
+                }
+                console.log("✅ [Cloud] Données cloud appliquées.");
+                // Rafraîchir le widget avec les nouvelles données
+                if (document.getElementById('progression-container')) {
+                    try {
+                        const { updateProgressionWidget } = await import('./progression.js');
+                        updateProgressionWidget();
+                    } catch (e) { console.warn('☁️ [Cloud] Erreur refresh widget:', e.message); }
+                }
+            } else {
+                console.log("✅ [Cloud] Données locales déjà à jour.");
+            }
+        }
+
+        // Dans tous les cas : injecter les bannières événements
+        if (document.getElementById('progression-container')) {
+            try {
+                const { initEvents } = await import('./events.js');
+                initEvents();
+            } catch (e) { console.warn('☁️ [Cloud] Erreur chargement événements:', e.message); }
+        }
+
+    } catch (e) {
+        console.warn("☁️ [Cloud] Échec de la récupération au démarrage :", e.message);
+    }
+}
+
+/**
+ * 🔄 RÉCUPÉRATION MANUELLE (utilisée par games_manager avant de jouer)
+ * Alias vers syncOnPageLoad pour compatibilité.
+ */
+export async function autoRestore(shouldReload = false) {
+    await syncOnPageLoad();
+}
+

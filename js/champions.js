@@ -1,42 +1,68 @@
-import { getGameStats } from './storage.js';
+import { getGameStats, getAuthData } from './storage.js';
+import { getLeaderboardTabs } from './events.js';
 
 // --- CONFIGURATION ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPCaEX5-yxWkcLYBLXG94tOFi1M2jBNoxTcAVnXjY6iI6k_XptXeRWX7LQ4dg7JI8u/exec"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0wVnHtP0NQWwUX9cMjzriBrRcfBba3reE5rvwuKsNJJB2j-xlBfQ3h5qg3XGo6McE/exec";
 const CACHE_KEY = 'leaderboard_cache_';
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-document.addEventListener('DOMContentLoaded', () => {
-    const tabBtns = document.querySelectorAll('.tab-btn');
+document.addEventListener('DOMContentLoaded', async () => {
+    const periodFilters = document.querySelector('.leaderboard-tabs');
     const levelBtns = document.querySelectorAll('.level-btn');
     const contentArea = document.getElementById('leaderboard-content');
 
     let currentPeriod = 'global';
     let currentLevel = 'tous';
+    let isEventMode = false;
 
-    /**
-     * Charge le classement depuis le cache ou l'API Google
-     */
-    async function loadLeaderboard() {
-        const cacheKey = `${CACHE_KEY}${currentPeriod}_${currentLevel}`;
-        
-        const cacheEntry = localStorage.getItem(cacheKey);
-        if (cacheEntry) {
-            const { timestamp, data } = JSON.parse(cacheEntry);
-            if (Date.now() - timestamp < CACHE_DURATION) {
-                renderTable(data, currentPeriod);
-                return;
-            }
+    // --- 1. INITIALISATION DES ONGLETS DYNAMIQUES ---
+    async function initTabs() {
+        const auth = getAuthData();
+        const studentClass = auth ? auth.classe : "tous";
+        const eventTabs = await getLeaderboardTabs(studentClass);
+
+        if (periodFilters && eventTabs) {
+            eventTabs.forEach(tab => {
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn';
+                btn.dataset.period = tab.id;
+                btn.dataset.isEvent = "true";
+                btn.innerHTML = tab.title;
+                periodFilters.appendChild(btn);
+            });
         }
 
+        // Réattacher les événements sur les nouveaux boutons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentPeriod = btn.dataset.period;
+                isEventMode = btn.dataset.isEvent === "true";
+                loadLeaderboard();
+            });
+        });
+    }
+
+    /**
+     * Charge le classement depuis l'API Google (Temps Réel)
+     */
+    async function loadLeaderboard() {
         showLoading();
         try {
-            const url = `${SCRIPT_URL}?action=getLeaderboard&period=${currentPeriod}&classe=${currentLevel}`;
-            const response = await fetch(url);
+            // APPEL DIRECT SANS CACHE
+            const action = isEventMode ? 'getEventLeaderboard' : 'getLeaderboard';
+            const response = await fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: action,
+                    period: currentPeriod,
+                    classe: currentLevel
+                })
+            });
             const result = await response.json();
 
             if (result.success) {
-                const cacheData = { timestamp: Date.now(), data: result.data };
-                localStorage.setItem(cacheKey, JSON.stringify(cacheData));
                 renderTable(result.data, currentPeriod);
             } else {
                 throw new Error(result.message);
@@ -67,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="text-align: center; color: #64748b; padding: 3rem;">
                     <i class="fas fa-ghost" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i><br>
                     <strong>Aucun champion pour le moment !</strong><br>
-                    <small>Dès qu'un élève de cette catégorie synchronisera ses points, il apparaîtra ici.</small>
+                    <small>Dès qu'un élève de cette catégorie marquera des points, il apparaîtra ici.</small>
                 </div>
             `;
             return;
@@ -93,19 +119,24 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rank === 1) rankDisplay = '<i class="fas fa-crown rank-1"></i>';
             else if (rank === 2) rankDisplay = '<i class="fas fa-medal rank-2"></i>';
             else if (rank === 3) rankDisplay = '<i class="fas fa-medal rank-3"></i>';
-            
+
             if (rank <= 3) rankClass = "top-3-rank";
 
-            let mpValue = student.totalMp;
-            if (period === 'weekly') mpValue = student.weeklyMp;
-            if (period === 'monthly') mpValue = student.monthlyMp;
+            // Pour les événements, le score est déjà calculé côté serveur (différentiel)
+            let mpValue = student.score;
+            // Pour les périodes classiques, on garde l'ancienne logique
+            if (!isEventMode) {
+                if (period === 'global') mpValue = student.totalMp;
+                else if (period === 'weekly') mpValue = student.weeklyMp;
+                else if (period === 'monthly') mpValue = student.monthlyMp;
+            }
 
             html += `
                 <tr>
                     <td class="rank-cell ${rankClass}">${rankDisplay}</td>
                     <td>
                         <div class="user-cell">
-                            <div class="user-avatar">${student.displayName.charAt(0)}</div>
+                            <div class="user-avatar" style="background:${getRandomColor(student.displayName)}">${student.displayName.charAt(0)}</div>
                             <div>
                                 <div class="user-name">${student.displayName}</div>
                                 <div class="user-class">${student.classe}</div>
@@ -122,18 +153,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatMP(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        return (num || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentPeriod = btn.dataset.period;
-            loadLeaderboard();
-        });
-    });
+    function getRandomColor(str) {
+        const colors = ['#4f46e5', '#7c3aed', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        return colors[Math.abs(hash) % colors.length];
+    }
 
+    // -- Event Listeners for Level Filters --
     levelBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             levelBtns.forEach(b => b.classList.remove('active'));
@@ -143,5 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Initialisation
+    await initTabs();
     loadLeaderboard();
 });

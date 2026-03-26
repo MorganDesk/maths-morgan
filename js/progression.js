@@ -1,6 +1,7 @@
-import { getTotalMP, addMP, getGameStats, updateStatsOnGameComplete, logPlayedGame } from './storage.js';
+import { getTotalMP, addMP, getGameStats, updateStatsOnGameComplete, logPlayedGame, saveGameMP } from './storage.js';
 import { gamesData } from '../datas/games_data.js';
 import { updateQuestProgression } from './quests.js'; // Import quest functionality
+
 
 // --- Configuration des Rangs ---
 const RANKS = [
@@ -132,6 +133,9 @@ export async function completeGame(gameId, modeIndex, score) {
     const startMP = getTotalMP();
     addMP(gain);
     updateStatsOnGameComplete(gain);
+    
+    // NOUVEAU : Sauvegarder les MP spécifiques à ce jeu/mode pour les événements
+    saveGameMP(gameId, modeIndex, gain);
 
     // Mettre à jour la progression des quêtes
     updateQuestProgression(gameId, modeIndex, score, gain);

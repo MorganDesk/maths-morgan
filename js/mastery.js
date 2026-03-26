@@ -1,4 +1,5 @@
 import { getMastery, saveMastery } from './storage.js';
+import { autoSyncThrottled } from './cloud_manager.js';
 
 // Define the states, their text, and the cycle order
 const masteryStates = {
@@ -48,6 +49,9 @@ export function createMasteryElement(lessonId) {
 
         // Save the new state
         saveMastery(lessonId, nextStatus);
+
+        // --- NOUVEAU : Sauvegarde Cloud Automatique Throttlée ---
+        autoSyncThrottled();
     });
 
     return masteryElement;

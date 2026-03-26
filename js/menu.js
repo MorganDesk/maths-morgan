@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let activeFilterId = 'tous'; // Default to 'tous'
 
-        if (currentPage === 'jeux.html') {
+        if (currentPage === 'jeux.html' || currentPage === 'champions.html') {
             activeFilterId = 'jeux';
         } else if (currentPage === 'index.html' && currentHash) {
             // Check for a direct match in menu items first (e.g., #favoris, #6e)

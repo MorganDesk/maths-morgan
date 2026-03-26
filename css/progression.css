@@ -123,6 +123,72 @@
 .detail-label { color: #6b7280; }
 .detail-value { font-weight: 600; color: #374151; }
 
+/* --- Event Banner Notification --- */
+.event-banner-notification {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.event-banner-icon {
+    font-size: 1.5rem;
+}
+
+.event-banner-content {
+    flex-grow: 1;
+}
+
+.event-banner-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.event-banner-desc {
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
+
+.event-banner-timer {
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.event-banner-btn {
+    background: white;
+    color: #4f46e5;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: transform 0.2s ease;
+}
+
+.event-banner-btn:hover {
+    transform: scale(1.05);
+}
+
 .leaderboard-btn-container {
     margin-top: 15px;
     padding-top: 10px;

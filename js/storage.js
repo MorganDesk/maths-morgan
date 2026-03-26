@@ -112,13 +112,17 @@ export function getGameStats() {
         lastPlayedDate: '',
         lastPlayedWeek: -1,
         lastPlayedMonth: -1,
-        gamesPlayedToday: [] // For PLAY_X_GAMES quest type
+        gamesPlayedToday: [], 
+        games: {} // Stockage des MP par jeu : { gameId: { total_mp: X, modes: { modeIndex: { mp: Y } } } }
     };
+    
+    // Initialiser 'games' pour les anciens utilisateurs
+    if (!stats.games) stats.games = {};
 
     const now = new Date();
     const today = getTodayDateString();
     
-    // Calcul simpliste du numéro de semaine (ISO-8601 ish)
+    // Calcul de la semaine et du mois
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const dayOfYear = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
     const currentWeek = Math.ceil((dayOfYear + startOfYear.getDay() + 1) / 7);
@@ -152,13 +156,28 @@ export function getGameStats() {
         localStorage.setItem(STATS_KEY, JSON.stringify(stats));
     }
     
-    // Ensure gamesPlayedToday exists for users with older data structure
-    if (!Array.isArray(stats.gamesPlayedToday)) {
-        stats.gamesPlayedToday = [];
-    }
-
     return stats;
 }
+
+/**
+ * Sauvegarde les MP gagnés pour un jeu et un mode spécifique
+ */
+export function saveGameMP(gameId, modeIndex, amount) {
+    const stats = getGameStats();
+    if (!stats.games[gameId]) stats.games[gameId] = { total_mp: 0, modes: {} };
+
+    // Update global pour ce jeu
+    stats.games[gameId].total_mp = (stats.games[gameId].total_mp || 0) + amount;
+
+    // Update par mode
+    if (modeIndex !== undefined && modeIndex !== null) {
+        if (!stats.games[gameId].modes[modeIndex]) stats.games[gameId].modes[modeIndex] = { mp: 0 };
+        stats.games[gameId].modes[modeIndex].mp = (stats.games[gameId].modes[modeIndex].mp || 0) + amount;
+    }
+
+    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+}
+
 
 /**
  * Logs a unique game played today for quest tracking.
@@ -214,4 +233,20 @@ export function getActiveQuests() {
  */
 export function saveActiveQuests(quests) {
     localStorage.setItem(ACTIVE_QUESTS_KEY, JSON.stringify(quests));
+}
+
+// --- Auth Functions ---
+const AUTH_KEY = 'cloud_session';
+
+export function getAuthData() {
+    const data = localStorage.getItem(AUTH_KEY);
+    return data ? JSON.parse(data) : null;
+}
+
+export function saveAuthData(data) {
+    localStorage.setItem(AUTH_KEY, JSON.stringify(data));
+}
+
+export function clearAuthData() {
+    localStorage.removeItem(AUTH_KEY);
 }
