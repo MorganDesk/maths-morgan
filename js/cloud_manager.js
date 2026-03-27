@@ -1,7 +1,7 @@
 // --- Configuration ---
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0wVnHtP0NQWwUX9cMjzriBrRcfBba3reE5rvwuKsNJJB2j-xlBfQ3h5qg3XGo6McE/exec";
 const SESSION_KEY = "cloud_session";
-
+import { showToastQueue } from './toast.js';
 
 // Exporte les infos de session pour le reste de l'app si besoin
 export function getCloudSession() {
@@ -23,13 +23,16 @@ export async function syncToCloud() {
     const session = getCloudSession();
     if (!session) return { success: false, message: "Non connecté." };
 
-    // 🔒 SECURITÉ : Aspirer le localStorage SAUF la session et le TOKEN ADMIN
+    // SÉCURITÉ : Ne pas uploader si les données vitales (gameStats) sont absentes du local
+    if (!localStorage.getItem('gameStats')) return { success: false, message: "Aucune donnée locale à synchroniser." };
+
+    // 🔒 SECURITÉ : Aspirer le localStorage, UNIQUEMENT les clés de données vitales
     let appData = {};
-    const EXCLUDED_KEYS = [SESSION_KEY, 'admin_token_site', 'maths_admin_token'];
+    const INCLUDED_KEYS = ['gameStats', 'cours'];
 
     for (let i = 0; i < localStorage.length; i++) {
         let key = localStorage.key(i);
-        if (!EXCLUDED_KEYS.includes(key)) {
+        if (INCLUDED_KEYS.includes(key)) {
             appData[key] = localStorage.getItem(key);
         }
     }
@@ -47,6 +50,9 @@ export async function syncToCloud() {
             body: JSON.stringify(payload) // Envoi en mode text/plain implicite
         });
         let result = await res.json();
+        if (result.success && result.lastUpdated) {
+            localStorage.setItem('cloud_last_updated', result.lastUpdated);
+        }
         return result;
     } catch (err) {
         return { success: false, message: "Erreur réseau de synchronisation." };
@@ -66,8 +72,9 @@ export async function autoSync() {
     const jitter = Math.floor(Math.random() * 4000);
     setTimeout(async () => {
         try {
-            console.log("☁️ [Cloud] Synchro auto... (Jitter: " + jitter + "ms)");
-            await syncToCloud();
+            console.log("☁️ [Cloud] Synchro auto... Envoi silencieux.");
+            let result = await syncToCloud();
+            if (result && result.success) showToastQueue("<span>💾 Progression sauvegardée dans le cloud.</span>");
         } catch (e) {
             console.warn("☁️ [Cloud] Échec synchro auto silencieuse.");
         }
@@ -86,11 +93,11 @@ export function autoSyncThrottled() {
     if (!session) return;
 
     // Si un enregistrement était déjà prévu, on l'annule pour recommencer le décompte
-    if (throttledTimeout) {
+    if (!throttledTimeout) {
+        showToastQueue("<span>⏳ Sauvegarde en ligne dans 10 secondes...</span>");
+    } else {
         clearTimeout(throttledTimeout);
     }
-
-    console.log("☁️ [Cloud] Enregistrement automatique planifié (10s après le dernier clic)...");
 
     throttledTimeout = setTimeout(() => {
         throttledTimeout = null;
@@ -118,9 +125,10 @@ export async function restoreFromCloud() {
 
             // Importation des données
             if (result.dataJSON !== "{}") {
-                const appData = JSON.parse(result.dataJSON);
+                let appData = JSON.parse(result.dataJSON);
+                appData = migrateOldCloudData(appData); // APPLIQUE MIGRATION
                 for (let key in appData) {
-                    localStorage.setItem(key, appData[key]);
+                    localStorage.setItem(key, typeof appData[key] === 'object' ? JSON.stringify(appData[key]) : appData[key]);
                 }
             }
             return { success: true };
@@ -220,7 +228,10 @@ function renderCloudUI() {
 async function doLogin() {
     const login = document.getElementById('cloud-login-input').value.trim();
     const pass = document.getElementById('cloud-pass-input').value.trim();
-    if (!login || !pass) return alert("Veuillez remplir les champs");
+    if (!login || !pass) {
+        showToastQueue("⚠️ Veuillez remplir les champs.");
+        return;
+    }
 
     document.getElementById('cloud-login-btn').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
@@ -239,9 +250,10 @@ async function doLogin() {
 
             // On restaure le Data_JSON
             if (result.dataJSON && result.dataJSON !== "{}") {
-                const appData = JSON.parse(result.dataJSON);
+                let appData = JSON.parse(result.dataJSON);
+                appData = migrateOldCloudData(appData); // APPLIQUE MIGRATION
                 for (let key in appData) {
-                    localStorage.setItem(key, appData[key]);
+                    localStorage.setItem(key, typeof appData[key] === 'object' ? JSON.stringify(appData[key]) : appData[key]);
                 }
             }
 
@@ -260,15 +272,14 @@ async function doLogin() {
                 classe: result.classe || ""
             }));
 
-            alert("Connexion réussie et progression restaurée !");
             window.location.reload();
         } else {
             document.getElementById('cloud-login-btn').innerHTML = 'Connexion';
-            alert(result.message);
+            showToastQueue(`⚠️ ${result.message}`);
         }
     } catch (err) {
         document.getElementById('cloud-login-btn').innerHTML = 'Connexion';
-        alert("Erreur de connexion Serveur.");
+        showToastQueue("❌ Erreur de connexion Serveur.");
     }
 }
 
@@ -324,9 +335,7 @@ function renderRegisterModal() {
         // -- Préparation d'une sauvegarde PLATE et LÉGÈRE --
         const data = {};
         const keysToSave = [
-            'gameStats', 'gameHighScores', 'activeQuests',
-            'coursFavorites', 'coursMastery', 'total_mp',
-            'lastQuestDate'
+            'gameStats', 'activeQuests', 'cours'
         ];
 
         keysToSave.forEach(key => {
@@ -357,11 +366,16 @@ function renderRegisterModal() {
             let result = await res.json();
 
             btn.innerHTML = 'Créer la demande';
-            alert(result.message);
-            if (result.success) modal.remove();
+            
+            if (result.success) {
+                showToastQueue("✔️ " + result.message);
+                modal.remove();
+            } else {
+                showToastQueue("⚠️ " + result.message);
+            }
         } catch (e) {
             btn.innerHTML = 'Créer la demande';
-            alert("Erreur réseau");
+            showToastQueue("❌ Erreur réseau");
         }
     });
 }
@@ -403,8 +417,33 @@ async function syncOnPageLoad() {
     const session = getCloudSession();
     if (!session) return;
 
-    console.log("☁️ [Cloud] Récupération des données au chargement...");
     try {
+        const localLastUpdated = localStorage.getItem('cloud_last_updated');
+        
+        // Fast-check API call
+        const checkRes = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "checkUpdate", login: session.login, hash: session.hash })
+        });
+        const checkResult = await checkRes.json();
+        
+        if (checkResult.success && checkResult.lastUpdated && localLastUpdated) {
+            const remoteDate = new Date(checkResult.lastUpdated).getTime();
+            const localDate = new Date(localLastUpdated).getTime();
+            
+            if (remoteDate <= localDate) {
+                // On s'assure d'initialiser les hooks/événements
+                if (document.getElementById('progression-container')) {
+                    try {
+                        const { initEvents } = await import('./events.js');
+                        initEvents();
+                    } catch (e) { console.warn('☁️ [Cloud] Erreur chargement événements:', e.message); }
+                }
+                return;
+            }
+        }
+        
+
         const response = await fetch(SCRIPT_URL, {
             method: "POST",
             body: JSON.stringify({ action: "sync", login: session.login, hash: session.hash, dataJSON: null })
@@ -412,24 +451,27 @@ async function syncOnPageLoad() {
         const result = await response.json();
 
         if (result.success && result.dataJSON && result.dataJSON !== "{}") {
-            const EXCLUDED_KEYS = [SESSION_KEY, 'admin_token_site', 'maths_admin_token'];
+            const INCLUDED_KEYS = ['gameStats', 'cours'];
             let currentLocal = {};
             for (let i = 0; i < localStorage.length; i++) {
                 let key = localStorage.key(i);
-                if (!EXCLUDED_KEYS.includes(key)) {
+                if (INCLUDED_KEYS.includes(key)) {
                     currentLocal[key] = localStorage.getItem(key);
                 }
             }
 
             if (isDataDifferent(currentLocal, result.dataJSON)) {
-                console.log("🔄 [Cloud] Données plus récentes trouvées. Application...");
-                const cloudData = JSON.parse(result.dataJSON);
+                let cloudData = JSON.parse(result.dataJSON);
+                cloudData = migrateOldCloudData(cloudData); // APPLIQUE MIGRATION
                 for (const key in cloudData) {
-                    if (!EXCLUDED_KEYS.includes(key)) {
+                    if (INCLUDED_KEYS.includes(key)) {
                         localStorage.setItem(key, typeof cloudData[key] === 'object' ? JSON.stringify(cloudData[key]) : cloudData[key]);
                     }
                 }
-                console.log("✅ [Cloud] Données cloud appliquées.");
+                if (result.lastUpdated) {
+                    localStorage.setItem('cloud_last_updated', result.lastUpdated);
+                }
+                showToastQueue("☁️ Progression appliquée depuis le serveur !");
                 // Rafraîchir le widget avec les nouvelles données
                 if (document.getElementById('progression-container')) {
                     try {
@@ -437,8 +479,6 @@ async function syncOnPageLoad() {
                         updateProgressionWidget();
                     } catch (e) { console.warn('☁️ [Cloud] Erreur refresh widget:', e.message); }
                 }
-            } else {
-                console.log("✅ [Cloud] Données locales déjà à jour.");
             }
         }
 
@@ -461,5 +501,76 @@ async function syncOnPageLoad() {
  */
 export async function autoRestore(shouldReload = false) {
     await syncOnPageLoad();
+}
+
+/**
+ * MIGRATION V2 POUR LES DONNEES CLOUD
+ * Si l'ancien format est détecté côté Cloud, on convertit l'objet appData à la volée.
+ */
+export function migrateOldCloudData(cloudData) {
+    let parsedStats = cloudData.gameStats ? (typeof cloudData.gameStats === 'string' ? JSON.parse(cloudData.gameStats) : cloudData.gameStats) : {};
+    
+    if (parsedStats.format_v2) {
+        return cloudData;
+    }
+    
+    const oldTotalMp = cloudData.total_mp;
+    const oldHighScores = cloudData.gameHighScores;
+    const oldCoursF = cloudData.coursFavorites;
+    const oldCoursM = cloudData.coursMastery;
+    const oldActiveQuests = cloudData.activeQuests;
+    
+    let needsMigration = false;
+    if (oldTotalMp !== undefined || oldHighScores !== undefined || oldCoursF !== undefined || oldCoursM !== undefined || (oldActiveQuests && typeof oldActiveQuests === 'string' && oldActiveQuests.startsWith('['))) {
+        needsMigration = true;
+    }
+    
+    if (needsMigration) {
+        parsedStats.total_mp = oldTotalMp !== undefined ? parseInt(oldTotalMp, 10) : (parsedStats.total_mp || 0);
+        if (!parsedStats.games) parsedStats.games = {};
+        
+        if (oldHighScores) {
+            const parsedHS = (typeof oldHighScores === 'string') ? JSON.parse(oldHighScores) : oldHighScores;
+            for (const key in parsedHS) {
+                const lastUnderscore = key.lastIndexOf('_');
+                let gameId = key, mode = '0';
+                if (lastUnderscore !== -1) {
+                    gameId = key.substring(0, lastUnderscore);
+                    mode = key.substring(lastUnderscore + 1);
+                    if (mode === 'default') mode = '0';
+                }
+                if (!parsedStats.games[gameId]) parsedStats.games[gameId] = { total_mp: 0, modes: {} };
+                if (!parsedStats.games[gameId].modes[mode]) parsedStats.games[gameId].modes[mode] = { mp: 0, highscore: 0 };
+                parsedStats.games[gameId].modes[mode].highscore = parsedHS[key];
+            }
+        }
+
+        if (oldActiveQuests) {
+            const parsedArray = (typeof oldActiveQuests === 'string') ? JSON.parse(oldActiveQuests) : oldActiveQuests;
+            if (Array.isArray(parsedArray)) {
+                parsedStats.activeQuests = { bonus_given_today: false, quests: parsedArray };
+            } else {
+                parsedStats.activeQuests = parsedArray; 
+            }
+        }
+        
+        const cours = { favoris: [], maitrises: {} };
+        if (oldCoursF) cours.favoris = (typeof oldCoursF === 'string') ? JSON.parse(oldCoursF) : oldCoursF;
+        if (oldCoursM) cours.maitrises = (typeof oldCoursM === 'string') ? JSON.parse(oldCoursM) : oldCoursM;
+        
+        cloudData.cours = JSON.stringify(cours);
+        
+        delete cloudData.total_mp;
+        delete cloudData.gameHighScores;
+        delete cloudData.coursFavorites;
+        delete cloudData.coursMastery;
+        delete cloudData.activeQuests;
+        delete cloudData.lastQuestDate;
+        
+        parsedStats.format_v2 = true;
+        cloudData.gameStats = JSON.stringify(parsedStats);
+    }
+    
+    return cloudData;
 }
 

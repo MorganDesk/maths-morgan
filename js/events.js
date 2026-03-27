@@ -114,7 +114,7 @@ function renderEventBanners(events, container) {
             <div class="event-banner-icon">⚔️</div>
             <div class="event-banner-content">
                 <div class="event-banner-title">ÉVÉNEMENT : ${event.title}</div>
-                <div class="event-banner-desc">Cumule des points sur <strong>${event.gameId} (${event.gameMode})</strong> !</div>
+                <div class="event-banner-desc">${event.description ? event.description : `Cumule des points sur <strong>${event.gameId} (${event.gameMode})</strong> !`}</div>
                 <div class="event-banner-timer" data-endtime="${event.endDate}">
                     Fini dans : ${timeRemaining}
                 </div>

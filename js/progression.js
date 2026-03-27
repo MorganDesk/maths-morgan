@@ -6,15 +6,15 @@ import { updateQuestProgression } from './quests.js'; // Import quest functional
 // --- Configuration des Rangs ---
 const RANKS = [
     { name: 'Fer', minLevel: 0, className: 'rank-iron', icon: 'fa-shield-alt' },
-    { name: 'Bronze', minLevel: 30, className: 'rank-bronze', icon: 'fa-medal' },
-    { name: 'Argent', minLevel: 60, className: 'rank-silver', icon: 'fa-award' },
-    { name: 'Or', minLevel: 90, className: 'rank-gold', icon: 'fa-trophy' },
-    { name: 'Platine', minLevel: 120, className: 'rank-platinum', icon: 'fa-gem' },
-    { name: 'Émeraude', minLevel: 150, className: 'rank-emerald', icon: 'fa-gem' },
-    { name: 'Diamant', minLevel: 180, className: 'rank-diamond', icon: 'fa-gem' },
-    { name: 'Maître', minLevel: 210, className: 'rank-master', icon: 'fa-crown' },
-    { name: 'Grand Maître', minLevel: 240, className: 'rank-grandmaster', icon: 'fa-star' },
-    { name: 'Challenger', minLevel: 270, className: 'rank-challenger', icon: 'fa-rocket' }
+    { name: 'Bronze', minLevel: 20, className: 'rank-bronze', icon: 'fa-medal' },
+    { name: 'Argent', minLevel: 40, className: 'rank-silver', icon: 'fa-award' },
+    { name: 'Or', minLevel: 60, className: 'rank-gold', icon: 'fa-trophy' },
+    { name: 'Platine', minLevel: 80, className: 'rank-platinum', icon: 'fa-gem' },
+    { name: 'Émeraude', minLevel: 100, className: 'rank-emerald', icon: 'fa-gem' },
+    { name: 'Diamant', minLevel: 120, className: 'rank-diamond', icon: 'fa-gem' },
+    { name: 'Maître', minLevel: 140, className: 'rank-master', icon: 'fa-crown' },
+    { name: 'Grand Maître', minLevel: 160, className: 'rank-grandmaster', icon: 'fa-star' },
+    { name: 'Challenger', minLevel: 180, className: 'rank-challenger', icon: 'fa-rocket' }
 ];
 
 function getRank(level) {
@@ -49,11 +49,7 @@ export function getLevelInfo(totalMP) {
 }
 
 function showMPGainAnimation(amount) {
-    const el = document.createElement('div');
-    el.textContent = `+${amount} MP`;
-    el.className = 'mp-gain-animation';
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 3000);
+    showToastQueue(`<span>✨ Partie terminée : <strong>+${amount} MP</strong> !</span>`);
 }
 
 function showLevelUpAnimation(newLevel) {
@@ -76,7 +72,7 @@ async function animateProgression(startMP, gain) {
     const rankIconEl = levelBadge.querySelector('.rank-icon');
     const levelTextEl = levelBadge.querySelector('span');
 
-    const animationDuration = 800; 
+    const animationDuration = 800;
 
     let currentMP = startInfo.mpInCurrentLevel;
     const finalMP = endInfo.mpInCurrentLevel;
@@ -92,7 +88,7 @@ async function animateProgression(startMP, gain) {
             mpInfoEl.textContent = `${endInfo.mpInCurrentLevel} / ${endInfo.mpToNextLevel} MP`;
         }
     };
-    
+
     if (startInfo.level === endInfo.level) {
         xpBar.style.transition = `width ${animationDuration}ms ease-out`;
         xpBar.style.width = `${endInfo.percentage}%`;
@@ -106,7 +102,7 @@ async function animateProgression(startMP, gain) {
         for (let i = startInfo.level + 1; i <= endInfo.level; i++) {
             showLevelUpAnimation(i);
             const levelInfoForLevel = getLevelInfo(requiredMpForLevel(i));
-            
+
             levelTextEl.textContent = `NIVEAU ${i}`;
             rankIconEl.className = `fas ${levelInfoForLevel.rank.icon} rank-icon`;
             widget.className = `progression-widget ${levelInfoForLevel.rank.className}`;
@@ -133,7 +129,7 @@ export async function completeGame(gameId, modeIndex, score) {
     const startMP = getTotalMP();
     addMP(gain);
     updateStatsOnGameComplete(gain);
-    
+
     // NOUVEAU : Sauvegarder les MP spécifiques à ce jeu/mode pour les événements
     saveGameMP(gameId, modeIndex, gain);
 
@@ -142,7 +138,7 @@ export async function completeGame(gameId, modeIndex, score) {
 
     showMPGainAnimation(gain);
     await animateProgression(startMP, gain);
-    updateProgressionWidget(); 
+    updateProgressionWidget();
 
     const oldLevelInfo = getLevelInfo(startMP);
     const newLevelInfo = getLevelInfo(startMP + gain);

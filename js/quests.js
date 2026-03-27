@@ -1,16 +1,14 @@
 import { getActiveQuests, saveActiveQuests, getGameStats, addMP } from './storage.js';
 import { QUEST_MODELS } from '../datas/quests_data.js';
 import { gamesData } from '../datas/games_data.js';
+import { showToastQueue } from './toast.js';
 
-let activeQuests = [];
+// Active quests state contains both the array and metadata now
+let activeQuestsState = { bonus_given_today: false, quests: [] };
 const QUESTS_COLLAPSED_KEY = 'questsCollapsed'; // Key to store user's preference
 
 function showQuestCompletedAnimation(title, reward) {
-    const el = document.createElement('div');
-    el.className = 'level-up-animation';
-    el.innerHTML = `Quête Accomplie !<br><span style="font-size: 1.5rem; font-weight: normal;">${title} (+${reward} MP)</span>`;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 3500);
+    showToastQueue(`<span>🏆 Quête accomplie : ${title} (+<strong>${reward} MP</strong>)</span>`);
 }
 
 function generateNewQuests() {
@@ -56,7 +54,7 @@ function updatePlayXGamesQuests() {
     const gamesPlayedCount = stats.gamesPlayedToday.length;
     let needsSave = false;
 
-    activeQuests.forEach(quest => {
+    activeQuestsState.quests.forEach(quest => {
         if (quest.type === 'PLAY_X_GAMES' && !quest.completed) {
             quest.progress = gamesPlayedCount;
             if (quest.progress >= quest.goal) {
@@ -71,9 +69,9 @@ function updatePlayXGamesQuests() {
 }
 
 export function updateQuestProgression(gameId, modeIndex, score, mpGained) {
-    if (!activeQuests) return;
+    if (!activeQuestsState || !activeQuestsState.quests) return;
     let needsRender = false;
-    activeQuests.forEach(quest => {
+    activeQuestsState.quests.forEach(quest => {
         if (quest.completed) return;
         let progressMade = false;
         switch (quest.type) {
@@ -109,8 +107,15 @@ export function updateQuestProgression(gameId, modeIndex, score, mpGained) {
         }
     });
 
+    if (activeQuestsState.quests.every(q => q.completed) && !activeQuestsState.bonus_given_today) {
+        activeQuestsState.bonus_given_today = true;
+        addMP(20);
+        showToastQueue(`<span>🎁 <strong>Défi Quotidien Réussi !</strong> Bonus de +20 MP !</span>`);
+        needsRender = true;
+    }
+
     if (needsRender) {
-        saveActiveQuests(activeQuests);
+        saveActiveQuests(activeQuestsState);
         renderQuestsWidget();
     }
 }
@@ -119,12 +124,12 @@ export function renderQuestsWidget() {
     const container = document.getElementById('quests-container');
     if (!container) return;
 
-    if (!activeQuests || activeQuests.length === 0) {
+    if (!activeQuestsState || !activeQuestsState.quests || activeQuestsState.quests.length === 0) {
         container.innerHTML = '<p>Aucune quête pour aujourd\'hui.</p>';
         return;
     }
 
-    const questsListHTML = activeQuests.map(quest => {
+    const questsListHTML = activeQuestsState.quests.map(quest => {
         const progressPercent = Math.min((quest.progress / quest.goal) * 100, 100);
         return `
             <div class="card quest-card ${quest.completed ? 'completed' : ''}">
@@ -141,33 +146,45 @@ export function renderQuestsWidget() {
         `;
     }).join('');
 
+    let bonusMessage = '';
+    if (activeQuestsState.bonus_given_today) {
+        bonusMessage = `<div style="margin-top: 10px; padding: 10px; background: #dcfce7; color: #166534; border-radius: 8px; text-align: center; font-size: 0.9rem; border: 1px solid #bbf7d0;">
+            🌟 <strong>Bonus Quotidien (+20 MP) Récupéré !</strong>
+        </div>`;
+    } else {
+        bonusMessage = `<div style="margin-top: 10px; padding: 10px; background: #e0e7ff; color: #3730a3; border-radius: 8px; text-align: center; font-size: 0.9rem; border: 1px solid #c7d2fe;">
+            🎁 Termine toutes tes quêtes pour gagner <strong>+20 MP Bonus</strong> !
+        </div>`;
+    }
+
     container.innerHTML = `
         <div class="quests-list">
             ${questsListHTML}
+            ${bonusMessage}
         </div>
     `;
 }
 
 export function checkDailyQuests() {
-    const stats = getGameStats(); // Make sure we have latest stats
+    const stats = getGameStats(); // This automatically handles daily reset by setting activeQuests to null if day changed!
     const storedQuests = getActiveQuests();
-    const lastQuestDate = localStorage.getItem('lastQuestDate');
-    const today = new Date().toISOString().split('T')[0];
     let questsChanged = false;
 
-    if (!storedQuests || lastQuestDate !== today) {
-        activeQuests = generateNewQuests();
-        localStorage.setItem('lastQuestDate', today);
+    if (!storedQuests || !storedQuests.quests || storedQuests.quests.length === 0) {
+        activeQuestsState = {
+            bonus_given_today: false,
+            quests: generateNewQuests()
+        };
         questsChanged = true;
     } else {
-        activeQuests = storedQuests;
+        activeQuestsState = storedQuests;
     }
 
     // Always check the progress for PLAY_X_GAMES quests as it depends on external state
     const playQuestsUpdated = updatePlayXGamesQuests();
 
     if (questsChanged || playQuestsUpdated) {
-        saveActiveQuests(activeQuests);
+        saveActiveQuests(activeQuestsState);
     }
 
     renderQuestsWidget();

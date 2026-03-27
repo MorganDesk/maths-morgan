@@ -52,12 +52,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             // APPEL DIRECT SANS CACHE
             const action = isEventMode ? 'getEventLeaderboard' : 'getLeaderboard';
+            const includeProf = document.getElementById('include-prof-cb')?.checked || false;
             const response = await fetch(SCRIPT_URL, {
                 method: "POST",
                 body: JSON.stringify({
                     action: action,
                     period: currentPeriod,
-                    classe: currentLevel
+                    classe: currentLevel,
+                    includeProf: includeProf
                 })
             });
             const result = await response.json();
@@ -172,6 +174,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadLeaderboard();
         });
     });
+
+    const includeProfCb = document.getElementById('include-prof-cb');
+    if (includeProfCb) {
+        includeProfCb.addEventListener('change', () => loadLeaderboard());
+    }
 
     // Initialisation
     await initTabs();

@@ -4,10 +4,10 @@ export const gamesData = [
         title: 'Multipli-Warrior',
         matiere: 'Calcul mental',
         description: 'Multiplie à la vitesse de l\'éclair ! Donne un maximum de bonnes réponses avant la fin du chrono.',
-        tags: ['calcul', 'multiplication', 'vitesse'],
         entryPoint: 'jeux/defi-des-tables.js',
         baseMP: 5,
-        coefficient: [1]
+        coefficient: [1],
+        timer: true
     },
     {
         id: 'duel-des-signes',
@@ -24,7 +24,8 @@ export const gamesData = [
             { name: 'Mélange (+/-)', settings: { operators: ['+', '-'] } },
             { name: 'Multiplication (x)', settings: { operators: ['*'] } },
             { name: 'Mélange total (+/-/x)', settings: { operators: ['+', '-', '*'] } }
-        ]
+        ],
+        timer: true
     },
     {
         id: 'compte-bon',
@@ -39,7 +40,8 @@ export const gamesData = [
             { name: 'Facile' },
             { name: 'Normal' },
             { name: 'Extrême' }
-        ]
+        ],
+        timer: false
     },
     {
         id: 'miroir-magique',
@@ -54,7 +56,8 @@ export const gamesData = [
             { name: 'Axiale' },
             { name: 'Centrale' },
             { name: 'Mélange' }
-        ]
+        ],
+        timer: false
     },
     {
         id: 'angle-master',
@@ -64,7 +67,8 @@ export const gamesData = [
         tags: ['géométrie', 'estimation', 'angles', 'degrés', 'vitesse'],
         entryPoint: 'jeux/angle-master.js',
         baseMP: 5,
-        coefficient: [2.5]
+        coefficient: [2.5],
+        timer: true
     },
     {
         id: 'code-brise',
@@ -74,7 +78,8 @@ export const gamesData = [
         tags: ['calcul', 'divisibilité', 'logique', 'vitesse'],
         entryPoint: 'jeux/divisibilite.js',
         baseMP: 5,
-        coefficient: [2.5]
+        coefficient: [2.5],
+        timer: true
     },
     {
         id: 'batisseur-de-nombres',
@@ -89,7 +94,8 @@ export const gamesData = [
             { name: 'Facile' },
             { name: 'Normal' },
             { name: 'Extrême' }
-        ]
+        ],
+        timer: true
     },
     {
         id: 'maitre-des-nombres',
@@ -106,8 +112,8 @@ export const gamesData = [
             { name: 'Chiffre (Décimaux)' },
             { name: 'Nombre (Décimaux)' },
             { name: 'Mélange' }
-        ]
-
+        ],
+        timer: true
     },
     {
         id: 'ascenseur-unites',
@@ -124,6 +130,7 @@ export const gamesData = [
             { name: 'Masses (g)' },
             { name: 'Capacités (L)' },
             { name: 'Volumes (m³)' }
-        ]
+        ],
+        timer: true
     }
 ];
