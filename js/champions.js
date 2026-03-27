@@ -138,7 +138,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td class="rank-cell ${rankClass}">${rankDisplay}</td>
                     <td>
                         <div class="user-cell">
-                            <div class="user-avatar" style="background:${getRandomColor(student.displayName)}">${student.displayName.charAt(0)}</div>
+                            ${student.isGroup ? 
+                                `<div class="user-avatar" style="background:${getRandomColor(student.displayName)}; border-radius:8px;"><i class="fas fa-users"></i></div>` : 
+                                `<div class="user-avatar" style="background:${getRandomColor(student.displayName)}">${student.displayName.charAt(0)}</div>`
+                            }
                             <div>
                                 <div class="user-name">${student.displayName}</div>
                                 <div class="user-class">${student.classe}</div>
