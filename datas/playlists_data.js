@@ -1,17 +1,14 @@
 var playlists_data = [
     {
-        "id": "playlist-les-triangles-en-cinquieme",
-        "titre": "Les triangles en cinquième",
-        "desc": "Tout pour maîtriser les triangles et les angles.",
-        "niveau": "5e",
-        "matiere": "Géométrie",
+        "id": "playlist-fractions-et-proportions",
+        "titre": "Fractions et Proportions",
+        "desc": "Tout ce qui concerne le partage, les ratios et la manipulation des nombres en écriture fractionnaire.",
+        "matiere": "Nombres et Calcul",
+        "tags": [],
         "items": [
-            "5e-2025-2026-somme-des-angles-dans-un-triangle",
-            "5e-2025-2026-droites-particulieres-dans-un-triangle",
-            "5e-2025-2026-inegalite-triangulaire"
-        ],
-        "tags": [
-            "huehue"
+            "5e-2025-2026-proportionnalite",
+            "5e-2025-2026-fractions",
+            "5e-2025-2026-addition-et-soustraction-de-fractions"
         ]
     },
     {
@@ -62,6 +59,39 @@ var playlists_data = [
             "3e-2025-2026-calcul-litteral",
             "3e-2025-2026-calcul-litteral-partie-2",
             "3e-2025-2026-arithmetique"
+        ]
+    },
+    {
+        "id": "playlist-maitrise-du-calcul-numerique",
+        "titre": "Maîtrise du Calcul Numérique",
+        "desc": "Ce bloc regroupe les bases fondamentales du calcul, de l'ordre des opérations aux nouvelles familles de nombres.",
+        "matiere": "Nombres et Calcul",
+        "tags": [],
+        "items": [
+            "5e-2025-2026-priorite-operatoire",
+            "5e-2025-2026-nombres-relatifs",
+            "5e-2025-2026-addition-et-soustraction-de-relatifs"
+        ]
+    },
+    {
+        "id": "playlist-angles-et-transformations",
+        "titre": "Angles et Transformations",
+        "desc": "Pour comprendre comment les figures se déplacent, tournent ou se répondent dans le plan.",
+        "matiere": "Géométrie",
+        "tags": [],
+        "items": [
+            "5e-2025-2026-angles-et-parallelisme",
+            "5e-2025-2026-symetrie-axiale-et-centrale"
+        ]
+    },
+    {
+        "id": "playlist-initiation-a-lalgebre",
+        "titre": "Initiation à l'Algèbre",
+        "desc": "",
+        "matiere": "",
+        "tags": [],
+        "items": [
+            "5e-2025-2026-calcul-litteral"
         ]
     }
 ];
