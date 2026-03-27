@@ -15,53 +15,53 @@ var playlists_data = [
         ]
     },
     {
-        "id": "playlist-gestion-de-donnees",
-        "titre": "Gestion de données",
-        "desc": "Maîtriser le hasard et l'analyse de données (Probabilités et Statistiques).",
-        "niveau": "3e",
+        "id": "playlist-gestion-de-donnees-et-hasard",
+        "titre": "Gestion de Données et Hasard",
+        "desc": "Tout pour apprendre à traiter l'information et mesurer l'incertitude.",
         "matiere": "Gestion de données",
-        "items": [
-            "3e-2025-2026-probabilites",
-            "3e-2025-2026-statistiques"
-        ],
         "tags": [
             "huehue"
+        ],
+        "items": [
+            "3e-2025-2026-statistiques",
+            "3e-2025-2026-probabilites"
         ]
     },
     {
         "id": "playlist-geometrie-du-brevet",
         "titre": "Géométrie du Brevet",
         "desc": "Les deux piliers de la 3ème : Théorème de Thalès et Trigonométrie.",
-        "niveau": "3e",
         "matiere": "Géométrie",
-        "items": [
-            "3e-2025-2026-theoreme-de-thales",
-            "3e-2025-2026-trigonometrie"
-        ],
         "tags": [
             "zob"
+        ],
+        "items": [
+            "3e-2025-2026-theoreme-de-thales",
+            "3e-2025-2026-trigonometrie",
+            "3e-2025-2026-transformations-du-plan"
         ]
     },
     {
         "id": "playlist-le-monde-des-fonctions",
-        "titre": "Le monde des Fonctions",
+        "titre": "Le Monde des Fonctions",
         "desc": "Comprendre les bases des fonctions et l'étude des droites (affines et linéaires).",
-        "niveau": "3e",
         "matiere": "Gestion de données",
+        "tags": [],
         "items": [
             "3e-2025-2026-notion-de-fonction",
             "3e-2025-2026-fonctions-affines-et-lineaires"
         ]
     },
     {
-        "id": "playlist-calcul-litteral",
-        "titre": "Calcul littéral",
-        "desc": "S'entraîner au développement, à la factorisation et aux équations.",
+        "id": "playlist-nombres-et-maitrise-du-calcul",
+        "titre": "Nombres et Maîtrise du Calcul",
+        "desc": "Le socle de l'algèbre : manipuler les nombres, les lettres et résoudre des problèmes de divisibilité.",
         "matiere": "Nombres et calcul",
         "tags": [],
         "items": [
             "3e-2025-2026-calcul-litteral",
-            "3e-2025-2026-calcul-litteral-partie-2"
+            "3e-2025-2026-calcul-litteral-partie-2",
+            "3e-2025-2026-arithmetique"
         ]
     }
 ];
