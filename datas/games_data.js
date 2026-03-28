@@ -4,6 +4,7 @@ export const gamesData = [
         title: 'Multipli-Warrior',
         matiere: 'Calcul mental',
         description: 'Multiplie à la vitesse de l\'éclair ! Donne un maximum de bonnes réponses avant la fin du chrono.',
+        tags: ['vitesse', 'multiplication'],
         entryPoint: 'jeux/defi-des-tables.js',
         baseMP: 5,
         coefficient: [1],

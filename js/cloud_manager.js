@@ -181,8 +181,8 @@ function renderCloudUI() {
         document.getElementById('cloud-logout-btn').addEventListener('click', () => {
             if (confirm("Êtes-vous sûr de vouloir vous déconnecter ? Les données locales seront effacées de cet appareil.")) {
                 localStorage.clear();
-                alert("Déconnexion réussie.");
-                window.location.reload();
+                showToastQueue("✔️ Déconnexion réussie. Redémarrage imminent.");
+                setTimeout(() => window.location.reload(), 1000);
             }
         });
 
@@ -201,7 +201,7 @@ function renderCloudUI() {
                     btn.innerHTML = '<i class="fas fa-check"></i> OK';
                     setTimeout(() => window.location.reload(), 800);
                 } else {
-                    alert(result.message);
+                    showToastQueue("❌ " + result.message);
                     btn.innerHTML = oldHTML;
                     btn.disabled = false;
                 }
@@ -326,7 +326,7 @@ function renderRegisterModal() {
         const pw = document.getElementById('reg-pass').value.trim();
         const c = document.getElementById('reg-classe').value;
 
-        if (!n || !p || !l || !pw || !c) return alert("Remplissez tous les champs !");
+        if (!n || !p || !l || !pw || !c) return showToastQueue("⚠️ Remplissez tous les champs !");
 
         const btn = document.getElementById('reg-submit');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';

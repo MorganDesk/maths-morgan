@@ -3,6 +3,7 @@ import { updateProgressionWidget, completeGame } from './progression.js';
 import { checkDailyQuests } from './quests.js';
 import { gamesData } from '../datas/games_data.js';
 import { autoSync, autoRestore } from './cloud_manager.js';
+import { showToastQueue } from './toast.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const gamesGrid = document.getElementById('games-grid');
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const searchTerm = searchInput.value.toLowerCase().trim();
         const filteredGames = allGames.filter(game => {
             const titleMatch = game.title.toLowerCase().includes(searchTerm);
-            const tagMatch = game.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+            const tagMatch = (game.tags || []).some(tag => tag.toLowerCase().includes(searchTerm));
             return titleMatch || tagMatch;
         });
         renderGameCards(filteredGames);
@@ -165,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Erreur lors du chargement du module de jeu:", error);
-            alert("Impossible de charger le jeu. Vérifiez la console pour plus de détails.");
+            showToastQueue("❌ Impossible de charger le jeu.");
             showGamesGrid();
         }
     };

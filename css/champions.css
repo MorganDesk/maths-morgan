@@ -25,11 +25,11 @@
 .leaderboard-tabs {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 10px;
     background: #f1f5f9;
     padding: 5px;
     border-radius: 12px;
-    display: inline-flex;
 }
 
 .tab-btn {
@@ -122,10 +122,25 @@
     text-align: center;
 }
 
-.top-3-rank { font-size: 1.4rem; }
-.rank-1 { color: #f59e0b; } /* Or */
-.rank-2 { color: #94a3b8; } /* Argent */
-.rank-3 { color: #b45309; } /* Bronze */
+.top-3-rank {
+    font-size: 1.4rem;
+}
+
+.rank-1 {
+    color: #f59e0b;
+}
+
+/* Or */
+.rank-2 {
+    color: #94a3b8;
+}
+
+/* Argent */
+.rank-3 {
+    color: #b45309;
+}
+
+/* Bronze */
 
 .user-cell {
     display: flex;
@@ -178,7 +193,16 @@
 
 /* Responsive */
 @media (max-width: 600px) {
-    .leaderboard-header { padding: 1.5rem 1rem; }
-    .leaderboard-content { padding: 0.5rem; }
-    .leaderboard-table td, .leaderboard-table th { padding: 10px 6px; }
+    .leaderboard-header {
+        padding: 1.5rem 1rem;
+    }
+
+    .leaderboard-content {
+        padding: 0.5rem;
+    }
+
+    .leaderboard-table td,
+    .leaderboard-table th {
+        padding: 10px 6px;
+    }
 }
